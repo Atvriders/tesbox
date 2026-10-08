@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" href="data:," />
+    <title>Tesbox probe</title>
+    <link rel="stylesheet" href="/src/probe/probe.css" />
+  </head>
+  <body>
+    <header class="top">
+      <h1>Tesbox in-car probe</h1>
+      <p class="muted">Interactive steps only while parked. While driving, a passenger reads the screen.</p>
+    </header>
+    <main>
+      <section id="build">
+        <h2>Build</h2>
+        <dl class="kv">
+          <dt>SHA</dt>
+          <dd id="build-sha">…</dd>
+          <dt>Version check</dt>
+          <dd id="build-status">checking…</dd>
+        </dl>
+      </section>
+
+      <section id="env">
+        <h2>Environment</h2>
+        <dl class="kv" id="env-kv"></dl>
+        <div class="scroll">
+          <table id="env-features">
+            <thead>
+              <tr><th>Feature</th><th>Available</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="audio">
+        <h2>Audio</h2>
+        <fieldset class="choices">
+          <legend>latencyHint (used at Start)</legend>
+          <label class="choice"><input type="radio" name="latency" value="balanced" checked /> balanced</label>
+          <label class="choice"><input type="radio" name="latency" value="playback" /> playback</label>
+        </fieldset>
+        <fieldset class="choices">
+          <legend>Output route</legend>
+          <label class="choice"><input type="radio" name="route" value="direct" /> direct</label>
+          <label class="choice"><input type="radio" name="route" value="media-element" /> media-element</label>
+          <label class="choice"><input type="radio" name="route" value="direct-anchor" checked /> direct + anchor</label>
+        </fieldset>
+        <div class="buttons">
+          <button type="button" id="audio-start">Start audio</button>
+          <button type="button" id="audio-resume" disabled>Resume</button>
+          <button type="button" id="audio-recreate" disabled>Recreate</button>
+          <button type="button" id="audio-bench" disabled>Benchmark</button>
+          <button type="button" id="audio-tone" disabled>Pitch step</button>
+          <button type="button" id="audio-stop" disabled>Stop audio</button>
+        </div>
+        <dl class="kv">
+          <dt>Status</dt>
+          <dd id="audio-status">idle</dd>
+          <dt>Context state</dt>
+          <dd id="audio-state">none</dd>
+          <dt>Route</dt>
+          <dd id="audio-route">—</dd>
+          <dt>Quanta</dt>
+          <dd id="audio-quanta">0</dd>
+          <dt>Hidden clock ratio</dt>
+          <dd id="audio-hidden-ratio">—</dd>
+          <dt>Last worklet report</dt>
+          <dd id="audio-report">—</dd>
+        </dl>
+        <pre id="audio-snapshot"></pre>
+        <h3>Headroom benchmark</h3>
+        <div class="scroll">
+          <table id="bench-results">
+            <thead>
+              <tr><th>k</th><th>clock ratio</th><th>overloaded</th><th>busy</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p id="bench-status" class="muted">not run</p>
+        <h3>Observations for route <span id="obs-route">direct-anchor</span></h3>
+        <div id="observations"></div>
+      </section>
+
+      <section id="gps">
+        <h2>GPS</h2>
+        <p id="gps-crash" class="banner" hidden></p>
+        <p class="muted">Each run lasts <span id="gps-seconds">60</span> s. One run at a time.</p>
+        <ul id="gps-modes" class="modes"></ul>
+        <div class="buttons">
+          <button type="button" id="gps-stop" disabled>Stop GPS run</button>
+        </div>
+        <p id="gps-live">idle</p>
+        <div class="scroll">
+          <table id="gps-results">
+            <thead>
+              <tr>
+                <th>mode</th><th>s</th><th>fixes</th><th>err p/u/t</th><th>interval med/p95 ms</th>
+                <th>age med/p95 ms</th><th>stale &gt;3 s</th><th>dup</th><th>speed null</th><th>speed 0</th>
+                <th>0 while moving</th><th>acc med m</th><th>alt</th><th>hidden fixes</th><th>max m/s</th><th>crashed</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="inputs">
+        <h2>Inputs</h2>
+        <p class="muted">Tilt/press steering-wheel controls, press keys or gamepad buttons: every event is logged.</p>
+        <dl class="kv" id="input-counts"></dl>
+        <div class="buttons">
+          <button type="button" id="motion-run">Probe motion (<span id="motion-seconds">5</span> s)</button>
+        </div>
+        <p id="motion-result" class="muted">not run</p>
+        <h3>Event log (newest first)</h3>
+        <ol id="log-view" class="log"></ol>
+      </section>
+
+      <section id="storage">
+        <h2>Storage</h2>
+        <dl class="kv" id="storage-report">
+          <dt>Status</dt>
+          <dd>running…</dd>
+        </dl>
+      </section>
+
+      <section id="export">
+        <h2>Export</h2>
+        <fieldset class="notes">
+          <legend>Notes (parked)</legend>
+          <label>Car
+            <select id="note-model">
+              <option value="">not set</option>
+              <option>Model S</option>
+              <option>Model X</option>
+              <option>Model 3</option>
+              <option>Model Y</option>
+              <option>Model Y L</option>
+              <option>Cybertruck</option>
+            </select>
+          </label>
+          <label>Music resumes after Stop audio
+            <select id="note-music-resume">
+              <option value="">not set</option>
+              <option>yes</option>
+              <option>no</option>
+            </select>
+          </label>
+          <label>Road-noise cancellation interferes (S/X)
+            <select id="note-anc">
+              <option value="">not set</option>
+              <option>yes</option>
+              <option>no</option>
+              <option>n/a</option>
+            </select>
+          </label>
+        </fieldset>
+        <div class="buttons">
+          <button type="button" id="qr-show">Show QR</button>
+          <button type="button" id="qr-prev" disabled>Previous QR</button>
+          <button type="button" id="qr-next" disabled>Next QR</button>
+        </div>
+        <p id="qr-status" class="muted"></p>
+        <div id="qr-list"></div>
+        <pre id="summary-json"></pre>
+      </section>
+    </main>
+    <footer class="muted">Tesbox probe · Not affiliated with Tesla, Inc.</footer>
+    <script type="module" src="/src/probe/main.ts"></script>
+  </body>
+</html>

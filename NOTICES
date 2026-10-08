@@ -1,0 +1,39 @@
+Tesbox
+Copyright (c) 2026 Atvriders. Licensed under the MIT License (see LICENSE).
+
+Third-party code shipped in the web app: src/platform/qr.ts adapts the QR Code generator
+library (TypeScript) by Project Nayuki, https://www.nayuki.io/page/qr-code-generator-library,
+under the licence below. Its attribution also stays in the minified probe bundle as a legal
+comment, and the Docker image serves this file as /NOTICES.txt and the Tesbox licence as
+/LICENSE.txt.
+
+  Copyright (c) Project Nayuki. (MIT License)
+  https://www.nayuki.io/page/qr-code-generator-library
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy of
+  this software and associated documentation files (the "Software"), to deal in
+  the Software without restriction, including without limitation the rights to
+  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+  the Software, and to permit persons to whom the Software is furnished to do so,
+  subject to the following conditions:
+  - The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+  - The Software is provided "as is", without warranty of any kind, express or
+    implied, including but not limited to the warranties of merchantability,
+    fitness for a particular purpose and noninfringement. In no event shall the
+    authors or copyright holders be liable for any claim, damages or other
+    liability, whether in an action of contract, tort or otherwise, arising from,
+    out of or in connection with the Software or the use or other dealings in the
+    Software.
+
+All other application code is original; algorithm sources are logged in docs/CLEAN_ROOM.md.
+
+The Docker image is based on nginxinc/nginx-unprivileged:alpine (nginx: BSD-2-Clause;
+Alpine Linux packages under their own licences).
+
+Development and test tools (not shipped to users):
+  Vite, Vitest, Rolldown, tsx, ESLint, typescript-eslint, @eslint/js, @types/node — MIT
+  TypeScript, Playwright — Apache-2.0
+  jsQR — Apache-2.0 (used only by tests to decode QR codes: tests/unit/qr.test.ts, tests/e2e/probe-qr.spec.ts)
+
+Not affiliated with or endorsed by Tesla, Inc. or any car manufacturer.

@@ -1,0 +1,17 @@
+# Tesbox — self-hosted static app.
+# Serve it from YOUR public HTTPS domain (e.g. https://tesbox.example.com) through a reverse proxy
+# or tunnel that forwards to port 8080: geolocation and AudioWorklet only work in a secure context,
+# and the car's browser cannot reach private LAN addresses.
+services:
+  tesbox:
+    image: ghcr.io/atvriders/tesbox:latest
+    # To build locally instead of pulling: comment out "image" and uncomment "build".
+    # build: .
+    restart: unless-stopped
+    ports:
+      # Loopback only by default: the reverse proxy or tunnel runs on this host and is the only
+      # way in. If your proxy runs on another machine, publish on all interfaces instead by
+      # replacing the line below with "8080:8080" (and firewall the port so only the proxy reaches it).
+      - "127.0.0.1:8080:8080"
+    security_opt:
+      - no-new-privileges:true

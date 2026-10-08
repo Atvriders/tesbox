@@ -1,0 +1,23 @@
+# dependencies and build output
+node_modules/
+dist/
+*.tsbuildinfo
+.vite/
+
+# test output
+coverage/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# local reference audio for the Sound Lab (never committed, spec §4.6)
+lab-refs/
+
+# local environment and editor noise
+.env
+.env.*
+*.log
+.DS_Store
+.idea/
+.vscode/

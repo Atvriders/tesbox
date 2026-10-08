@@ -1,0 +1,271 @@
+/* Tesbox probe — dark theme forced: the car reports colour-scheme preferences unreliably (spec §3). */
+:root {
+  color-scheme: dark;
+  --bg: #0e1116;
+  --panel: #161b22;
+  --line: #2d3540;
+  --text: #e6edf3;
+  --muted: #8d98a5;
+  --accent: #58b4ff;
+  --ok: #3fb950;
+  --bad: #ff6b61;
+  --warn: #e3b341;
+  /* Overwritten at runtime with minTouchCssPx(devicePixelRatio) (≥ 22 mm on any Tesla panel). */
+  --touch: 108px;
+  --gap: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 18px/1.4 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+}
+
+h1 {
+  font-size: 1.6rem;
+  margin: 16px 0 4px;
+}
+
+h2 {
+  font-size: 1.3rem;
+  margin: 0 0 12px;
+}
+
+h3 {
+  font-size: 1.05rem;
+  margin: 20px 0 8px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+section {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+  margin: 12px 0;
+}
+
+button {
+  min-height: var(--touch);
+  min-width: var(--touch);
+  padding: 8px 20px;
+  font: inherit;
+  font-weight: 600;
+  color: var(--text);
+  background: #1f2833;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+button:active {
+  background: #2b3a4a;
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+button[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: #123049;
+}
+
+fieldset {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin: 12px 0;
+  padding: 8px 12px 12px;
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+}
+
+.choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: var(--touch);
+  padding: 0 20px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  touch-action: manipulation;
+}
+
+.choice input {
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.notes {
+  display: grid;
+  gap: var(--gap);
+}
+
+.notes label {
+  display: grid;
+  gap: 6px;
+}
+
+select {
+  min-height: var(--touch);
+  font: inherit;
+  color: var(--text);
+  background: #1f2833;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 0 12px;
+}
+
+.kv {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 16px;
+  margin: 12px 0;
+}
+
+.kv dt {
+  color: var(--muted);
+}
+
+.kv dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+
+.scroll {
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-variant-numeric: tabular-nums;
+}
+
+th,
+td {
+  border-bottom: 1px solid var(--line);
+  padding: 6px 10px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+td.yes {
+  color: var(--ok);
+}
+
+td.no {
+  color: var(--bad);
+}
+
+pre {
+  max-height: 40vh;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: #0a0d12;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 0.8rem;
+}
+
+pre:empty {
+  display: none;
+}
+
+.banner {
+  background: #3a2c05;
+  border: 2px solid var(--warn);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.obs-row {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.obs-row .buttons {
+  margin: 0;
+}
+
+.modes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+}
+
+.log {
+  margin: 0;
+  /* Room for a two-digit "30. " marker: overflow: auto clips markers that spill out of the padding. */
+  padding-left: 3em;
+  max-height: 50vh;
+  overflow: auto;
+  font: 0.85rem/1.5 ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  overflow-wrap: anywhere;
+}
+
+.qr {
+  margin: 12px 0;
+}
+
+/* Whole code on screen even in the 773×601 in-motion/split-view layout (spec §3): scaled to fit both ways. */
+.qr canvas {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100svh - 24px);
+  width: auto;
+  height: auto;
+  image-rendering: pixelated;
+  background: #fff;
+}
+
+.qr figcaption {
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+footer {
+  margin: 24px 0;
+  text-align: center;
+}

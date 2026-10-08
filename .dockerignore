@@ -1,0 +1,18 @@
+# Keep the build context small; the image only needs sources, configs and the lockfile.
+.git
+.github
+node_modules
+dist
+coverage
+test-results
+playwright-report
+blob-report
+playwright
+lab-refs
+docs
+*.log
+.env
+.env.*
+.DS_Store
+.idea
+.vscode

@@ -1,0 +1,125 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+# Least privilege: read-only by default; only the publish job may write packages.
+# Every action is pinned to a full commit SHA (version in the trailing comment).
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+  e2e:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
+      - name: Build amd64 image (loaded into the local daemon)
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
+        with:
+          context: .
+          platforms: linux/amd64
+          load: true
+          tags: tesbox:ci
+          build-args: GITHUB_SHA=${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Start container
+        run: docker run -d --name tesbox -p 8080:8080 tesbox:ci
+      - name: Wait for /version.json
+        run: |
+          for i in $(seq 1 30); do
+            if curl -fsS http://localhost:8080/version.json; then exit 0; fi
+            sleep 1
+          done
+          docker logs tesbox
+          exit 1
+      - name: Served build SHA matches this commit
+        run: test "$(curl -fsS http://localhost:8080/version.json | jq -r .sha)" = "${GITHUB_SHA::7}"
+      - name: Cache Playwright browsers
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - run: npx playwright install --with-deps chromium
+      - name: Playwright against the container
+        run: npx playwright test
+        env:
+          E2E_BASE_URL: http://localhost:8080
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+      - name: Container logs
+        if: failure()
+        run: docker logs tesbox
+
+  publish:
+    needs: [test, e2e]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    # One publish per ref at a time: a newer push cancels the older run, so :latest never moves back.
+    concurrency:
+      group: publish-${{ github.ref }}
+      cancel-in-progress: true
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3.7.0
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
+      - uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push multi-arch image
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          build-args: GITHUB_SHA=${{ github.sha }}
+          tags: |
+            ghcr.io/atvriders/tesbox:latest
+            ghcr.io/atvriders/tesbox:${{ github.sha }}
+          # Links the GHCR package to the public repo (it inherits the repo's visibility).
+          labels: |
+            org.opencontainers.image.source=https://github.com/Atvriders/tesbox
+            org.opencontainers.image.revision=${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

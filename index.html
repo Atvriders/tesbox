@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" href="data:," />
+    <title>Tesbox</title>
+  </head>
+  <body>
+    <!-- Visible by default: browsers without ES modules (MCU1) never run the bundle that hides it. -->
+    <div id="unsupported" role="alert">
+      <h1>Tesbox can't run in this browser</h1>
+      <p>
+        Tesbox needs a current browser with ES modules and Web Audio AudioWorklet: a Tesla with
+        the MCU2 (Intel) or MCU3 (AMD) touchscreen computer on current software. The original
+        MCU1 browser is not supported.
+      </p>
+      <p>Not affiliated with Tesla, Inc.</p>
+    </div>
+    <main id="app"></main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

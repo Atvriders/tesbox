@@ -1,0 +1,34 @@
+{
+  "name": "tesbox",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 4173 --strictPort",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "gen:anchor": "tsx tools/make-anchor-wav.ts",
+    "verify": "npm run lint && npm run typecheck && npm test && npm run build && npm run test:e2e"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10",
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^24",
+    "ajv": "^8.20.0",
+    "eslint": "^10.12.0",
+    "jsqr": "^1.4.0",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.71.1",
+    "vite": "^8.3.3",
+    "vitest": "^5.0.3"
+  }
+}
