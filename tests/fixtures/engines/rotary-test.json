@@ -1,0 +1,59 @@
+{
+  "id": "rotary-test",
+  "name": "Test 1.3 Twin-Rotor Turbo",
+  "inspiredBy": "Test fixture (no real car)",
+  "set": "jdm",
+  "notes": "Phase 2a DSP test fixture. Invented but plausible values; not sourced, not a real car. 13B-like: cycleDeg 1080, rotor 1 faces 0/360/720 (bank 0), rotor 2 faces 180/540/900 (bank 1); sequential twin turbos.",
+  "spec": {
+    "layout": {"type": "rotary", "bankAngleDeg": 0, "crank": "n/a", "displacementL": 1.31},
+    "cycleDeg": 1080,
+    "combustion": [
+      {"angleDeg": 0, "bank": 0},
+      {"angleDeg": 360, "bank": 0},
+      {"angleDeg": 720, "bank": 0},
+      {"angleDeg": 180, "bank": 1},
+      {"angleDeg": 540, "bank": 1},
+      {"angleDeg": 900, "bank": 1}
+    ],
+    "rpm": {
+      "idle": 800,
+      "redline": 8000,
+      "limiter": {"type": "fuel-hard", "rpm": 8200, "hysteresisRpm": 200}
+    },
+    "aspiration": {"type": "turbo", "turbo": {"count": 2, "layout": "sequential"}, "supercharger": null},
+    "gearbox": {
+      "type": "manual",
+      "overallRatios": [14.27, 8.28, 5.7, 4.1, 3.48, 2.95],
+      "drivenTyre": "255/40R17",
+      "shiftTimeS": 0.3,
+      "tc": null
+    },
+    "sources": {
+      "layout": ["fixture"],
+      "combustion": ["fixture"],
+      "rpm": ["fixture"],
+      "aspiration": ["fixture"],
+      "gearbox": ["fixture"]
+    }
+  },
+  "voicing": {
+    "pulse": {"widthDeg": 260, "alpha": 6, "beta": 2.5, "evoOffsetDeg": 140, "cycleAsymmetry": 0.1},
+    "headersM": [0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
+    "collectors": [{"banks": [0, 1], "lengthM": 0.3}],
+    "turbine": {"reflection": 0.4, "lpHz": 1600},
+    "exhaust": {
+      "midPipeM": 2.2,
+      "mufflerSectionsM": [0.25, 0.4],
+      "mufflerAction": 0.5,
+      "tailpipeM": 0.55,
+      "valve": {"fitted": false, "openGainDb": 0}
+    },
+    "intake": {"runnerM": 0.28, "helmholtzHz": 170, "gain": 0.45},
+    "forcedInduction": {"spoolTimeS": 0.5, "maxShaftKrpm": 200, "lift": "bov", "cabinGainDb": -12},
+    "mechanical": {"blockGain": 0.3, "valvetrainGain": 0.1},
+    "overrun": {"crackleRate": 0.9, "fuelCutResumeRpm": 1300},
+    "cabin": {"lowpassHz": 580},
+    "launchRpm": 3600,
+    "estimated": true
+  }
+}

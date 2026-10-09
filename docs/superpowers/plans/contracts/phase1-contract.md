@@ -365,3 +365,11 @@ No real coordinates anywhere; GPX inputs are never committed.
   each kickdown drops ≤ 2 gears. Task 8 identifies kickdowns by the A4 condition on that step (not
   by the load-map classifier) and its DCT7 demo expectation becomes a single kickdown at ≈ 13.45 s
   (Comfort 4→3, Sport 4→2).
+- **A11 EPA N/V screening (2026-10-08):** when an engine's variant matches an EPA Test Car List row
+  (same top gear and axle) but the computed N/V misses ±2.5 % after re-checking tyre, final-drive
+  mapping and extra gear stages (e.g. the EPA test car ran a different tyre size), the row is
+  screened out with a comment above `EPA_NV` stating the measured deviation; the tolerance is never
+  loosened. A deviation > 4 % is treated as a data error and must be fixed. (Applied: i4-turbo-20
+  +2.66–3.05 %, v8-twinturbo-40 +3.65 %.) Engines whose per-gear ratios or firing order come only
+  from secondary sources stay, with the gap stated in `notes` (v12-na-65; v10-na-52 shares the
+  Audi R8 V10 short gear set).

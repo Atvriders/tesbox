@@ -16,7 +16,10 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "gen:anchor": "tsx tools/make-anchor-wav.ts",
-    "verify": "npm run lint && npm run typecheck && npm test && npm run build && npm run test:e2e"
+    "verify": "npm run lint && npm run typecheck && npm test && npm run build && npm run test:e2e",
+    "render": "tsx tools/render.ts",
+    "check:alloc": "node --expose-gc --import tsx tools/check-alloc.ts",
+    "bench:dsp": "tsx tools/bench-dsp.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10",

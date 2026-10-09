@@ -437,3 +437,8 @@ ITU-R BS.1770 (true peak), Kaiser window design.
   (spec §1.3c), with `renderSegment` accepting `trimDb`.
 - **B17 ESLint hot-path names:** the B1 name list uses `input[A-Za-z]*` (not bare `input`) so
   `inputPair()` and similar per-sample methods are covered.
+- **B6 (revised 2026-10-08, supersedes B6):** CI gate `FULL_FLOOR = 5×` realtime on the best of 3
+  windows (catches gross regressions only); `FULL_TARGET = 10×` is the reported development target.
+  Reason: on Node 22 (CI's version) the Full tier measured 10.1–11.1× best-of-3 on the dev host, so a
+  10× gate flaked. In-car headroom is measured by the Phase 0 probe; raising DSP speed (boxing-free
+  block paths, B2-revised remedy) is a Phase 4 hardening item.

@@ -1,0 +1,61 @@
+{
+  "id": "v8-flatplane-test",
+  "name": "Test 4.5 Flat-Plane V8 NA",
+  "inspiredBy": "Test fixture (no real car)",
+  "set": "exotic",
+  "notes": "Phase 2a DSP test fixture. Invented but plausible values; not sourced, not a real car. Flat-plane 1-5-3-7-4-8-2-6, banks alternate every 90 deg, equal headers (B8), single muffler section.",
+  "spec": {
+    "layout": {"type": "v", "bankAngleDeg": 90, "crank": "flat-plane", "displacementL": 4.5},
+    "cycleDeg": 720,
+    "combustion": [
+      {"angleDeg": 0, "bank": 0},
+      {"angleDeg": 540, "bank": 0},
+      {"angleDeg": 180, "bank": 0},
+      {"angleDeg": 360, "bank": 0},
+      {"angleDeg": 90, "bank": 1},
+      {"angleDeg": 630, "bank": 1},
+      {"angleDeg": 270, "bank": 1},
+      {"angleDeg": 450, "bank": 1}
+    ],
+    "rpm": {
+      "idle": 900,
+      "redline": 9000,
+      "limiter": {"type": "ignition-hard", "rpm": 9100, "hysteresisRpm": 150}
+    },
+    "aspiration": {"type": "na", "turbo": null, "supercharger": null},
+    "gearbox": {
+      "type": "dct",
+      "overallRatios": [13.68, 9.72, 7.24, 5.73, 4.57, 3.73, 2.8],
+      "drivenTyre": "295/35R20",
+      "shiftTimeS": 0.1,
+      "tc": null
+    },
+    "sources": {
+      "layout": ["fixture"],
+      "combustion": ["fixture"],
+      "rpm": ["fixture"],
+      "aspiration": ["fixture"],
+      "gearbox": ["fixture"]
+    }
+  },
+  "voicing": {
+    "pulse": {"widthDeg": 45, "alpha": 10, "beta": 4.5, "evoOffsetDeg": 140, "cycleAsymmetry": 0.05},
+    "headersM": [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
+    "collectors": [{"banks": [0], "lengthM": 0.3}, {"banks": [1], "lengthM": 0.3}],
+    "turbine": null,
+    "exhaust": {
+      "midPipeM": 1.2,
+      "mufflerSectionsM": [0.3],
+      "mufflerAction": 0.4,
+      "tailpipeM": 0.4,
+      "valve": {"fitted": true, "openGainDb": 5}
+    },
+    "intake": {"runnerM": 0.25, "helmholtzHz": 180, "gain": 0.5},
+    "forcedInduction": null,
+    "mechanical": {"blockGain": 0.3, "valvetrainGain": 0.1},
+    "overrun": {"crackleRate": 0.9, "fuelCutResumeRpm": 1400},
+    "cabin": {"lowpassHz": 680},
+    "launchRpm": 4950,
+    "estimated": true
+  }
+}

@@ -9,6 +9,7 @@ playwright-report
 blob-report
 playwright
 lab-refs
+renders
 docs
 *.log
 .env

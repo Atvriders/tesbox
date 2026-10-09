@@ -1,0 +1,61 @@
+{
+  "id": "v8-crossplane-test",
+  "name": "Test 6.2 Cross-Plane V8 NA",
+  "inspiredBy": "Test fixture (no real car)",
+  "set": "american",
+  "notes": "Phase 2a DSP test fixture. Invented but plausible values; not sourced, not a real car. 90-deg cross-plane 1-8-4-3-6-5-7-2; odd cylinders bank 0, even bank 1; unequal headers.",
+  "spec": {
+    "layout": {"type": "v", "bankAngleDeg": 90, "crank": "cross-plane", "displacementL": 6.16},
+    "cycleDeg": 720,
+    "combustion": [
+      {"angleDeg": 0, "bank": 0},
+      {"angleDeg": 630, "bank": 1},
+      {"angleDeg": 270, "bank": 0},
+      {"angleDeg": 180, "bank": 1},
+      {"angleDeg": 450, "bank": 0},
+      {"angleDeg": 360, "bank": 1},
+      {"angleDeg": 540, "bank": 0},
+      {"angleDeg": 90, "bank": 1}
+    ],
+    "rpm": {
+      "idle": 650,
+      "redline": 6600,
+      "limiter": {"type": "fuel-hard", "rpm": 6700, "hysteresisRpm": 250}
+    },
+    "aspiration": {"type": "na", "turbo": null, "supercharger": null},
+    "gearbox": {
+      "type": "tc-auto",
+      "overallRatios": [14.84, 9.86, 6.62, 5.26, 4.06, 3.15, 2.65, 2.11],
+      "drivenTyre": "305/30R20",
+      "shiftTimeS": 0.2,
+      "tc": {"stallRpmWot": 2400, "lockupTurbineRpm": 1300, "couplingSR": 0.88}
+    },
+    "sources": {
+      "layout": ["fixture"],
+      "combustion": ["fixture"],
+      "rpm": ["fixture"],
+      "aspiration": ["fixture"],
+      "gearbox": ["fixture"]
+    }
+  },
+  "voicing": {
+    "pulse": {"widthDeg": 65, "alpha": 8, "beta": 3.5, "evoOffsetDeg": 140, "cycleAsymmetry": 0.25},
+    "headersM": [0.58, 0.66, 0.62, 0.7, 0.66, 0.58, 0.7, 0.62],
+    "collectors": [{"banks": [0], "lengthM": 0.4}, {"banks": [1], "lengthM": 0.45}],
+    "turbine": null,
+    "exhaust": {
+      "midPipeM": 1.6,
+      "mufflerSectionsM": [0.24, 0.38, 0.52],
+      "mufflerAction": 0.5,
+      "tailpipeM": 0.6,
+      "valve": {"fitted": true, "openGainDb": 4}
+    },
+    "intake": {"runnerM": 0.4, "helmholtzHz": 160, "gain": 0.45},
+    "forcedInduction": null,
+    "mechanical": {"blockGain": 0.3, "valvetrainGain": 0.1},
+    "overrun": {"crackleRate": 0.7, "fuelCutResumeRpm": 1150},
+    "cabin": {"lowpassHz": 560},
+    "launchRpm": 3650,
+    "estimated": true
+  }
+}

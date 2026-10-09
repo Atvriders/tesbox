@@ -21,3 +21,9 @@ lab-refs/
 .DS_Store
 .idea/
 .vscode/
+
+# Phone GPX logs contain real positions: never commit them
+*.gpx
+
+# tesbox-render output (local listening only)
+renders/

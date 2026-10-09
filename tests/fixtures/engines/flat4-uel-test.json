@@ -1,0 +1,57 @@
+{
+  "id": "flat4-uel-test",
+  "name": "Test 2.5 Turbo Flat-4 (unequal headers)",
+  "inspiredBy": "Test fixture (no real car)",
+  "set": "jdm",
+  "notes": "Phase 2a DSP test fixture. Invented but plausible values; not sourced, not a real car. Boxer 1-3-2-4; bank 0 (cyl 1, 3) short 0.45 m headers, bank 1 (cyl 2, 4) long 0.75 m; one up-pipe collector; no valve.",
+  "spec": {
+    "layout": {"type": "flat", "bankAngleDeg": 180, "crank": "n/a", "displacementL": 2.46},
+    "cycleDeg": 720,
+    "combustion": [
+      {"angleDeg": 0, "bank": 0},
+      {"angleDeg": 360, "bank": 1},
+      {"angleDeg": 180, "bank": 0},
+      {"angleDeg": 540, "bank": 1}
+    ],
+    "rpm": {
+      "idle": 750,
+      "redline": 6700,
+      "limiter": {"type": "fuel-hard", "rpm": 6800, "hysteresisRpm": 300}
+    },
+    "aspiration": {"type": "turbo", "turbo": {"count": 1, "layout": "single"}, "supercharger": null},
+    "gearbox": {
+      "type": "manual",
+      "overallRatios": [14.2, 8.74, 5.93, 4.45, 3.78, 2.96],
+      "drivenTyre": "245/40R18",
+      "shiftTimeS": 0.3,
+      "tc": null
+    },
+    "sources": {
+      "layout": ["fixture"],
+      "combustion": ["fixture"],
+      "rpm": ["fixture"],
+      "aspiration": ["fixture"],
+      "gearbox": ["fixture"]
+    }
+  },
+  "voicing": {
+    "pulse": {"widthDeg": 70, "alpha": 8, "beta": 3.5, "evoOffsetDeg": 140, "cycleAsymmetry": 0.25},
+    "headersM": [0.45, 0.75, 0.45, 0.75],
+    "collectors": [{"banks": [0, 1], "lengthM": 0.6}],
+    "turbine": {"reflection": 0.5, "lpHz": 1400},
+    "exhaust": {
+      "midPipeM": 1.5,
+      "mufflerSectionsM": [0.22, 0.35, 0.62],
+      "mufflerAction": 0.6,
+      "tailpipeM": 0.5,
+      "valve": {"fitted": false, "openGainDb": 0}
+    },
+    "intake": {"runnerM": 0.3, "helmholtzHz": 130, "gain": 0.4},
+    "forcedInduction": {"spoolTimeS": 0.7, "maxShaftKrpm": 170, "lift": "bov", "cabinGainDb": -14},
+    "mechanical": {"blockGain": 0.3, "valvetrainGain": 0.1},
+    "overrun": {"crackleRate": 0.5, "fuelCutResumeRpm": 1250},
+    "cabin": {"lowpassHz": 600},
+    "launchRpm": 3000,
+    "estimated": true
+  }
+}

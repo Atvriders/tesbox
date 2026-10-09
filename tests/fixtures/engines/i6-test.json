@@ -1,0 +1,59 @@
+{
+  "id": "i6-test",
+  "name": "Test 3.0 Inline-6 NA",
+  "inspiredBy": "Test fixture (no real car)",
+  "set": "jdm",
+  "notes": "Phase 2a DSP test fixture. Invented but plausible values; not sourced, not a real car. Even-fire 1-5-3-6-2-4, two 3-into-1 collectors (cyl 1-3, 4-6), equal headers (B8), no valve.",
+  "spec": {
+    "layout": {"type": "inline", "bankAngleDeg": 0, "crank": "n/a", "displacementL": 2.99},
+    "cycleDeg": 720,
+    "combustion": [
+      {"angleDeg": 0, "bank": 0},
+      {"angleDeg": 480, "bank": 0},
+      {"angleDeg": 240, "bank": 0},
+      {"angleDeg": 600, "bank": 1},
+      {"angleDeg": 120, "bank": 1},
+      {"angleDeg": 360, "bank": 1}
+    ],
+    "rpm": {
+      "idle": 700,
+      "redline": 7000,
+      "limiter": {"type": "fuel-hard", "rpm": 7100, "hysteresisRpm": 200}
+    },
+    "aspiration": {"type": "na", "turbo": null, "supercharger": null},
+    "gearbox": {
+      "type": "manual",
+      "overallRatios": [14.22, 8.03, 5.33, 4.08, 3.46, 2.94],
+      "drivenTyre": "275/35R19",
+      "shiftTimeS": 0.3,
+      "tc": null
+    },
+    "sources": {
+      "layout": ["fixture"],
+      "combustion": ["fixture"],
+      "rpm": ["fixture"],
+      "aspiration": ["fixture"],
+      "gearbox": ["fixture"]
+    }
+  },
+  "voicing": {
+    "pulse": {"widthDeg": 50, "alpha": 9, "beta": 4, "evoOffsetDeg": 140, "cycleAsymmetry": 0.05},
+    "headersM": [0.55, 0.55, 0.55, 0.55, 0.55, 0.55],
+    "collectors": [{"banks": [0], "lengthM": 0.35}, {"banks": [1], "lengthM": 0.35}],
+    "turbine": null,
+    "exhaust": {
+      "midPipeM": 1.3,
+      "mufflerSectionsM": [0.2, 0.32, 0.44, 0.62],
+      "mufflerAction": 0.65,
+      "tailpipeM": 0.5,
+      "valve": {"fitted": false, "openGainDb": 0}
+    },
+    "intake": {"runnerM": 0.35, "helmholtzHz": 150, "gain": 0.4},
+    "forcedInduction": null,
+    "mechanical": {"blockGain": 0.3, "valvetrainGain": 0.1},
+    "overrun": {"crackleRate": 0.4, "fuelCutResumeRpm": 1200},
+    "cabin": {"lowpassHz": 650},
+    "launchRpm": 3850,
+    "estimated": true
+  }
+}

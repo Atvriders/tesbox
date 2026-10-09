@@ -1,0 +1,65 @@
+{
+  "id": "v8-sc-test",
+  "name": "Test 6.2 Supercharged V8",
+  "inspiredBy": "Test fixture (no real car)",
+  "set": "american",
+  "notes": "Phase 2a DSP test fixture. Invented but plausible values; not sourced, not a real car. Cross-plane V8 with a roots blower: whine order 2.4 x 1 x (2 x 4) = 19.2.",
+  "spec": {
+    "layout": {"type": "v", "bankAngleDeg": 90, "crank": "cross-plane", "displacementL": 6.17},
+    "cycleDeg": 720,
+    "combustion": [
+      {"angleDeg": 0, "bank": 0},
+      {"angleDeg": 630, "bank": 1},
+      {"angleDeg": 270, "bank": 0},
+      {"angleDeg": 180, "bank": 1},
+      {"angleDeg": 450, "bank": 0},
+      {"angleDeg": 360, "bank": 1},
+      {"angleDeg": 540, "bank": 0},
+      {"angleDeg": 90, "bank": 1}
+    ],
+    "rpm": {
+      "idle": 750,
+      "redline": 6500,
+      "limiter": {"type": "fuel-soft", "rpm": 6600, "hysteresisRpm": 250}
+    },
+    "aspiration": {
+      "type": "supercharger",
+      "turbo": null,
+      "supercharger": {"kind": "roots", "pulleyRatio": 2.4, "gearRatio": 1, "lobes": 4}
+    },
+    "gearbox": {
+      "type": "tc-auto",
+      "overallRatios": [12.34, 8.23, 5.53, 4.38, 3.38, 2.62, 2.2, 1.76],
+      "drivenTyre": "305/35R20",
+      "shiftTimeS": 0.2,
+      "tc": {"stallRpmWot": 2600, "lockupTurbineRpm": 1400, "couplingSR": 0.86}
+    },
+    "sources": {
+      "layout": ["fixture"],
+      "combustion": ["fixture"],
+      "rpm": ["fixture"],
+      "aspiration": ["fixture"],
+      "gearbox": ["fixture"]
+    }
+  },
+  "voicing": {
+    "pulse": {"widthDeg": 65, "alpha": 8, "beta": 3.5, "evoOffsetDeg": 140, "cycleAsymmetry": 0.2},
+    "headersM": [0.6, 0.68, 0.64, 0.72, 0.68, 0.6, 0.72, 0.64],
+    "collectors": [{"banks": [0], "lengthM": 0.42}, {"banks": [1], "lengthM": 0.48}],
+    "turbine": null,
+    "exhaust": {
+      "midPipeM": 1.7,
+      "mufflerSectionsM": [0.26, 0.42],
+      "mufflerAction": 0.55,
+      "tailpipeM": 0.6,
+      "valve": {"fitted": true, "openGainDb": 4}
+    },
+    "intake": {"runnerM": 0.45, "helmholtzHz": 160, "gain": 0.45},
+    "forcedInduction": {"spoolTimeS": 0.05, "maxShaftKrpm": 15, "lift": "bov", "cabinGainDb": -12},
+    "mechanical": {"blockGain": 0.3, "valvetrainGain": 0.1},
+    "overrun": {"crackleRate": 0.6, "fuelCutResumeRpm": 1250},
+    "cabin": {"lowpassHz": 540},
+    "launchRpm": 2900,
+    "estimated": true
+  }
+}
