@@ -1,0 +1,443 @@
+[
+  {
+    "ref": "cybertruck-awd-2026",
+    "A_N": 171.88,
+    "B_Nps_m": 4.0896,
+    "C_Ns2_m2": 0.58984,
+    "source": "EPA 2026 Test Car List: Tesla Cybertruck AWD (621 hp, ETW 7000 lb; A 38.64 lbf, B 0.411 lbf/mph, C 0.0265 lbf/mph²) — same coefficients in the MY2025 file; also used as the closest proxy for the tri-motor Cyberbeast (same body), which has no EPA row"
+  },
+  {
+    "ref": "cybertruck-lr-rwd-2025",
+    "A_N": 143.1,
+    "B_Nps_m": 2.0309,
+    "C_Ns2_m2": 0.71227,
+    "source": "EPA 2025 Test Car List: Tesla Cybertruck Long Range (321 hp, ETW 6500 lb; A 32.17 lbf, B 0.2041 lbf/mph, C 0.032 lbf/mph²) — 2-Wheel Drive, Rear row (CR125-00760); the file's second 'Cybertruck Long Range' row (CR125-00756, 34.55 / 0.3853 / 0.03198) is coded All Wheel Drive but shares the single-motor test group STSLT00.0L1C, 321 hp and ETW 6500 — fueleconomy.gov lists both 2025 Long Range configurations (standard and 20in Cyber wheels) as Rear-Wheel Drive with one 240 kW motor, so it is not a separate AWD trim; same rows in the MY2026 file"
+  },
+  {
+    "ref": "model3-2017-lr-awd-2021",
+    "A_N": 155.6,
+    "B_Nps_m": 0.8627,
+    "C_Ns2_m2": 0.33165,
+    "source": "EPA 2021 Test Car List: Tesla Model 3 Long Range AWD (393 hp, ETW 4250 lb; A 34.98 lbf, B 0.0867 lbf/mph, C 0.0149 lbf/mph²) — Test Vehicle ID 3D221-731644; the MY2022 row (3D322-028886, 393 hp: 34.98/0.0865/0.0148) is nearly identical; the MY2018-2020 rows (252 hp) and the MY2023 row (370 hp, 34.08/0.2413/0.0129) differ"
+  },
+  {
+    "ref": "model3-2017-lr-rwd-2018",
+    "A_N": 171.3,
+    "B_Nps_m": -0.807,
+    "C_Ns2_m2": 0.35836,
+    "source": "EPA 2018 Test Car List: Tesla Long Range (258 hp, ETW 4250 lb; A 38.51 lbf, B -0.0811 lbf/mph, C 0.0161 lbf/mph²) — Model 3 Long Range RWD: Represented Test Veh Make \"Tesla Model 3\", Test Vehicle ID 3R217-R00012, 2-Wheel Drive, Rear; identical row in the MY2017, MY2019 and MY2020 files"
+  },
+  {
+    "ref": "model3-2017-mid-range-2019",
+    "A_N": 164.18,
+    "B_Nps_m": -1.1244,
+    "C_Ns2_m2": 0.36659,
+    "source": "EPA 2019 Test Car List: Tesla Mid Range RWD (270 hp, ETW 4250 lb; A 36.91 lbf, B -0.113 lbf/mph, C 0.01647 lbf/mph²) — Model 3 Mid Range RWD: Represented Test Veh Make \"Tesla Model 3\", Test Vehicle ID 3R118-101926, 2-Wheel Drive, Rear; identical row in the MY2020 file"
+  },
+  {
+    "ref": "model3-2017-performance-2021",
+    "A_N": 218.01,
+    "B_Nps_m": -1.9911,
+    "C_Ns2_m2": 0.44517,
+    "source": "EPA 2021 Test Car List: Tesla Model 3 Performance AWD (430 hp, ETW 4250 lb; A 49.01 lbf, B -0.2001 lbf/mph, C 0.02 lbf/mph²) — Test Vehicle ID 3D221-731645; identical row in the MY2022 and MY2023 files"
+  },
+  {
+    "ref": "model3-2017-rwd-2022",
+    "A_N": 165.34,
+    "B_Nps_m": 0.4677,
+    "C_Ns2_m2": 0.32052,
+    "source": "EPA 2022 Test Car List: Tesla Model 3 RWD (257 hp, ETW 4250 lb; A 37.17 lbf, B 0.047 lbf/mph, C 0.0144 lbf/mph²) — Test Vehicle ID 3R022-043763; identical row in the MY2023 file, and the same coefficients in the MY2021 file as Model 3 Standard Range Plus RWD (3R121-000670, 256 hp)"
+  },
+  {
+    "ref": "model3-2017-sr-plus-2020",
+    "A_N": 131.76,
+    "B_Nps_m": 2.4528,
+    "C_Ns2_m2": 0.24929,
+    "source": "EPA 2020 Test Car List: Tesla Model 3 Standard Range Plus RWD (282 hp, ETW 3875 lb; A 29.62 lbf, B 0.2465 lbf/mph, C 0.0112 lbf/mph²) — Test Vehicle ID 3R020-429179; the MY2019 SR+ row (36.01/-0.1289/0.01667) and the MY2021 SR+ rows (30.3/0.2129/0.0127 and 37.17/0.047/0.0144) differ"
+  },
+  {
+    "ref": "model3-2017-standard-range-2019",
+    "A_N": 160.18,
+    "B_Nps_m": -1.2826,
+    "C_Ns2_m2": 0.37105,
+    "source": "EPA 2019 Test Car List: Tesla Model 3 Standard Range RWD (282 hp, ETW 3875 lb; A 36.01 lbf, B -0.1289 lbf/mph, C 0.01667 lbf/mph²) — Test Vehicle ID 3R019-297396; the MY2019 Standard Range Plus RWD row (3R019-101926) has identical coefficients"
+  },
+  {
+    "ref": "model3-highland-lr-awd-2026",
+    "A_N": 137.81,
+    "B_Nps_m": 1.5881,
+    "C_Ns2_m2": 0.31384,
+    "source": "EPA 2026 Test Car List: Tesla Model 3 Long Range AWD-E (397 hp, ETW 4250 lb; A 30.98 lbf, B 0.1596 lbf/mph, C 0.0141 lbf/mph²) — same coefficients in the MY2024 and MY2025 files"
+  },
+  {
+    "ref": "model3-highland-lr-rwd-2024",
+    "A_N": 120.19,
+    "B_Nps_m": 2.8587,
+    "C_Ns2_m2": 0.27155,
+    "source": "EPA 2024 Test Car List: Tesla Model 3 Long Range RWD (302 hp, ETW 4250 lb; A 27.02 lbf, B 0.2873 lbf/mph, C 0.0122 lbf/mph²)"
+  },
+  {
+    "ref": "model3-highland-performance-2026",
+    "A_N": 163.78,
+    "B_Nps_m": 1.3791,
+    "C_Ns2_m2": 0.34389,
+    "source": "EPA 2026 Test Car List: Tesla Model 3 Performance AWD (510 hp, ETW 4250 lb; A 36.82 lbf, B 0.1386 lbf/mph, C 0.01545 lbf/mph²)"
+  },
+  {
+    "ref": "model3-highland-rwd-2024",
+    "A_N": 120.19,
+    "B_Nps_m": 2.8587,
+    "C_Ns2_m2": 0.27155,
+    "source": "EPA 2024 Test Car List: Tesla Model 3 RWD (257 hp, ETW 4250 lb; A 27.02 lbf, B 0.2873 lbf/mph, C 0.0122 lbf/mph²) — EPA row lists the drive system as 4-Wheel Drive (data-entry error; the car is RWD); coefficients equal the Long Range RWD row"
+  },
+  {
+    "ref": "model3-highland-standard-2026",
+    "A_N": 124.51,
+    "B_Nps_m": 1.1662,
+    "C_Ns2_m2": 0.29715,
+    "source": "EPA 2026 Test Car List: Tesla Model 3 Standard RWD (18in Wheels) (305 hp, ETW 4000 lb; A 27.99 lbf, B 0.1172 lbf/mph, C 0.01335 lbf/mph²)"
+  },
+  {
+    "ref": "models-2012-60-2013",
+    "A_N": 177.24,
+    "B_Nps_m": 1.4454,
+    "C_Ns2_m2": 0.35366,
+    "source": "EPA 2013 Test Car List: Tesla S1 (301 hp, ETW 4750 lb; A 39.846 lbf, B 0.14526 lbf/mph, C 0.015889 lbf/mph²) — Model S single-motor RWD, Test Vehicle ID MS113-L1S, test group DTSLV00.0L1S (fueleconomy.gov: 2013 Model S 40/60/85 kWh); row S2 (MS212-L1S) carries identical Target coefficients and ETW; shared by the 40 (a software-limited 60 kWh pack) and the 60"
+  },
+  {
+    "ref": "models-2012-70-2016",
+    "A_N": 179.49,
+    "B_Nps_m": 1.3174,
+    "C_Ns2_m2": 0.34656,
+    "source": "EPA 2016 Test Car List: Tesla 75R (376 hp, ETW 5000 lb; A 40.35 lbf, B 0.1324 lbf/mph, C 0.01557 lbf/mph²) — proxy for the 2015-2016 Model S 70 (RWD), which has no EPA test car row: closest single-motor RWD Model S row (Test Vehicle ID DS216-L1S; the 60R row has the same Target coefficients); facelift body"
+  },
+  {
+    "ref": "models-2012-70d-2015",
+    "A_N": 161.16,
+    "B_Nps_m": 1.8965,
+    "C_Ns2_m2": 0.38863,
+    "source": "EPA 2015 Test Car List: Tesla 70D (376 hp, ETW 5000 lb; A 36.23 lbf, B 0.1906 lbf/mph, C 0.01746 lbf/mph²) — Test Vehicle ID DS215-L2S; same Target coefficients as the 85D row"
+  },
+  {
+    "ref": "models-2012-85-2012",
+    "A_N": 194.03,
+    "B_Nps_m": 1.9742,
+    "C_Ns2_m2": 0.35802,
+    "source": "EPA 2012 Test Car List: Tesla S3 (362 hp, ETW 4500 lb; A 43.62 lbf, B 0.1984 lbf/mph, C 0.016085 lbf/mph²) — Model S single-motor RWD, Test Vehicle ID MS312-L1S, test group CTSLV00.0L1S = the only MY2012 certification (fueleconomy.gov 2012 Model S, 85 kWh, 265 mi); \"MS3\" read as non-Performance 85 kWh by the pattern of later Tesla IDs (DS315 85D, DP315 P85D; P = Performance); no single-motor Performance test car exists in the 2012-2016 files, so this row is also the same-pack proxy for the P85 and P85+; ETW as filed"
+  },
+  {
+    "ref": "models-2012-85d-2015",
+    "A_N": 161.16,
+    "B_Nps_m": 1.8965,
+    "C_Ns2_m2": 0.38863,
+    "source": "EPA 2015 Test Car List: Tesla 85D (376 hp, ETW 5000 lb; A 36.23 lbf, B 0.1906 lbf/mph, C 0.01746 lbf/mph²) — Test Vehicle ID DS315-L2S; same Target coefficients as the 70D row"
+  },
+  {
+    "ref": "models-2012-90d-2016",
+    "A_N": 174.55,
+    "B_Nps_m": 1.4856,
+    "C_Ns2_m2": 0.33699,
+    "source": "EPA 2016 Test Car List: Tesla 90D (376 hp, ETW 5000 lb; A 39.24 lbf, B 0.1493 lbf/mph, C 0.01514 lbf/mph²) — Test Vehicle ID DS316-L2S"
+  },
+  {
+    "ref": "models-2012-p85d-2015",
+    "A_N": 186.42,
+    "B_Nps_m": 0.2557,
+    "C_Ns2_m2": 0.43649,
+    "source": "EPA 2015 Test Car List: Tesla P85D (449 hp, ETW 5250 lb; A 41.91 lbf, B 0.0257 lbf/mph, C 0.01961 lbf/mph²) — Test Vehicle ID DP315-L2S (the MY2014 row DP314-L2S has the same A but B 0.1389, C 0.0185)"
+  },
+  {
+    "ref": "models-2012-p90d-2016",
+    "A_N": 184.65,
+    "B_Nps_m": 2.215,
+    "C_Ns2_m2": 0.31228,
+    "source": "EPA 2016 Test Car List: Tesla P90D (376 hp, ETW 5250 lb; A 41.51 lbf, B 0.2226 lbf/mph, C 0.01403 lbf/mph²) — Test Vehicle ID DP316-L2S; rated hp as filed (376 hp appears on every MY2016 Model S row, incl. the P100D), so the catalogue power comes from Tesla"
+  },
+  {
+    "ref": "models-2016-100d-2017",
+    "A_N": 180.24,
+    "B_Nps_m": 1.6687,
+    "C_Ns2_m2": 0.35925,
+    "source": "EPA 2017 Test Car List: Tesla 100D (376 hp, ETW 5250 lb; A 40.52 lbf, B 0.1677 lbf/mph, C 0.01614 lbf/mph²) — Model S 100D (Test Vehicle ID DS417-172225, 4-Wheel Drive), not the Model X 100D row XB417-026625; repeats unchanged in the MY2018 file"
+  },
+  {
+    "ref": "models-2016-60-2016",
+    "A_N": 179.49,
+    "B_Nps_m": 1.3174,
+    "C_Ns2_m2": 0.34656,
+    "source": "EPA 2016 Test Car List: Tesla 60R (376 hp, ETW 5000 lb; A 40.35 lbf, B 0.1324 lbf/mph, C 0.01557 lbf/mph²) — Model S 60 (Test Vehicle ID MS116-L1S, 2-Wheel Drive, Rear; the 2012-2018 files list only the trim); same Target coefficients as the 75R row; the row repeats unchanged in the MY2017 file"
+  },
+  {
+    "ref": "models-2016-60d-2016",
+    "A_N": 166.23,
+    "B_Nps_m": 1.8329,
+    "C_Ns2_m2": 0.33566,
+    "source": "EPA 2016 Test Car List: Tesla 60D (376 hp, ETW 5000 lb; A 37.37 lbf, B 0.1842 lbf/mph, C 0.01508 lbf/mph²) — Model S 60D (Test Vehicle ID DS116-L2S, 4-Wheel Drive), not the Model X 60D row XB116-L2X; same Target coefficients as the 75D row; repeats unchanged in the MY2017 file"
+  },
+  {
+    "ref": "models-2016-75-2016",
+    "A_N": 179.49,
+    "B_Nps_m": 1.3174,
+    "C_Ns2_m2": 0.34656,
+    "source": "EPA 2016 Test Car List: Tesla 75R (376 hp, ETW 5000 lb; A 40.35 lbf, B 0.1324 lbf/mph, C 0.01557 lbf/mph²) — Model S 75 (Test Vehicle ID DS216-L1S, 2-Wheel Drive, Rear); repeats unchanged in the MY2017 and MY2018 files"
+  },
+  {
+    "ref": "models-2016-75d-2016",
+    "A_N": 166.23,
+    "B_Nps_m": 1.8329,
+    "C_Ns2_m2": 0.33566,
+    "source": "EPA 2016 Test Car List: Tesla 75D (376 hp, ETW 5000 lb; A 37.37 lbf, B 0.1842 lbf/mph, C 0.01508 lbf/mph²) — Model S 75D (Test Vehicle ID DS216-L2S, 4-Wheel Drive), not the Model X 75D row XB216-L2X; repeats unchanged in the MY2017 and MY2018 files"
+  },
+  {
+    "ref": "models-2016-90d-2016",
+    "A_N": 174.55,
+    "B_Nps_m": 1.4856,
+    "C_Ns2_m2": 0.33699,
+    "source": "EPA 2016 Test Car List: Tesla 90D (376 hp, ETW 5000 lb; A 39.24 lbf, B 0.1493 lbf/mph, C 0.01514 lbf/mph²) — Model S 90D (Test Vehicle ID DS316-L2S, 4-Wheel Drive), not the Model X 90D row XB316-L2X; repeats unchanged in the MY2017 file"
+  },
+  {
+    "ref": "models-2016-p100d-2016",
+    "A_N": 183.93,
+    "B_Nps_m": 2.6568,
+    "C_Ns2_m2": 0.30494,
+    "source": "EPA 2016 Test Car List: Tesla P100D (376 hp, ETW 5250 lb; A 41.35 lbf, B 0.267 lbf/mph, C 0.0137 lbf/mph²) — Model S P100D (Test Vehicle ID DP416-L2S, 4-Wheel Drive), not the Model X P100D row XP416-L2X; repeats unchanged in the MY2017 and MY2018 files"
+  },
+  {
+    "ref": "models-2016-p90d-2016",
+    "A_N": 184.65,
+    "B_Nps_m": 2.215,
+    "C_Ns2_m2": 0.31228,
+    "source": "EPA 2016 Test Car List: Tesla P90D (376 hp, ETW 5250 lb; A 41.51 lbf, B 0.2226 lbf/mph, C 0.01403 lbf/mph²) — Model S P90D (Test Vehicle ID DP316-L2S, 4-Wheel Drive); repeats unchanged in the MY2017 file"
+  },
+  {
+    "ref": "models-2018-100d-2018",
+    "A_N": 180.24,
+    "B_Nps_m": 1.6687,
+    "C_Ns2_m2": 0.35925,
+    "source": "EPA 2018 Test Car List: Tesla 100D (376 hp, ETW 5250 lb; A 40.52 lbf, B 0.1677 lbf/mph, C 0.01614 lbf/mph²) — Model S 100D (Test Vehicle ID DS417-172225, 4-Wheel Drive), not the Model X 100D row XB417-026625; unchanged in the MY2017 and MY2019 files"
+  },
+  {
+    "ref": "models-2018-75d-2018",
+    "A_N": 166.23,
+    "B_Nps_m": 1.8329,
+    "C_Ns2_m2": 0.33566,
+    "source": "EPA 2018 Test Car List: Tesla 75D (376 hp, ETW 5000 lb; A 37.37 lbf, B 0.1842 lbf/mph, C 0.01508 lbf/mph²) — Model S 75D (Test Vehicle ID DS216-L2S, 4-Wheel Drive), not the Model X 75D row XB216-L2X; unchanged in the MY2016, MY2017 and MY2019 files"
+  },
+  {
+    "ref": "models-2018-long-range-2019",
+    "A_N": 184.16,
+    "B_Nps_m": 1.5841,
+    "C_Ns2_m2": 0.36392,
+    "source": "EPA 2019 Test Car List: Tesla Model S Long Range (398 hp, ETW 5250 lb; A 41.4 lbf, B 0.1592 lbf/mph, C 0.01635 lbf/mph²) — Test Vehicle ID SD219-262105; unchanged in the MY2020 file"
+  },
+  {
+    "ref": "models-2018-long-range-plus-2020",
+    "A_N": 136.16,
+    "B_Nps_m": 6.418,
+    "C_Ns2_m2": 0.20923,
+    "source": "EPA 2020 Test Car List: Tesla Model S Long Range Plus (534 hp, ETW 5000 lb; A 30.61 lbf, B 0.645 lbf/mph, C 0.0094 lbf/mph²) — Test Vehicle ID SD220-381503 (the MY2021 file re-tests as SD221-381503: 489 hp, 33.4 / 0.5032 / 0.0106)"
+  },
+  {
+    "ref": "models-2018-p100d-2018",
+    "A_N": 183.93,
+    "B_Nps_m": 2.6568,
+    "C_Ns2_m2": 0.30494,
+    "source": "EPA 2018 Test Car List: Tesla P100D (376 hp, ETW 5250 lb; A 41.35 lbf, B 0.267 lbf/mph, C 0.0137 lbf/mph²) — Model S P100D (Test Vehicle ID DP416-L2S, 4-Wheel Drive), not the Model X P100D row XP416-L2X; unchanged in the MY2016, MY2017 and MY2019 files"
+  },
+  {
+    "ref": "models-2018-performance-2020",
+    "A_N": 239.76,
+    "B_Nps_m": 0.374,
+    "C_Ns2_m2": 0.35836,
+    "source": "EPA 2020 Test Car List: Tesla Model S Performance (19\" Wheel) (580 hp, ETW 5250 lb; A 53.9 lbf, B 0.03759 lbf/mph, C 0.0161 lbf/mph²) — Test Vehicle ID SD219-295248 (the 21\" row has A 55.1 lbf); A = 53.9 lbf is high but is the EPA Target value; unchanged in the MY2019 file (the MY2021 file re-tests as SD221-405432: 34.6 / 0.4888 / 0.0125)"
+  },
+  {
+    "ref": "models-2018-standard-range-2019",
+    "A_N": 178.9,
+    "B_Nps_m": 0.601,
+    "C_Ns2_m2": 0.38017,
+    "source": "EPA 2019 Test Car List: Tesla Model S Standard Range (534 hp, ETW 5000 lb; A 40.218 lbf, B 0.0604 lbf/mph, C 0.01708 lbf/mph²) — Test Vehicle ID SD019-271490; unchanged in the MY2020 file"
+  },
+  {
+    "ref": "models-2021-long-range-2026",
+    "A_N": 117.3,
+    "B_Nps_m": 3.0667,
+    "C_Ns2_m2": 0.30939,
+    "source": "EPA 2026 Test Car List: Tesla Model S Long Range (658 hp, ETW 4750 lb; A 26.37 lbf, B 0.3082 lbf/mph, C 0.0139 lbf/mph²) — Test Vehicle ID SD225-547476; identical Target coefficients in the MY2025 file"
+  },
+  {
+    "ref": "models-2021-plaid-2026",
+    "A_N": 142.79,
+    "B_Nps_m": 3.1861,
+    "C_Ns2_m2": 0.31073,
+    "source": "EPA 2026 Test Car List: Tesla Model S Plaid (1006 hp, ETW 5000 lb; A 32.1 lbf, B 0.3202 lbf/mph, C 0.01396 lbf/mph²) — Test Vehicle ID ST326-549469 (row without a wheel suffix; the separate \"(21in Wheels)\" row ST326-552315 has A 44.47 lbf)"
+  },
+  {
+    "ref": "models-2021-standard-range-2023",
+    "A_N": 128.95,
+    "B_Nps_m": 4.5692,
+    "C_Ns2_m2": 0.24707,
+    "source": "EPA 2023 Test Car List: Tesla Model S Long Range (662 hp, ETW 4750 lb; A 28.99 lbf, B 0.4592 lbf/mph, C 0.0111 lbf/mph²) — Test Vehicle ID SD321-428324 (same row in the MY2021 and MY2022 files); proxy for the Aug 2023 Standard Range, a firmware-limited Long Range with no EPA row of its own"
+  },
+  {
+    "ref": "modelx-2015-100d-2017",
+    "A_N": 157.87,
+    "B_Nps_m": 1.9622,
+    "C_Ns2_m2": 0.45496,
+    "source": "EPA 2017 Test Car List: Tesla 100D (517 hp, ETW 6000 lb; A 35.49 lbf, B 0.1972 lbf/mph, C 0.02044 lbf/mph²) — Model X 100D (Represented Test Veh Make \"Tesla Model X\", Test Vehicle ID XB417-026625, 4-Wheel Drive), not the Model S 100D row DS417-172225; repeats unchanged in the MY2018 file"
+  },
+  {
+    "ref": "modelx-2015-60d-2016",
+    "A_N": 167.61,
+    "B_Nps_m": 0.4836,
+    "C_Ns2_m2": 0.47633,
+    "source": "EPA 2016 Test Car List: Tesla 60D (417 hp, ETW 5500 lb; A 37.68 lbf, B 0.0486 lbf/mph, C 0.0214 lbf/mph²) — Model X 60D (Represented Test Veh Make \"Tesla Model X\", Test Vehicle ID XB116-L2X, 4-Wheel Drive; the 2012-2018 files list only the trim), not the Model S 60D row DS116-L2S; same Target coefficients as the Model X 75D and 90D rows; repeats unchanged in the MY2017 file"
+  },
+  {
+    "ref": "modelx-2015-75d-2016",
+    "A_N": 167.61,
+    "B_Nps_m": 0.4836,
+    "C_Ns2_m2": 0.47633,
+    "source": "EPA 2016 Test Car List: Tesla 75D (417 hp, ETW 5500 lb; A 37.68 lbf, B 0.0486 lbf/mph, C 0.0214 lbf/mph²) — Model X 75D (Represented Test Veh Make \"Tesla Model X\", Test Vehicle ID XB216-L2X, 4-Wheel Drive), not the Model S 75D row DS216-L2S; repeats unchanged in the MY2017 and MY2018 files"
+  },
+  {
+    "ref": "modelx-2015-90d-2016",
+    "A_N": 167.61,
+    "B_Nps_m": 0.4836,
+    "C_Ns2_m2": 0.47633,
+    "source": "EPA 2016 Test Car List: Tesla 90D (417 hp, ETW 5500 lb; A 37.68 lbf, B 0.0486 lbf/mph, C 0.0214 lbf/mph²) — Model X 90D (Represented Test Veh Make \"Tesla Model X\", Test Vehicle ID XB316-L2X, 4-Wheel Drive), not the Model S 90D row DS316-L2S; repeats unchanged in the MY2017 file"
+  },
+  {
+    "ref": "modelx-2015-p100d-2016",
+    "A_N": 208.49,
+    "B_Nps_m": -0.5154,
+    "C_Ns2_m2": 0.48211,
+    "source": "EPA 2016 Test Car List: Tesla P100D (713 hp, ETW 6000 lb; A 46.87 lbf, B -0.0518 lbf/mph, C 0.02166 lbf/mph²) — Model X P100D (Represented Test Veh Make \"Tesla Model X\", Test Vehicle ID XP416-L2X, 4-Wheel Drive), not the Model S P100D row DP416-L2S; repeats unchanged in the MY2017 and MY2018 files; also the closest proxy for the Model X P90D, which has no Test Car List row (same body, same 193 kW front / 375 kW rear motors per fueleconomy.gov)"
+  },
+  {
+    "ref": "modelx-2018-100d-2018",
+    "A_N": 157.87,
+    "B_Nps_m": 1.9622,
+    "C_Ns2_m2": 0.45496,
+    "source": "EPA 2018 Test Car List: Tesla 100D (517 hp, ETW 6000 lb; A 35.49 lbf, B 0.1972 lbf/mph, C 0.02044 lbf/mph²) — Model X row (Test Vehicle ID XB417-026625, 4-Wheel Drive; the 2012–2018 files give only the trim); the MY2017 file carries the identical row"
+  },
+  {
+    "ref": "modelx-2018-75d-2018",
+    "A_N": 167.61,
+    "B_Nps_m": 0.4836,
+    "C_Ns2_m2": 0.47633,
+    "source": "EPA 2018 Test Car List: Tesla 75D (417 hp, ETW 5500 lb; A 37.68 lbf, B 0.0486 lbf/mph, C 0.0214 lbf/mph²) — Model X row (Test Vehicle ID XB216-L2X, 4-Wheel Drive; the 2012–2018 files give only the trim); the MY2016 and MY2017 files carry the identical row"
+  },
+  {
+    "ref": "modelx-2018-long-range-2019",
+    "A_N": 188.43,
+    "B_Nps_m": 1.8269,
+    "C_Ns2_m2": 0.44116,
+    "source": "EPA 2019 Test Car List: Tesla Model X Long Range (534 hp, ETW 6000 lb; A 42.36 lbf, B 0.1836 lbf/mph, C 0.01982 lbf/mph²) — Test Vehicle ID XD219-126944, 4-Wheel Drive; the MY2020 file carries the identical row"
+  },
+  {
+    "ref": "modelx-2018-long-range-plus-2020",
+    "A_N": 179.35,
+    "B_Nps_m": 1.0239,
+    "C_Ns2_m2": 0.42736,
+    "source": "EPA 2020 Test Car List: Tesla Model X Long Range Plus (534 hp, ETW 5500 lb; A 40.32 lbf, B 0.1029 lbf/mph, C 0.0192 lbf/mph²) — Test Vehicle ID XD220-234408, 4-Wheel Drive (the MY2021 file lists a later Long Range Plus row XD221-273717: 496 hp, A 29.04 / B 0.605 / C 0.0132)"
+  },
+  {
+    "ref": "modelx-2018-p100d-2018",
+    "A_N": 208.49,
+    "B_Nps_m": -0.5154,
+    "C_Ns2_m2": 0.48211,
+    "source": "EPA 2018 Test Car List: Tesla P100D (713 hp, ETW 6000 lb; A 46.87 lbf, B -0.0518 lbf/mph, C 0.02166 lbf/mph²) — Model X row (Test Vehicle ID XP416-L2X, 4-Wheel Drive; the 2012–2018 files give only the trim); the MY2016 and MY2017 files carry the identical row"
+  },
+  {
+    "ref": "modelx-2018-performance-2019",
+    "A_N": 232.78,
+    "B_Nps_m": -0.0517,
+    "C_Ns2_m2": 0.46765,
+    "source": "EPA 2019 Test Car List: Tesla Model X Performance (20\" Wheels) (778 hp, ETW 6000 lb; A 52.33 lbf, B -0.0052 lbf/mph, C 0.02101 lbf/mph²) — Test Vehicle ID XD219-138648, 4-Wheel Drive, standard 20-inch wheels (the 22-inch row XD219-118270 has A 65.68 lbf); the MY2020 file carries the identical row"
+  },
+  {
+    "ref": "modelx-2018-standard-range-2019",
+    "A_N": 179.35,
+    "B_Nps_m": 0.9851,
+    "C_Ns2_m2": 0.47544,
+    "source": "EPA 2019 Test Car List: Tesla Model X Standard Range (534 hp, ETW 5500 lb; A 40.32 lbf, B 0.099 lbf/mph, C 0.02136 lbf/mph²) — Test Vehicle ID XD019-133320, 4-Wheel Drive; the MY2020 file carries the identical row"
+  },
+  {
+    "ref": "modelx-2021-long-range-2026",
+    "A_N": 148.48,
+    "B_Nps_m": 2.6607,
+    "C_Ns2_m2": 0.36927,
+    "source": "EPA 2026 Test Car List: Tesla Model X (666 hp, ETW 5500 lb; A 33.38 lbf, B 0.2674 lbf/mph, C 0.01659 lbf/mph²) — Palladium Dual Motor (Long Range / All-Wheel Drive), Test Vehicle ID XD226-468565, All Wheel Drive"
+  },
+  {
+    "ref": "modelx-2021-plaid-2026",
+    "A_N": 139.9,
+    "B_Nps_m": 3.9533,
+    "C_Ns2_m2": 0.36058,
+    "source": "EPA 2026 Test Car List: Tesla Model X Plaid (925 hp, ETW 5500 lb; A 31.45 lbf, B 0.3973 lbf/mph, C 0.0162 lbf/mph²) — Test Vehicle ID XT326-469483, All Wheel Drive"
+  },
+  {
+    "ref": "modelx-2021-standard-range-2023",
+    "A_N": 149.28,
+    "B_Nps_m": 4.216,
+    "C_Ns2_m2": 0.37394,
+    "source": "EPA 2023 Test Car List: Tesla Model X Long Range (658 hp, ETW 5500 lb; A 33.56 lbf, B 0.4237 lbf/mph, C 0.0168 lbf/mph²) — software-limited Long Range (no separate EPA row for the 2023 Standard Range); Test Vehicle ID XD321-325808, 4-Wheel Drive; the MY2021 and MY2022 files carry the identical row"
+  },
+  {
+    "ref": "modely-2020-awd-2023",
+    "A_N": 152.4,
+    "B_Nps_m": 3.1752,
+    "C_Ns2_m2": 0.31607,
+    "source": "EPA 2023 Test Car List: Tesla Model Y AWD (390 hp, ETW 4750 lb; A 34.26 lbf, B 0.3191 lbf/mph, C 0.0142 lbf/mph²) — Test Vehicle ID YD122-000067, identical in the MY2022 file; same coefficients as the MY2022/2023 Model Y Long Range AWD row (YD222-231326)"
+  },
+  {
+    "ref": "modely-2020-lr-awd-2024",
+    "A_N": 170.59,
+    "B_Nps_m": 0.6736,
+    "C_Ns2_m2": 0.38062,
+    "source": "EPA 2024 Test Car List: Tesla Model Y Long Range AWD (390 hp, ETW 4750 lb; A 38.35 lbf, B 0.0677 lbf/mph, C 0.0171 lbf/mph²) — pre-Juniper row (Test Vehicle ID YD224-922405); the MY2025 file lists the Juniper car with new coefficients"
+  },
+  {
+    "ref": "modely-2020-lr-rwd-2024",
+    "A_N": 161.69,
+    "B_Nps_m": 0.5045,
+    "C_Ns2_m2": 0.3962,
+    "source": "EPA 2024 Test Car List: Tesla Model Y Long Range RWD (296 hp, ETW 4500 lb; A 36.35 lbf, B 0.0507 lbf/mph, C 0.0178 lbf/mph²) — pre-Juniper row (Test Vehicle ID YR124-082300); coefficients equal the MY2024 Model Y RWD row; the MY2025 file lists the Juniper car"
+  },
+  {
+    "ref": "modely-2020-performance-2024",
+    "A_N": 175.3,
+    "B_Nps_m": 2.1961,
+    "C_Ns2_m2": 0.37617,
+    "source": "EPA 2024 Test Car List: Tesla Model Y Performance AWD (452 hp, ETW 4750 lb; A 39.409 lbf, B 0.2207 lbf/mph, C 0.0169 lbf/mph²) — pre-Juniper row (Test Vehicle ID YD224-970022), carried over unchanged into the MY2025 file; never used for the Juniper Performance"
+  },
+  {
+    "ref": "modely-2020-rwd-2024",
+    "A_N": 161.69,
+    "B_Nps_m": 0.5045,
+    "C_Ns2_m2": 0.3962,
+    "source": "EPA 2024 Test Car List: Tesla Model Y RWD (272 hp, ETW 4500 lb; A 36.35 lbf, B 0.0507 lbf/mph, C 0.0178 lbf/mph²) — Test Vehicle ID YR124-944436; coefficients equal the MY2023 Model Y RWD (YR123-873957) and MY2024 Model Y Long Range RWD rows"
+  },
+  {
+    "ref": "modely-2020-sr-rwd-2021",
+    "A_N": 111.29,
+    "B_Nps_m": 4.823,
+    "C_Ns2_m2": 0.26933,
+    "source": "EPA 2021 Test Car List: Tesla Model Y Standard Range RWD (280 hp, ETW 4250 lb; A 25.02 lbf, B 0.4847 lbf/mph, C 0.0121 lbf/mph²) — Test Vehicle ID YR121-033006 (row carried over unchanged into the MY2022 file)"
+  },
+  {
+    "ref": "modely-juniper-lr-awd-2025",
+    "A_N": 168.01,
+    "B_Nps_m": -1.5304,
+    "C_Ns2_m2": 0.45496,
+    "source": "EPA 2025 Test Car List: Tesla Model Y Long Range AWD (390 hp, ETW 4750 lb; A 37.77 lbf, B -0.1538 lbf/mph, C 0.02044 lbf/mph²) — Juniper row (coefficients changed from the MY2024 file); also used as the closest proxy for Juniper Performance, Standard AWD and Model Y L, which have no EPA row"
+  },
+  {
+    "ref": "modely-juniper-lr-rwd-2025",
+    "A_N": 158.49,
+    "B_Nps_m": -1.0727,
+    "C_Ns2_m2": 0.42736,
+    "source": "EPA 2025 Test Car List: Tesla Model Y Long Range RWD (296 hp, ETW 4500 lb; A 35.63 lbf, B -0.1078 lbf/mph, C 0.0192 lbf/mph²) — Juniper row; also used as the closest proxy for the Standard RWD and the 2025 EU base RWD, which have no EPA row"
+  }
+]

@@ -1,0 +1,156 @@
+{
+  "id": "i5-turbo-25",
+  "name": "2.5 Turbo Inline-5",
+  "inspiredBy": "Audi RS 3 (8Y)",
+  "set": "euro",
+  "notes": "Variant: Audi RS 3 (8Y, 2.5 TFSI 294 kW, 7-speed S tronic wet DCT), data status Audi eTD 03/06/2026. Combustion entries are listed in firing order 1-2-4-5-3 (cylinder 1, 2, 4, 5, 3) at the even 720/5 = 144 deg interval; single exhaust bank. Gearbox: the 8Y eTD gives gear ratios 3.560/2.530/1.680/1.020/0.790/0.760/0.630 but only the 4.059 final drive; the per-gear dual final-drive mapping (4.059 for 1st, 4th, 5th and reverse; 3.450 for 2nd, 3rd, 6th, 7th) comes from Audi's own RS 3 Sportback 8V technical data (status January 2017), which uses the same 7-speed S tronic (8V ratios 3.563/2.526/1.679/1.022/0.788/0.761/0.635 agree with the 8Y two-decimal figures to within 0.005; the 8Y figures are used). Overall ratios = gear x applicable final drive. The EPA Test Car List (MY2023-2024 RS 3) lists axle 3.45 and N/V 29.2, consistent with 7th x 3.450. Driven tyre is the FRONT 265/30 ZR19 (transverse quattro: the gearbox final drive turns the front axle). Estimated (not published): idle 850 rpm, limiter type/rpm/hysteresis (ignition soft cut just above the 7,000 rpm end of the rated-power plateau), shift time 0.10 s (DCT default).",
+  "spec": {
+    "layout": {
+      "type": "inline",
+      "bankAngleDeg": 0,
+      "crank": "n/a",
+      "displacementL": 2.48
+    },
+    "cycleDeg": 720,
+    "combustion": [
+      {
+        "angleDeg": 0,
+        "bank": 0
+      },
+      {
+        "angleDeg": 144,
+        "bank": 0
+      },
+      {
+        "angleDeg": 288,
+        "bank": 0
+      },
+      {
+        "angleDeg": 432,
+        "bank": 0
+      },
+      {
+        "angleDeg": 576,
+        "bank": 0
+      }
+    ],
+    "rpm": {
+      "idle": 850,
+      "redline": 7000,
+      "limiter": {
+        "type": "ignition-soft",
+        "rpm": 7100,
+        "hysteresisRpm": 150
+      }
+    },
+    "aspiration": {
+      "type": "turbo",
+      "turbo": {
+        "count": 1,
+        "layout": "single"
+      },
+      "supercharger": null
+    },
+    "gearbox": {
+      "type": "dct",
+      "overallRatios": [
+        14.45,
+        8.7285,
+        5.796,
+        4.1402,
+        3.2066,
+        2.622,
+        2.1735
+      ],
+      "drivenTyre": "265/30ZR19",
+      "shiftTimeS": 0.1,
+      "tc": null
+    },
+    "sources": {
+      "layout": [
+        "Audi AG, Technical data sheet Audi RS 3 Sedan, Program for Germany, status 03/06/2026 (Inline 5-cylinder; 2480 cc; 82.5 x 92.8 mm): https://uploads.audi-mediacenter.com/system/production/car_motorizations/1545/file_en/4fa19f9df51c551a54ddb969966dffefecb35555/eTD-Audi-RS3-Sedan_260306.pdf"
+      ],
+      "combustion": [
+        "Audi MediaCenter, 'The engine: legendary five-cylinder' (firing order 1-2-4-5-3): https://www.audi-mediacenter.com/en/high-performance-redefined-audi-rs-3-sportback-and-rs-3-sedan-14310/the-engine-legendary-five-cylinder-14313",
+        "Four-stroke even firing interval = 720 deg / 5 cylinders = 144 deg (first principles)"
+      ],
+      "rpm": [
+        "Audi AG eTD RS 3 Sedan 03/06/2026 (max. power 294 kW at 5600-7000 rpm): https://uploads.audi-mediacenter.com/system/production/car_motorizations/1545/file_en/4fa19f9df51c551a54ddb969966dffefecb35555/eTD-Audi-RS3-Sedan_260306.pdf"
+      ],
+      "aspiration": [
+        "Audi AG eTD RS 3 Sedan 03/06/2026 (mixture preparation: direct injection, turbocharger, intercooler): https://uploads.audi-mediacenter.com/system/production/car_motorizations/1545/file_en/4fa19f9df51c551a54ddb969966dffefecb35555/eTD-Audi-RS3-Sedan_260306.pdf"
+      ],
+      "gearbox": [
+        "Audi AG eTD RS 3 Sedan 03/06/2026 (7-speed S tronic; gear ratios; final drive 4.059; tyres 265/30 ZR 19 | 245/35 ZR 19): https://uploads.audi-mediacenter.com/system/production/car_motorizations/1545/file_en/4fa19f9df51c551a54ddb969966dffefecb35555/eTD-Audi-RS3-Sedan_260306.pdf",
+        "Audi AG, Technical Data Audi RS 3 Sportback 2.5 TFSI quattro S tronic (294 kW), Program for Germany, status January 2017 ('Reverse gear / final drive ratio 2.789 / 4.059 (1st, 4th, 5th + reverse gear); 3.450 (2nd, 3rd, 6th + 7th gear)'; unaltered copy of the Audi PDF hosted by autoprove.net): https://autoprove.net/wp-content/uploads/47869/84d34277e645571bae7ce626ef3f6281.pdf",
+        "US EPA 2024 Test Car List, Audi RS 3 (axle ratio 3.45, N/V 29.2): https://www.epa.gov/system/files/documents/2025-05/24-testcar-2025-05.xlsx"
+      ]
+    }
+  },
+  "voicing": {
+    "pulse": {
+      "widthDeg": 60,
+      "alpha": 9,
+      "beta": 4,
+      "evoOffsetDeg": 140,
+      "cycleAsymmetry": 0.1
+    },
+    "headersM": [
+      0.55,
+      0.643,
+      0.585,
+      0.678,
+      0.621
+    ],
+    "collectors": [
+      {
+        "banks": [
+          0
+        ],
+        "lengthM": 0.35
+      }
+    ],
+    "turbine": {
+      "reflection": 0.45,
+      "lpHz": 1500
+    },
+    "exhaust": {
+      "midPipeM": 1.4,
+      "mufflerSectionsM": [
+        0.21,
+        0.34,
+        0.47
+      ],
+      "mufflerAction": 0.6,
+      "tailpipeM": 0.5,
+      "valve": {
+        "fitted": true,
+        "openGainDb": 4
+      }
+    },
+    "intake": {
+      "runnerM": 0.3,
+      "helmholtzHz": 145,
+      "gain": 0.4
+    },
+    "forcedInduction": {
+      "spoolTimeS": 0.6,
+      "maxShaftKrpm": 180,
+      "lift": "bov",
+      "cabinGainDb": -14
+    },
+    "mechanical": {
+      "blockGain": 0.3,
+      "valvetrainGain": 0.1
+    },
+    "overrun": {
+      "crackleRate": 0.5,
+      "fuelCutResumeRpm": 1350
+    },
+    "cabin": {
+      "lowpassHz": 600
+    },
+    "launchRpm": 3150,
+    "estimated": true
+  }
+}

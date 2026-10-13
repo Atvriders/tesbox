@@ -1,0 +1,313 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "engine.schema.json",
+  "title": "Tesbox EngineDef",
+  "description": "Mirrors EngineDef in src/contracts.ts. Cross-field rules (limiter.rpm >= redline, strictly descending ratios, angles < cycleDeg, headersM length, turbine iff turbo) are checked in tests/unit/engines.test.ts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "inspiredBy", "set", "notes", "spec", "voicing"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "name": { "type": "string", "minLength": 1 },
+    "inspiredBy": { "type": "string", "minLength": 1 },
+    "set": { "enum": ["euro", "jdm", "american", "exotic"] },
+    "notes": { "type": "string", "minLength": 1 },
+    "spec": { "$ref": "#/$defs/spec" },
+    "voicing": { "$ref": "#/$defs/voicing" }
+  },
+  "$defs": {
+    "sourceList": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["layout", "cycleDeg", "combustion", "rpm", "aspiration", "gearbox", "sources"],
+      "properties": {
+        "layout": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "bankAngleDeg", "crank", "displacementL"],
+          "properties": {
+            "type": { "enum": ["inline", "v", "flat", "rotary"] },
+            "bankAngleDeg": { "type": "number", "minimum": 0, "maximum": 180 },
+            "crank": { "enum": ["cross-plane", "flat-plane", "n/a"] },
+            "displacementL": { "type": "number", "exclusiveMinimum": 0, "maximum": 10 }
+          }
+        },
+        "cycleDeg": { "enum": [720, 1080] },
+        "combustion": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 16,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["angleDeg", "bank"],
+            "properties": {
+              "angleDeg": { "type": "number", "minimum": 0, "exclusiveMaximum": 1080 },
+              "bank": { "type": "integer", "minimum": 0, "maximum": 3 }
+            }
+          }
+        },
+        "rpm": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["idle", "redline", "limiter"],
+          "properties": {
+            "idle": { "type": "number", "minimum": 500, "maximum": 1200 },
+            "redline": { "type": "number", "minimum": 4000, "maximum": 10000 },
+            "limiter": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["type", "rpm", "hysteresisRpm"],
+              "properties": {
+                "type": { "enum": ["ignition-hard", "ignition-soft", "fuel-hard", "fuel-soft"] },
+                "rpm": { "type": "number", "minimum": 4000, "maximum": 10500 },
+                "hysteresisRpm": { "type": "number", "minimum": 50, "maximum": 600 }
+              }
+            }
+          }
+        },
+        "aspiration": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "turbo", "supercharger"],
+          "properties": {
+            "type": { "enum": ["na", "turbo", "supercharger"] },
+            "turbo": {
+              "anyOf": [
+                { "type": "null" },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["count", "layout"],
+                  "properties": {
+                    "count": { "type": "integer", "minimum": 1, "maximum": 4 },
+                    "layout": { "enum": ["single", "parallel", "sequential"] }
+                  }
+                }
+              ]
+            },
+            "supercharger": {
+              "anyOf": [
+                { "type": "null" },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["kind", "pulleyRatio", "gearRatio", "lobes"],
+                  "properties": {
+                    "kind": { "enum": ["roots", "twin-screw"] },
+                    "pulleyRatio": { "type": "number", "exclusiveMinimum": 0, "maximum": 5 },
+                    "gearRatio": { "type": "number", "exclusiveMinimum": 0, "maximum": 5 },
+                    "lobes": { "type": "integer", "minimum": 2, "maximum": 8 }
+                  }
+                }
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": { "properties": { "type": { "const": "turbo" } } },
+              "then": { "properties": { "turbo": { "type": "object" }, "supercharger": { "type": "null" } } }
+            },
+            {
+              "if": { "properties": { "type": { "const": "supercharger" } } },
+              "then": { "properties": { "turbo": { "type": "null" }, "supercharger": { "type": "object" } } }
+            },
+            {
+              "if": { "properties": { "type": { "const": "na" } } },
+              "then": { "properties": { "turbo": { "type": "null" }, "supercharger": { "type": "null" } } }
+            }
+          ]
+        },
+        "gearbox": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "overallRatios", "drivenTyre", "shiftTimeS", "tc"],
+          "properties": {
+            "type": { "enum": ["dct", "pdk", "tc-auto", "manual", "amt"] },
+            "overallRatios": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 10,
+              "items": { "type": "number", "exclusiveMinimum": 0, "maximum": 40 }
+            },
+            "drivenTyre": { "type": "string", "pattern": "^P?[0-9]{3}/[0-9]{2} ?Z?R[0-9]{2}$" },
+            "shiftTimeS": { "type": "number", "minimum": 0.05, "maximum": 0.6 },
+            "tc": {
+              "anyOf": [
+                { "type": "null" },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["stallRpmWot", "lockupTurbineRpm", "couplingSR"],
+                  "properties": {
+                    "stallRpmWot": { "type": "number", "minimum": 1000, "maximum": 6000 },
+                    "lockupTurbineRpm": { "type": "number", "minimum": 500, "maximum": 4000 },
+                    "couplingSR": { "type": "number", "minimum": 0.8, "maximum": 0.95 }
+                  }
+                }
+              ]
+            }
+          },
+          "if": { "properties": { "type": { "const": "tc-auto" } } },
+          "then": { "properties": { "tc": { "type": "object" } } },
+          "else": { "properties": { "tc": { "type": "null" } } }
+        },
+        "sources": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["layout", "combustion", "rpm", "aspiration", "gearbox"],
+          "properties": {
+            "layout": { "$ref": "#/$defs/sourceList" },
+            "combustion": { "$ref": "#/$defs/sourceList" },
+            "rpm": { "$ref": "#/$defs/sourceList" },
+            "aspiration": { "$ref": "#/$defs/sourceList" },
+            "gearbox": { "$ref": "#/$defs/sourceList" }
+          }
+        }
+      }
+    },
+    "voicing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pulse", "headersM", "collectors", "turbine", "exhaust", "intake",
+        "forcedInduction", "mechanical", "overrun", "cabin", "launchRpm", "estimated"
+      ],
+      "properties": {
+        "pulse": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["widthDeg", "alpha", "beta", "evoOffsetDeg", "cycleAsymmetry"],
+          "properties": {
+            "widthDeg": { "type": "number", "minimum": 40, "maximum": 300 },
+            "alpha": { "type": "number", "exclusiveMinimum": 0 },
+            "beta": { "type": "number", "exclusiveMinimum": 0 },
+            "evoOffsetDeg": { "type": "number", "minimum": 0, "maximum": 360 },
+            "cycleAsymmetry": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "headersM": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 16,
+          "items": { "type": "number", "minimum": 0.1, "maximum": 3 }
+        },
+        "collectors": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["banks", "lengthM"],
+            "properties": {
+              "banks": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "type": "integer", "minimum": 0, "maximum": 3 }
+              },
+              "lengthM": { "type": "number", "minimum": 0.05, "maximum": 2 }
+            }
+          }
+        },
+        "turbine": {
+          "anyOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["reflection", "lpHz"],
+              "properties": {
+                "reflection": { "type": "number", "minimum": 0, "maximum": 0.95 },
+                "lpHz": { "type": "number", "minimum": 200, "maximum": 8000 }
+              }
+            }
+          ]
+        },
+        "exhaust": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["midPipeM", "mufflerSectionsM", "mufflerAction", "tailpipeM", "valve"],
+          "properties": {
+            "midPipeM": { "type": "number", "minimum": 0.1, "maximum": 5 },
+            "mufflerSectionsM": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 4,
+              "items": { "type": "number", "minimum": 0.05, "maximum": 2 }
+            },
+            "mufflerAction": { "type": "number", "minimum": 0, "maximum": 1 },
+            "tailpipeM": { "type": "number", "minimum": 0.05, "maximum": 3 },
+            "valve": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["fitted", "openGainDb"],
+              "properties": {
+                "fitted": { "type": "boolean" },
+                "openGainDb": { "type": "number", "minimum": 0, "maximum": 12 }
+              }
+            }
+          }
+        },
+        "intake": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["runnerM", "helmholtzHz", "gain"],
+          "properties": {
+            "runnerM": { "type": "number", "minimum": 0.05, "maximum": 1 },
+            "helmholtzHz": { "type": "number", "minimum": 20, "maximum": 1000 },
+            "gain": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "forcedInduction": {
+          "anyOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["spoolTimeS", "maxShaftKrpm", "lift", "cabinGainDb"],
+              "properties": {
+                "spoolTimeS": { "type": "number", "minimum": 0, "maximum": 5 },
+                "maxShaftKrpm": { "type": "number", "minimum": 10, "maximum": 400 },
+                "lift": { "enum": ["bov", "flutter"] },
+                "cabinGainDb": { "type": "number", "minimum": -20, "maximum": -10 }
+              }
+            }
+          ]
+        },
+        "mechanical": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["blockGain", "valvetrainGain"],
+          "properties": {
+            "blockGain": { "type": "number", "minimum": 0, "maximum": 1 },
+            "valvetrainGain": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "overrun": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["crackleRate", "fuelCutResumeRpm"],
+          "properties": {
+            "crackleRate": { "type": "number", "minimum": 0, "maximum": 10 },
+            "fuelCutResumeRpm": { "type": "number", "minimum": 500, "maximum": 6000 }
+          }
+        },
+        "cabin": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["lowpassHz"],
+          "properties": {
+            "lowpassHz": { "type": "number", "minimum": 200, "maximum": 2000 }
+          }
+        },
+        "launchRpm": { "type": "number", "minimum": 1000, "maximum": 10000 },
+        "estimated": { "type": "boolean" }
+      }
+    }
+  }
+}

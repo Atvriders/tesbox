@@ -373,3 +373,6 @@ No real coordinates anywhere; GPX inputs are never committed.
   +2.66–3.05 %, v8-twinturbo-40 +3.65 %.) Engines whose per-gear ratios or firing order come only
   from secondary sources stay, with the gap stated in `notes` (v12-na-65; v10-na-52 shares the
   Audi R8 V10 short gear set).
+- **A12 Catalogue coverage (2026-10-13):** research added `modelx-2021-standard-range` (2023 US
+  software-limited Long Range, mirrors `models-2021-standard-range`), so the catalogue has **73**
+  records; `EXPECTED_IDS`, `teslas.json` and the T11 coverage table changed together per T11 Step 21.

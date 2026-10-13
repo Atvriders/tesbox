@@ -1,0 +1,161 @@
+{
+  "id": "i4-turbo-20",
+  "name": "2.0 Turbo Inline-4",
+  "inspiredBy": "VW Golf GTI (Mk8)",
+  "set": "euro",
+  "notes": "Variant: US-market Volkswagen Golf GTI (Mk8, MY2022-2024; VW's specification sheets show the same gearing for the MY2025-2026 facelift) with the EA888 evo4 2.0 TSI (1,984 cc, 82.5 x 92.8 mm, single turbocharger with intercooler; 241 hp SAE, EU 180 kW at 5,000-6,500 rpm) and the optional 7-speed DSG wet dual-clutch gearbox (DQ381 / 0GC family), front-wheel drive, on the standard 18-inch 225/40 R18 92H all-season tyre (S and SE trims; Autobahn: 235/35 R19). Inline-4, one exhaust bank (bank 0): combustion entries are listed in firing order 1-3-4-2 (cylinder 1, 3, 4, 2) at the even 720/4 = 180 deg interval. The firing order is stated in Audi of America's SSP for the third-generation EA888 (2.0 TFSI, same 82.5 x 92.8 mm bore x stroke); VW describes the evo4 as the next-generation EA888 developed from that unit. Gearbox: VW of America's GTI technical specifications give the same two-decimal DSG data for every model year MY2019-2026, printed rounded on the MY2019-2020 and MY2025-2026 sheets (3.40/2.75/1.77/0.93/0.71/0.76/0.64, reverse 2.90, Final I 4.17, Final II 3.13) and truncated on the MY2022-2023 sheets (3.40/2.75/1.76/0.92/0.70/0.75/0.63, Final I 4.16, Final II 3.12; MY2021 and MY2024 mix the two). Together these bracket the true values: the gear ratios are Audi's three-decimal 0GC 7-speed S tronic gear set 3.400/2.750/1.767/0.925/0.705/0.755/0.635 (reverse 2.900; Audi Q2 40 TFSI eTD), Final I lies in [4.165, 4.170) and Final II in [3.125, 3.130); they are modelled as 4.167 and 3.125 (estimate inside the bracket, effect on any ratio < 0.15 %; consistent with a 75-tooth ring gear on 18- and 24-tooth pinions, the same 93/99 tooth sums as Audi's 4.471 = 76/17 and 3.304 = 76/23 0GC pairs - plausibility only). The EPA Test Car List axle field for this car alternates between 3.13 and 3.12 across MY2021-2026, consistent with Final II = 3.125. Per-gear allocation: Audi's technical data for the S3 Cabriolet 7-speed S tronic (August 2017) states 'final drive ratio 1st, 4th, 5th gear 4.471 / 2nd, 3rd, 6th, 7th gear 3.304 / reverse gear 4.471'; that gearbox is the 0GC - VW's 2018 Golf R 7-speed DSG (transmission code 0GC in VW TSB 37-23-01) has the same gear set 3.19/2.75/1.9/1.04/0.79/0.86/0.66 and Final I 4.47 / Final II 3.3 in VW's 2018 Golf R technical specifications, and Audi's Q2 S tronic with the GTI's gear set uses the same 4.471/3.304 pair. So Final I drives 1st, 4th, 5th and reverse, Final II drives 2nd, 3rd, 6th and 7th; this is also the only allocation giving strictly descending overall ratios with an even progression (4th/5th must use Final I and 6th/7th Final II to stay descending; EPA's top-gear axle 3.12/3.13 is Final II). Overall ratios = gear x applicable final drive. EPA N/V screened out: the EPA Test Car Lists give the GTI 7-speed rows axle 3.13/3.12 with N/V 26.7 (MY2022-2023) and 26.6 (MY2024-2026). VW's N/V equals 7th x Final II on the 225/40 R18 tyre's unloaded nominal circumference (1.9844 x 803.9 rev/mile / 60 = 26.6), while the rolling-circumference model (x 0.97) of tests/unit/engines.test.ts gives 27.41 rpm/mph (+3.0 % vs 26.6, +2.7 % vs 26.7), outside the 2.5 % tolerance, so no EPA_NV row is used (a manufacturer N/V convention, not a ratio conflict). Estimated (not published in the sources used): redline 6,500 rpm = the end of VW's rated-power band (no maximum engine speed is published in the sources used); limiter type ignition-soft at 6,600 rpm with 150 rpm hysteresis; idle 700 rpm; shift time 0.10 s (DCT type default; VW states no shift time). Source differences are rounding only (gearbox, above) and the torque-band end by market/year (EU 1,600-4,300 rpm, US MY2025-2026 1,600-4,500 rpm), which does not enter the data.",
+  "spec": {
+    "layout": {
+      "type": "inline",
+      "bankAngleDeg": 0,
+      "crank": "n/a",
+      "displacementL": 1.984
+    },
+    "cycleDeg": 720,
+    "combustion": [
+      {
+        "angleDeg": 0,
+        "bank": 0
+      },
+      {
+        "angleDeg": 180,
+        "bank": 0
+      },
+      {
+        "angleDeg": 360,
+        "bank": 0
+      },
+      {
+        "angleDeg": 540,
+        "bank": 0
+      }
+    ],
+    "rpm": {
+      "idle": 700,
+      "redline": 6500,
+      "limiter": {
+        "type": "ignition-soft",
+        "rpm": 6600,
+        "hysteresisRpm": 150
+      }
+    },
+    "aspiration": {
+      "type": "turbo",
+      "turbo": {
+        "count": 1,
+        "layout": "single"
+      },
+      "supercharger": null
+    },
+    "gearbox": {
+      "type": "dct",
+      "overallRatios": [
+        14.1678,
+        8.5938,
+        5.5219,
+        3.8545,
+        2.9377,
+        2.3594,
+        1.9844
+      ],
+      "drivenTyre": "225/40R18",
+      "shiftTimeS": 0.1,
+      "tc": null
+    },
+    "sources": {
+      "layout": [
+        "Volkswagen of America, 2022 Volkswagen Golf GTI Technical Specifications (2.0L inline four cylinder, 16V, turbocharged/intercooled, TSI; bore 82.5 mm, stroke 92.8 mm, 1984 cc; front mounted, transverse; forged steel crankshaft, five main bearings): https://media.vw.com/assets/documents/original/14657-2022GolfGTITechnicalSpecsFinalv2.pdf",
+        "Volkswagen AG, press kit 'The new Golf GTI - International Media Drive', August 2020 (EA888 evo4 TSI; turbocharged four-cylinder engine with a capacity of 1,984 cc): https://www.volkswagen-newsroom.com/en/the-new-golf-gti-international-media-drive-6282/download"
+      ],
+      "combustion": [
+        "Audi of America, eSelf-Study Program 920243 'The Audi 1.8L and 2.0L Third Generation EA888 Engines', 11/2013, technical features (2.0l TFSI CNTA/CYFB, 82.5 x 92.8 mm: firing order 1-3-4-2; filed with NHTSA as MC-10122162): https://static.nhtsa.gov/odi/tsbs/2014/MC-10122162-9999.pdf",
+        "Volkswagen AG, press kit 'The new Golf GTI - International Media Drive', August 2020 (the predecessor's 245 PS unit 'still belonged to the 3rd generation of the EA888 engine series. The next-generation EA888 evo4 now integrated in the new GTI has been enhanced in numerous details'): https://www.volkswagen-newsroom.com/en/the-new-golf-gti-international-media-drive-6282/download",
+        "Four-stroke inline-4 with a flat (180 deg) crankshaft: even firing interval 720/4 = 180 deg (first principles)"
+      ],
+      "rpm": [
+        "Volkswagen AG, press kit 'The new Golf GTI - International Media Drive', August 2020 (maximum power 180 kW (245 PS) in an engine speed range from 5,000 to 6,500 rpm; 370 Nm from 1,600 to 4,300 rpm): https://www.volkswagen-newsroom.com/en/the-new-golf-gti-international-media-drive-6282/download",
+        "Volkswagen of America, 2025 Volkswagen Golf GTI Technical Specifications (Horsepower (SAE) 241 @ 5000 - 6500 rpm; 273 lb-ft @ 1600 - 4500 rpm): https://media.vw.com/assets/applications/original/18575-2025-golf-gti-technical-specs-final.pdf"
+      ],
+      "aspiration": [
+        "Volkswagen of America, 2022 Volkswagen Golf GTI Technical Specifications (turbocharged/intercooled TSI; maximum turbo boost 26.1 psi): https://media.vw.com/assets/documents/original/14657-2022GolfGTITechnicalSpecsFinalv2.pdf",
+        "Volkswagen of America, 2022 Golf GTI press release (EA888 evo4 with 'a turbocharger that can withstand extremely high exhaust temperatures'): https://media.vw.com/assets/documents/original/15521-2022GolfGTIrelease.pdf"
+      ],
+      "gearbox": [
+        "Volkswagen of America, 2022 Volkswagen Golf GTI Technical Specifications (front-wheel drive; automatic (7-speed DSG) gear ratios 3.40/2.75/1.76/0.92/0.70/0.75/0.63, reverse 2.90, Final I 4.16, Final II 3.12; 18-in x 7.5J wheels with 225/40 R18 92H all-season tires, 19-in x 8J with 235/35 R19 91Y summer tires): https://media.vw.com/assets/documents/original/14657-2022GolfGTITechnicalSpecsFinalv2.pdf",
+        "Volkswagen of America, 2025 Volkswagen Golf GTI Technical Specifications (7-speed DSG gear ratios 3.40/2.75/1.77/0.93/0.71/0.76/0.64, reverse 2.90, Final I 4.17, Final II 3.13; 225/40 R18 92H all-season tires): https://media.vw.com/assets/applications/original/18575-2025-golf-gti-technical-specs-final.pdf",
+        "Volkswagen of America, 2022 Golf GTI and Golf R reveal and pricing release (GTI S: standard 18-inch aluminum-alloy wheels; Autobahn: 19-inch wheels, summer performance tires): https://media.vw.com/assets/documents/original/15079-Mk8RevealandPricingReleaseFINALv3.pdf",
+        "Audi AG, eTD Audi Q2 40 TFSI quattro S tronic 140 kW, Program for Germany, status 07/25/2024 (7-speed S tronic gear ratios 3.400/2.750/1.767/0.925/0.705/0.755/0.635, reverse 2.900, final drive ratios 4.471 / 3.304): https://uploads.audi-mediacenter.com/system/production/car_motorizations/1251/file_en/4e0b8831d952be6dc6e550ae1b75a2f204acdb80/eTD-Audi-Q2-40-TFSI-quattro-S_tronic-140kW_240725.pdf",
+        "Audi AG, Technical Data Audi S3 Cabriolet 2.0 TFSI quattro S tronic (228 kW), Program for Germany, status August 2017 (7-speed S tronic 3.190/2.750/1.897/1.040/0.793/0.860/0.661, reverse 2.901; 'final drive ratio 1st, 4th, 5th gear 4.471 / 2nd, 3rd, 6th, 7th gear 3.304 / reverse gear 4.471'): https://uploads.audi-mediacenter.com/system/production/car_motorizations/240/file_en/1b6b397823aac0f5b428084a4831678274cb94ee/etd_S3_Cabriolet_2_0_TFSI_quattro_S_tronic_228_kW_0817.pdf",
+        "Volkswagen of America, 2018 Golf R Technical Specifications (7-speed DSG 3.19/2.75/1.9/1.04/0.79/0.86/0.66, reverse 2.9, Final I 4.47, Final II 3.3): https://media.vw.com/assets/documents/original/8665-2018VolkswagenGolfRTechnicalSpecifications.pdf",
+        "Volkswagen of America, Technical Service Bulletin 37-23-01, 10 Aug 2023 (2018 Golf R 2.0T (DJJA), DSG transmission code 0GC, '7-Speed DSG Transmission 0GC'; NHTSA MC-10241181): https://static.nhtsa.gov/odi/tsbs/2023/MC-10241181-0001.pdf",
+        "Volkswagen Group of America, Self Study Program 850183 'The 7-speed Dual Clutch Transmission 0GC', 5/2018 (7 forward gears, 2 concentric drive shafts, 2 output shafts, 2 wet clutches; developed from the 0BT/0BH/0DE; NHTSA MC-10159423): https://static.nhtsa.gov/odi/tsbs/2018/MC-10159423-0001.pdf",
+        "US EPA Test Car Lists MY2022-2026, Volkswagen GTI 7-speed (axle ratio 3.13 / 3.12, N/V 26.7 (MY2022-2023) / 26.6 (MY2024-2026); screened out, see notes): https://www.epa.gov/system/files/documents/2025-05/24-testcar-2025-05.xlsx"
+      ]
+    }
+  },
+  "voicing": {
+    "pulse": {
+      "widthDeg": 60,
+      "alpha": 9,
+      "beta": 4,
+      "evoOffsetDeg": 140,
+      "cycleAsymmetry": 0.1
+    },
+    "headersM": [
+      0.55,
+      0.643,
+      0.585,
+      0.678
+    ],
+    "collectors": [
+      {
+        "banks": [
+          0
+        ],
+        "lengthM": 0.35
+      }
+    ],
+    "turbine": {
+      "reflection": 0.45,
+      "lpHz": 1500
+    },
+    "exhaust": {
+      "midPipeM": 1.4,
+      "mufflerSectionsM": [
+        0.21,
+        0.34,
+        0.47
+      ],
+      "mufflerAction": 0.6,
+      "tailpipeM": 0.5,
+      "valve": {
+        "fitted": true,
+        "openGainDb": 4
+      }
+    },
+    "intake": {
+      "runnerM": 0.3,
+      "helmholtzHz": 140,
+      "gain": 0.4
+    },
+    "forcedInduction": {
+      "spoolTimeS": 0.6,
+      "maxShaftKrpm": 180,
+      "lift": "bov",
+      "cabinGainDb": -14
+    },
+    "mechanical": {
+      "blockGain": 0.3,
+      "valvetrainGain": 0.1
+    },
+    "overrun": {
+      "crackleRate": 0.5,
+      "fuelCutResumeRpm": 1200
+    },
+    "cabin": {
+      "lowpassHz": 600
+    },
+    "launchRpm": 2925,
+    "estimated": true
+  }
+}

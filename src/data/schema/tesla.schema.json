@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tesla.schema.json",
+  "title": "Tesbox Tesla catalogue (teslas.json)",
+  "description": "Array of TeslaRecord (src/contracts.ts). Cross-field rules (unique ids, last accelMode factor 1, roadLoadRef resolves, supported/MCU1) are checked in tests/unit/catalogue.test.ts.",
+  "type": "array",
+  "minItems": 1,
+  "items": { "$ref": "#/$defs/record" },
+  "$defs": {
+    "sourceList": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "model", "generation", "years", "trim", "markets", "massKg", "massBasis", "peakPowerKw",
+        "accel", "accelModes", "roadLoadRef", "subwooferDefault", "mcu", "supported", "sources"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "model": { "enum": ["Model S", "Model X", "Model 3", "Model Y", "Model Y L", "Cybertruck"] },
+        "generation": { "type": "string", "minLength": 1 },
+        "years": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "prefixItems": [
+            { "type": "integer", "minimum": 2012, "maximum": 2030 },
+            { "type": "integer", "minimum": 2012, "maximum": 2030 }
+          ],
+          "items": false
+        },
+        "trim": { "type": "string", "minLength": 1 },
+        "markets": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["US", "EU", "CN", "other"] }
+        },
+        "massKg": { "type": "number", "minimum": 1000, "maximum": 4500 },
+        "massBasis": { "enum": ["us-curb", "eu-unladen-incl-driver", "test-weight"] },
+        "peakPowerKw": { "type": "number", "minimum": 50, "maximum": 1200 },
+        "accel": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["seconds", "basis", "rolloutSubtracted"],
+          "properties": {
+            "seconds": { "type": "number", "minimum": 1.5, "maximum": 20 },
+            "basis": { "enum": ["0-60mph", "0-100kmh"] },
+            "rolloutSubtracted": { "type": "boolean" }
+          }
+        },
+        "accelModes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "factor"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "factor": { "type": "number", "minimum": 0.2, "maximum": 1 }
+            }
+          }
+        },
+        "roadLoadRef": { "type": "string", "minLength": 1 },
+        "subwooferDefault": { "type": "boolean" },
+        "mcu": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["intel", "amd", "tegra"] }
+        },
+        "supported": { "type": "boolean" },
+        "sources": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mass", "power", "accel", "audio"],
+          "properties": {
+            "mass": { "$ref": "#/$defs/sourceList" },
+            "power": { "$ref": "#/$defs/sourceList" },
+            "accel": { "$ref": "#/$defs/sourceList" },
+            "audio": { "$ref": "#/$defs/sourceList" }
+          }
+        }
+      }
+    }
+  }
+}

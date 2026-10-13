@@ -1,0 +1,169 @@
+{
+  "id": "i6-twinturbo-30",
+  "name": "3.0 Twin-Turbo Inline-6",
+  "inspiredBy": "Toyota Supra (A80, 2JZ-GTE)",
+  "set": "jdm",
+  "notes": "Variant: US-market Toyota Supra Turbo (JZA80, model years 1993-1998, US sales brochure dated 5/93; 2JZ-GTE 2,997 cc, 239 kW / 320 hp SAE net at 5,600 rpm, 427 Nm / 315 lb-ft at 4,000 rpm) with the standard 6-speed manual (Toyota V160, developed jointly with Getrag: 3.827/2.360/1.685/1.312/1.000/0.793) and the 3.133 differential, on the standard rear 255/40ZR17 tyre (rear-wheel drive; fronts 235/45ZR17). Ratios, differential and tyres are from Toyota's 1993 Supra New Car Features (US models JZA80L-ALFVZA / -AJFVZA) and the 1993 US sales brochure; Toyota's 1997 New Car Features lists the same 6-speed data for MY1997. Not modelled: the 4-speed A340E automatic (differential 3.769) and the Japanese-market RZ (280 PS; 225/50ZR16 front / 245/50ZR16 rear tyres at launch). The EPA 1996 Test Car List has only the automatic Turbo (no 6-speed row). Inline-6, one exhaust bank (bank 0): combustion entries are listed in firing order 1-5-3-6-2-4 (cylinder 1, 5, 3, 6, 2, 4; Toyota NCF) at the even 720/6 = 120 deg interval. Physically the exhaust manifolds are split into cylinders 1-2-3 and 4-5-6, each directing its gas to one of the two turbochargers, joined by a connecting pipe (NCF p. 86), so each group fires every 240 deg; the contract keeps inline engines on one bank - revisit in the Sound Lab. Sequential twin turbochargers (Toyota 'Two-Way Twin Turbo': No.1 alone at low rpm and load, both at high rpm and load; 11.6 psi combined boost per Toyota's 1993 Product Source book). Redline 6,800 rpm is from secondary press (Car and Driver, March 1993: tach 'redlined at 6800 rpm'); no Toyota document seen states it. Idle 650 rpm = Toyota repair manual 2JZ-GTE troubleshooting value (650 +/- 50 rpm, transmission in N; the extract does not name the vehicle). Estimated (not published in the sources used): limiter type fuel-hard at the 6,800 rpm redline with 200 rpm hysteresis, manual shift time 0.30 s. EPA N/V: the MY1997 and MY1998 Test Car Lists give the Supra 6-speed manual (axle 3.13) N/V 34.4, MY1994-1995 give 34.5; model 34.39 rpm/mph (6th 0.793 x 3.133 on 255/40ZR17). The MY1993 EPA list (file dated October 1992) has no A80 Supra. Conflicts: EPA MY1994-1995 rows give 325 rated hp vs Toyota's 320 hp; Toyota's 1993 NCF lists a 180 km/h (112 mph) maximum speed while the 1993 Product Source book gives a 155 mph limiter and the 1997 NCF 250 km/h (155 mph) - top speed is not modelled; Car and Driver's '2200 rpm at 60 mph' in sixth is about 6.6 % above the EPA N/V (34.4 -> 2,064 rpm). The NCF's maximum permissible speeds in gears 1-4 (60/97/136/175 km/h) state no engine speed and correspond to about 6,000 rpm on the unloaded tyre diameter (about 6,190 rpm in this tyre model), not the 6,800 rpm redline, so they are not used as a gear-speed check.",
+  "spec": {
+    "layout": {
+      "type": "inline",
+      "bankAngleDeg": 0,
+      "crank": "n/a",
+      "displacementL": 2.997
+    },
+    "cycleDeg": 720,
+    "combustion": [
+      {
+        "angleDeg": 0,
+        "bank": 0
+      },
+      {
+        "angleDeg": 120,
+        "bank": 0
+      },
+      {
+        "angleDeg": 240,
+        "bank": 0
+      },
+      {
+        "angleDeg": 360,
+        "bank": 0
+      },
+      {
+        "angleDeg": 480,
+        "bank": 0
+      },
+      {
+        "angleDeg": 600,
+        "bank": 0
+      }
+    ],
+    "rpm": {
+      "idle": 650,
+      "redline": 6800,
+      "limiter": {
+        "type": "fuel-hard",
+        "rpm": 6800,
+        "hysteresisRpm": 200
+      }
+    },
+    "aspiration": {
+      "type": "turbo",
+      "turbo": {
+        "count": 2,
+        "layout": "sequential"
+      },
+      "supercharger": null
+    },
+    "gearbox": {
+      "type": "manual",
+      "overallRatios": [
+        11.99,
+        7.3939,
+        5.2791,
+        4.1105,
+        3.133,
+        2.4845
+      ],
+      "drivenTyre": "255/40ZR17",
+      "shiftTimeS": 0.3,
+      "tc": null
+    },
+    "sources": {
+      "layout": [
+        "Toyota Motor Corporation, Supra New Car Features (JZA80 series, 1993 US models; companion to the 1993 Toyota Supra Repair Manual RM343U1/U2), p. 77 Engine Specifications (2JZ-GTE: 6-cylinder in-line, 24-valve DOHC, 2997 cm3, bore x stroke 86.0 x 86.0 mm, compression ratio 8.5:1); scan hosted by MKIV.com: https://www.mkiv.com/specifications/ncf/ncf93/ncf077.jpg",
+        "Toyota Motor Sales, U.S.A., 1993 Toyota Supra sales brochure PC3-279 (5/93), Specifications (Supra Turbo: 6-cylinder inline twin-cam 24-valve, intercooled two-way twin turbochargers, 3.0 liters (2,997cc)); scan hosted by MKIV.com: https://www.mkiv.com/specifications/93_full_brochure/page24.jpg",
+        "Toyota Motor Corporation, 'Toyota Launches All-New Supra', 24 May 1993 (2JZ-GTE 3-liter, in-line, six-cylinder two-way twin-turbo engine): https://global.toyota/en/detail/7868203"
+      ],
+      "combustion": [
+        "Toyota Motor Corporation, Supra New Car Features (JZA80 series, 1993), p. 77 Engine Specifications (2JZ-GTE firing order 1-5-3-6-2-4); scan hosted by MKIV.com: https://www.mkiv.com/specifications/ncf/ncf93/ncf077.jpg",
+        "Four-stroke inline-6 even firing interval = 720 deg / 6 cylinders = 120 deg (first principles)",
+        "Toyota Motor Corporation, Supra New Car Features (JZA80 series, 1993), p. 86 Exhaust Manifold (exhaust manifolds separated into two parts handling cylinders 1, 2, 3 and 4, 5, 6, each directing exhaust gas to one of the turbochargers, with a connecting pipe between them; modelled as one bank, see notes); scan hosted by MKIV.com: https://www.mkiv.com/specifications/ncf/ncf93/ncf086.jpg"
+      ],
+      "rpm": [
+        "Car and Driver, March 1993, Toyota Supra Turbo test ('The new instrument cluster's centerpiece is a massive tach, redlined at 6800 rpm'; secondary press, no Toyota document seen states the redline); page scan archived from MKIV.com: http://web.archive.org/web/20010618170317/http://www.mkiv.com:80/publications/car&driver/3_93/5-cd3-93.jpg",
+        "Toyota repair manual (US), section EG '2JZ-GTE Engine Troubleshooting', p. EG-507 ('Idle speed: 650 +/- 50 rpm', transmission in N, engine warm; the extract does not name the vehicle); archive.org copy: https://archive.org/details/manualzilla-id-6877352",
+        "Toyota Motor Corporation, Supra New Car Features (JZA80 series, 1993), p. 77 (max. output 239 kW / 320 HP SAE-NET at 5600 rpm; max. torque 427 Nm / 315 ft-lbf at 4000 rpm); scan hosted by MKIV.com: https://www.mkiv.com/specifications/ncf/ncf93/ncf077.jpg"
+      ],
+      "aspiration": [
+        "Toyota Motor Corporation, Supra New Car Features (JZA80 series, 1993), p. 88 Turbocharger System ('Two-Way Twin Turbo System': one turbocharger gives boost at low rpm and low engine load, the two together at high rpm and high engine load); scan hosted by MKIV.com: https://www.mkiv.com/specifications/ncf/ncf93/ncf088.jpg",
+        "Toyota Motor Sales, U.S.A., 1993 Toyota Supra sales brochure PC3-279 (5/93), Features ('Twin-sequential turbocharged 3.0-liter 6-cylinder twin-cam 24-valve electronically fuel-injected (EFI) engine with air-to-air intercooler'); scan hosted by MKIV.com: https://www.mkiv.com/specifications/93_full_brochure/page24.jpg",
+        "Toyota US dealer Product Source book, '93 Supra, Specifications/Presentation p. 13 (Supra Turbo: 3.0L I-6 DOHC 24-V Twin-Sequential Turbocharged Intercooled EFI; turbo boost pressure 11.6 psi combined with both turbos operating); scan hosted by MKIV.com: https://mkiv.com/specifications/product_source/93/14.JPG"
+      ],
+      "gearbox": [
+        "Toyota Motor Corporation, Supra New Car Features (JZA80 series, 1993), p. 257 Major Technical Specifications (U.S.A. JZA80L-ALFVZA / JZA80L-AJFVZA: V160 6-speed manual 3.827/2.360/1.685/1.312/1.000/0.793, reverse 3.280; differential gear ratio 3.133; maximum permissible speed in gears 1-4 60/97/136/175 km/h, engine speed not stated); scan hosted by MKIV.com: https://www.mkiv.com/specifications/ncf/ncf93/ncf257.jpg",
+        "Toyota Motor Sales, U.S.A., 1993 Toyota Supra sales brochure PC3-279 (5/93), Specifications (6-spd. man. gear ratios 3.827/2.360/1.685/1.312/1.000/0.793, differential ratio 3.133; Supra Turbo tires 235/45ZR17 front, 255/40ZR17 rear); scan hosted by MKIV.com: https://www.mkiv.com/specifications/93_full_brochure/page24.jpg",
+        "Toyota Motor Corporation, 1997 Model New Car Features, Supra Appendix p. 125 (U.S.A. JZA80L-ALFVZA: V160 3.827/2.360/1.685/1.312/1.000/0.793, differential 3.133 for MY1997); scan hosted by MKIV.com: https://www.mkiv.com/specifications/ncf/ncf97/ncf125.jpg",
+        "Toyota Motor Corporation, 'Toyota Launches All-New Supra', 24 May 1993 (Toyota's first six-speed manual transmission, developed jointly with Getrag of Germany): https://global.toyota/en/detail/7868203",
+        "US EPA 1997 Test Car List, Toyota Supra 6-speed manual (M6-2, 320 hp, compression 8.5): axle ratio 3.13, N/V 34.4 (1998 list: 34.4; 1994 and 1995 lists: 34.5): https://www.epa.gov/sites/default/files/2016-07/97mftcl.zip"
+      ]
+    }
+  },
+  "voicing": {
+    "pulse": {
+      "widthDeg": 60,
+      "alpha": 9,
+      "beta": 4,
+      "evoOffsetDeg": 140,
+      "cycleAsymmetry": 0.1
+    },
+    "headersM": [
+      0.55,
+      0.643,
+      0.585,
+      0.678,
+      0.621,
+      0.564
+    ],
+    "collectors": [
+      {
+        "banks": [
+          0
+        ],
+        "lengthM": 0.35
+      }
+    ],
+    "turbine": {
+      "reflection": 0.45,
+      "lpHz": 1500
+    },
+    "exhaust": {
+      "midPipeM": 1.4,
+      "mufflerSectionsM": [
+        0.21,
+        0.34,
+        0.47
+      ],
+      "mufflerAction": 0.6,
+      "tailpipeM": 0.5,
+      "valve": {
+        "fitted": true,
+        "openGainDb": 4
+      }
+    },
+    "intake": {
+      "runnerM": 0.3,
+      "helmholtzHz": 150,
+      "gain": 0.4
+    },
+    "forcedInduction": {
+      "spoolTimeS": 0.6,
+      "maxShaftKrpm": 180,
+      "lift": "bov",
+      "cabinGainDb": -14
+    },
+    "mechanical": {
+      "blockGain": 0.3,
+      "valvetrainGain": 0.1
+    },
+    "overrun": {
+      "crackleRate": 0.5,
+      "fuelCutResumeRpm": 1150
+    },
+    "cabin": {
+      "lowpassHz": 600
+    },
+    "launchRpm": 3060,
+    "estimated": true
+  }
+}

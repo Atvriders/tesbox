@@ -1,0 +1,172 @@
+{
+  "id": "v6-twinturbo-38",
+  "name": "3.8 Twin-Turbo V6",
+  "inspiredBy": "Nissan GT-R (R35, VR38DETT)",
+  "set": "jdm",
+  "notes": "Variant: US-market Nissan GT-R (R35), MY2017 update onward (MY2017-2024 base/Premium, VR38DETT 3,799 cc, 565 hp at 6,800 rpm; the 600 hp NISMO is not modelled) with the dual-clutch sequential 6-speed rear transaxle (4.056/2.301/1.595/1.248/1.001/0.796) and the 3.700 rear final drive. The gear ratios, the final drives (front 2.937, rear 3.700) and the 285/35ZRF20 rear tyre are identical on every NissanNews GT-R specification page read (MY2012-2016, 2017, 2018, 2023, 2024; base, NISMO and Track Edition). ATTESA E-TS AWD with the gearbox and transfer in the rear transaxle: the gearbox final drive (3.700) turns the rear axle, so overall ratio = gear x 3.700 and the driven tyre is the rear 285/35ZRF20 run-flat, written 285/35ZR20 (the tyre-code pattern has no run-flat marker; same dimensions). The front axle (front differential 2.937, fed through the transfer) is not modelled. Layout: 60-degree V6 (owner's manual: '6-cylinder, V-slanted at 60°'); the owner's manual cylinder-numbering figure puts cylinders 1/3/5 on one bank and 2/4/6 on the other, numbered from the front. bank 0 = cylinders 1/3/5 (the bank containing cylinder 1; the right bank viewed from the driver's seat as drawn in that figure), bank 1 = cylinders 2/4/6. Firing order 1-2-3-4-5-6 at the even 720/6 = 120 deg interval (60-degree V6, first principles) alternates banks: bank 0 at 0/240/480, bank 1 at 120/360/600. Aspiration: two IHI turbochargers, one per bank ('An IHI turbocharger is mounted on each bank of the engine') -> parallel. RPM: redline = limiter rpm = 7,100, Nissan's published 'Maximum engine speed' for MY2017-on (NissanNews 2017, 2018, 2023 and 2024 specifications); the MY2012-2016 pages list 7,000 rpm (pre-update figure, not used); no separate tachometer red-line figure is published (owner's manual: 'Do not rev the engine into the red zone', no number). shiftTimeS 0.15 s = Nissan's documented R-mode gear change ('performs gear changes in just 0.15 seconds when in R-Mode'), used instead of the 0.10 s DCT default. Estimated (not published in the sources used): idle 700 rpm (owner's manual: 'Idle speed - No adjustment is necessary', no figure); limiter type fuel-hard and 150 rpm hysteresis at the published 7,100 rpm maximum engine speed. EPA Test Car List MY2019-2021 'GT-R' and MY2023-2024 'GT-R Premium' (565 hp, 6-gear automated manual, top gear ratio < 1): axle 3.7, N/V 36.5; model 6th 0.796 x 3.700 on 285/35ZR20 = 36.64 rpm/mph (+0.4 %). EPA's drive-system field reads '2-Wheel Drive, Rear' for this AWD car (EPA data-entry quirk); the MY2017-2018 rows list the 530 hp test vehicle MNE291 carried over from MY2015-2016, with the same axle 3.7 and N/V 36.5.",
+  "spec": {
+    "layout": {
+      "type": "v",
+      "bankAngleDeg": 60,
+      "crank": "n/a",
+      "displacementL": 3.799
+    },
+    "cycleDeg": 720,
+    "combustion": [
+      {
+        "angleDeg": 0,
+        "bank": 0
+      },
+      {
+        "angleDeg": 120,
+        "bank": 1
+      },
+      {
+        "angleDeg": 240,
+        "bank": 0
+      },
+      {
+        "angleDeg": 360,
+        "bank": 1
+      },
+      {
+        "angleDeg": 480,
+        "bank": 0
+      },
+      {
+        "angleDeg": 600,
+        "bank": 1
+      }
+    ],
+    "rpm": {
+      "idle": 700,
+      "redline": 7100,
+      "limiter": {
+        "type": "fuel-hard",
+        "rpm": 7100,
+        "hysteresisRpm": 150
+      }
+    },
+    "aspiration": {
+      "type": "turbo",
+      "turbo": {
+        "count": 2,
+        "layout": "parallel"
+      },
+      "supercharger": null
+    },
+    "gearbox": {
+      "type": "dct",
+      "overallRatios": [
+        15.0072,
+        8.5137,
+        5.9015,
+        4.6176,
+        3.7037,
+        2.9452
+      ],
+      "drivenTyre": "285/35ZR20",
+      "shiftTimeS": 0.15,
+      "tc": null
+    },
+    "sources": {
+      "layout": [
+        "Nissan North America, 2017 Nissan GT-R Owner's Manual (OM17E00R35U0, edit 2016-03-23), section 9 Specifications - Engine, p. 9-8 (Model VR38; gasoline, 4-cycle; cylinder arrangement '6-cylinder, V-slanted at 60°'; bore x stroke 95.5 x 88.4 mm; displacement 3,799 cm3): https://owners.nissanusa.com/content/techpub/ManualsAndGuides/GTR/2017/2017-GTR-owner-manual.pdf",
+        "Nissan North America, NissanNews USA '2017 Nissan GT-R Specifications', 21 January 2016 (VR38DETT; DOHC; longitudinal; V6; aluminum block and heads; 3.8 liters; bore & stroke 95.5 x 88.4 mm; 4 valves per cylinder): https://usa.nissannews.com/en-US/releases/2017-nissan-gt-r-specifications"
+      ],
+      "combustion": [
+        "Nissan North America, 2017 Nissan GT-R Owner's Manual (OM17E00R35U0, edit 2016-03-23), p. 9-8 (firing order 1-2-3-4-5-6; cylinder-numbering figure: cylinders 1, 3, 5 on one bank and 2, 4, 6 on the other, numbered from the engine front): https://owners.nissanusa.com/content/techpub/ManualsAndGuides/GTR/2017/2017-GTR-owner-manual.pdf",
+        "Four-stroke 60-degree V6: even firing every 720/6 = 120 deg; with odd cylinders on one bank and even on the other, the 1-2-3-4-5-6 order alternates banks (first principles)"
+      ],
+      "rpm": [
+        "Nissan North America, NissanNews USA '2017 Nissan GT-R Specifications', 21 January 2016 (565 hp @ 6,800 RPM; 467 lb-ft @ 3,300-5,800 RPM; 'Maximum engine speed 7,100 RPM'): https://usa.nissannews.com/en-US/releases/2017-nissan-gt-r-specifications",
+        "Nissan North America, NissanNews USA '2024 Nissan GT-R Specifications', published 13 January 2023 (565 hp @ 6,800 RPM; 'Maximum engine speed 7,100 RPM'): https://usa.nissannews.com/en-US/releases/2024-nissan-gt-r-specifications",
+        "Nissan North America, 2017 Nissan GT-R Owner's Manual (OM17E00R35U0), p. 9-8 ('Idle speed ... No adjustment is necessary' - no idle figure published) and p. 2-7 (tachometer: 'Do not rev the engine into the red zone'): https://owners.nissanusa.com/content/techpub/ManualsAndGuides/GTR/2017/2017-GTR-owner-manual.pdf"
+      ],
+      "aspiration": [
+        "Nissan North America, NissanNews USA '2017 Nissan GT-R Specifications', 21 January 2016 (Turbocharger: 'Twin IHI system'): https://usa.nissannews.com/en-US/releases/2017-nissan-gt-r-specifications",
+        "Nissan Motor (Thailand), New NISSAN GT-R 'Performance' web page, Wayback Machine copy of 15 May 2026 ('3.8-litre V6 24-valve twin-turbocharged engine ... 555PS at 6800 rpm'; 'An IHI turbocharger is mounted on each bank of the engine'): http://web.archive.org/web/20260515015057/https://en.nissan.co.th/vehicles/new-vehicles/new-gt-r/performance.html"
+      ],
+      "gearbox": [
+        "Nissan North America, NissanNews USA '2017 Nissan GT-R Specifications', 21 January 2016 (dual clutch sequential 6-speed rear transaxle; gear ratios 4.056/2.301/1.595/1.248/1.001/0.796, reverse 3.383; final drive ratio 'Front: 2.937, Rear: 3.700'; mid-mounted front engine / rear transaxle ATTESA E-TS all-wheel drive; tires F 255/40ZRF20, R 285/35ZRF20): https://usa.nissannews.com/en-US/releases/2017-nissan-gt-r-specifications",
+        "Nissan North America, NissanNews USA '2024 Nissan GT-R Specifications', published 13 January 2023 (same gear ratios 4.056/2.301/1.595/1.248/1.001/0.796; final drive ratio 'Front: 2.937, Rear: 3.700'; rear tires 285/35ZRF20): https://usa.nissannews.com/en-US/releases/2024-nissan-gt-r-specifications",
+        "Nissan Motor (Thailand), New NISSAN GT-R 'Performance' web page, Wayback Machine copy of 15 May 2026 ('performs gear changes in just 0.15 seconds when in R-Mode'; transmission with the transfer case in the rear, 'independent rear transaxle'; up to 100 % of torque to the rear wheels): http://web.archive.org/web/20260515015057/https://en.nissan.co.th/vehicles/new-vehicles/new-gt-r/performance.html",
+        "US EPA 2024 Test Car List, Nissan GT-R Premium (565 hp, 6-gear automated manual, top gear ratio < 1; axle ratio 3.7, N/V 36.5): https://www.epa.gov/system/files/documents/2025-05/24-testcar-2025-05.xlsx",
+        "US EPA 2021 Test Car List, Nissan GT-R (565 hp, 6-gear automated manual; axle ratio 3.7, N/V 36.5): https://www.epa.gov/system/files/documents/2022-04/21-tstcar-2022-04-15.xlsx"
+      ]
+    }
+  },
+  "voicing": {
+    "pulse": {
+      "widthDeg": 60,
+      "alpha": 9,
+      "beta": 4,
+      "evoOffsetDeg": 140,
+      "cycleAsymmetry": 0.1
+    },
+    "headersM": [
+      0.55,
+      0.55,
+      0.643,
+      0.643,
+      0.585,
+      0.585
+    ],
+    "collectors": [
+      {
+        "banks": [
+          0
+        ],
+        "lengthM": 0.35
+      },
+      {
+        "banks": [
+          1
+        ],
+        "lengthM": 0.35
+      }
+    ],
+    "turbine": {
+      "reflection": 0.45,
+      "lpHz": 1500
+    },
+    "exhaust": {
+      "midPipeM": 1.4,
+      "mufflerSectionsM": [
+        0.21,
+        0.34,
+        0.47
+      ],
+      "mufflerAction": 0.6,
+      "tailpipeM": 0.5,
+      "valve": {
+        "fitted": true,
+        "openGainDb": 4
+      }
+    },
+    "intake": {
+      "runnerM": 0.3,
+      "helmholtzHz": 150,
+      "gain": 0.4
+    },
+    "forcedInduction": {
+      "spoolTimeS": 0.6,
+      "maxShaftKrpm": 180,
+      "lift": "bov",
+      "cabinGainDb": -14
+    },
+    "mechanical": {
+      "blockGain": 0.3,
+      "valvetrainGain": 0.1
+    },
+    "overrun": {
+      "crackleRate": 0.5,
+      "fuelCutResumeRpm": 1200
+    },
+    "cabin": {
+      "lowpassHz": 600
+    },
+    "launchRpm": 3195,
+    "estimated": true
+  }
+}

@@ -1,0 +1,166 @@
+{
+  "id": "flat4-turbo-25",
+  "name": "2.5 Turbo Flat-Four",
+  "inspiredBy": "Subaru WRX STI (EJ257)",
+  "set": "jdm",
+  "notes": "Variant: US-market 2019-2021 Subaru WRX STI (VA body, base and Limited trims) with the 2.5-litre EJ25 (EJ257) turbocharged boxer four (2,457 cc, 310 hp at 6,000 rpm, 290 lb-ft at 4,000-5,200 rpm), the 6-speed manual with gear ratios 3.636/2.235/1.590/1.137/0.971/0.756 and the 3.900 final drive (Subaru of America's 2019, 2020 and 2021 WRX STI specification sheets all list these figures), on the standard 245/35R19 89W tyre. Symmetrical AWD with a longitudinal engine: the driven tyre is the rear one, the same size as the front. Overall ratio = gear x 3.900 (no other fixed reduction stage is listed). Layout: horizontally opposed (180 deg) four; Subaru (FHI) numbering puts cylinders #1 and #3 on the right-hand bank = bank 0 and #2 and #4 on the left-hand bank = bank 1 (taken from FHI's 2001 Impreza service manual, the EJ-family convention; no 2019-2021 service manual was available). Combustion entries are listed in firing order 1-3-2-4 (2021 owner's manual) at the even 720/4 = 180 deg interval: #1 at 0 and #3 at 180 (bank 0), #2 at 360 and #4 at 540 (bank 1), so each bank fires twice in a row - with the default unequal 0.45/0.75 m header pair this is the boxer rumble. Redline 6,700 rpm: Subaru's 2019 WRX/WRX STI Quick Guide says the STI-only REV alarm, which signals the tachometer red zone, can be set between 2,000 and 6,700 rpm, and the 2021 owner's manual gives that range as 2,000 rpm to the red zone. Source conflicts: (1) the plan expected 2nd-4th gear ratios 2.375/1.761/1.346 - those are the earlier 2.0 STi 6MT ratios in FHI's 2004 Impreza service manual (export markets); Subaru of America's own WRX STI specification sheets list 2.235/1.521/1.137 for MY2015-2018 and 2.235/1.590/1.137 for the MY2018 Type RA and MY2019-2021 (the 'revised 3rd gear ratio' of the 2018 Type RA and 2019 WRX STI press kits), so the MY2019-2021 figures are used; 1st, 5th, 6th, reverse (3.545) and the 3.900 final drive agree in every document. (2) Bore 99.6 mm (2021 specification sheet) vs 99.5 mm (2021 owner's manual; 99.5 x 79.0 mm gives the stated 2,457 cc) and compression ratio 8.1:1 vs 8.2:1 - neither affects the data. EPA: MY2021 Test Car List 'WRX STI' (2.5 L, 310 hp, 6-speed manual, top gear ratio < 1, axle 3.9) N/V 39.5; the model gives 39.67 rpm/mph (+0.4 %). The MY2019-2020 rows for the same car (listed as 'WRX' but 2.5 L, 310 hp, 6-speed manual, axle 3.9) give N/V 39.2 (model +1.2 %). Estimated (not published in the sources used): idle 750 rpm (FHI's 2004 export manual lists 700 +/- 100 rpm for the 2.0 STi; no EJ257 figure found); limiter fuel-hard at the 6,700 rpm red-zone start with 150 rpm hysteresis (no maximum engine speed is published for the STI; the fuel-cut type follows the same owner's manual's description of the CVT WRX rev limit, 'the fuel supply will be cut'); manual shift time 0.30 s (type default).",
+  "spec": {
+    "layout": {
+      "type": "flat",
+      "bankAngleDeg": 180,
+      "crank": "n/a",
+      "displacementL": 2.457
+    },
+    "cycleDeg": 720,
+    "combustion": [
+      {
+        "angleDeg": 0,
+        "bank": 0
+      },
+      {
+        "angleDeg": 180,
+        "bank": 0
+      },
+      {
+        "angleDeg": 360,
+        "bank": 1
+      },
+      {
+        "angleDeg": 540,
+        "bank": 1
+      }
+    ],
+    "rpm": {
+      "idle": 750,
+      "redline": 6700,
+      "limiter": {
+        "type": "fuel-hard",
+        "rpm": 6700,
+        "hysteresisRpm": 150
+      }
+    },
+    "aspiration": {
+      "type": "turbo",
+      "turbo": {
+        "count": 1,
+        "layout": "single"
+      },
+      "supercharger": null
+    },
+    "gearbox": {
+      "type": "manual",
+      "overallRatios": [
+        14.1804,
+        8.7165,
+        6.201,
+        4.4343,
+        3.7869,
+        2.9484
+      ],
+      "drivenTyre": "245/35R19",
+      "shiftTimeS": 0.3,
+      "tc": null
+    },
+    "sources": {
+      "layout": [
+        "Subaru of America, 2021 Subaru WRX STI Specifications, Subaru U.S. Media Center, Dec 2020 (4-cylinder SUBARU BOXER, turbocharged/intercooled; displacement 2,457 cc; bore x stroke 99.6 x 79.0 mm): https://s3.amazonaws.com/subarumedia.iconicweb.com/mediasite/attachments/2021_WRX_STI_Specs-FINAL.pdf",
+        "Subaru, 2021 WRX/WRX STI Owner's Manual (MSA5M2105A, North American model, edited 2020-10-01), Specifications - Engine (STI engine model EJ25 (2.5 L, DOHC, turbo); horizontally opposed, liquid cooled 4 cylinder, 4-stroke; 150 cu-in (2,457 cc); bore x stroke 99.5 x 79.0 mm): https://techinfo.subaru.com/stis/doc/ownerManual/MSA5M2105A_STIS-Opt.pdf"
+      ],
+      "combustion": [
+        "Subaru, 2021 WRX/WRX STI Owner's Manual (MSA5M2105A, North American model, edited 2020-10-01), Specifications - Engine (firing order 1-3-2-4 for the STI EJ25 and the WRX FA20): https://techinfo.subaru.com/stis/doc/ownerManual/MSA5M2105A_STIS-Opt.pdf",
+        "Fuji Heavy Industries Ltd., 2001 Impreza Service Manual, Mechanical ME(SOHC) section, pub. no. G1830GE2 (EJ-family cylinder numbering: 'When inspecting #1 and #3 cylinders' - spark plugs RH side; '#2 and #4 cylinders' - spark plugs LH side; separate #1/#3 and #2/#4 cylinder block halves; firing order 1-3-2-4; copy of the FHI PDF hosted by subaruport.ru): https://subaruport.ru/imp1/imp01_sec1_4.pdf",
+        "Four-stroke boxer four with even firing: interval 720/4 = 180 deg; the opposed pairs #1/#2 and #3/#4 fire 360 deg apart (first principles)"
+      ],
+      "rpm": [
+        "Subaru of America, 2019 WRX/WRX STI Quick Guide (MSA5B1905A, June 2018) ('REV Alarm System (WRX STI only) ... whenever the tachometer needle enters the red zone ... The REV alarm level can be set manually to an engine speed of your choosing between 2,000 and 6,700 rpm'): https://techinfo.subaru.com/stis/doc/ownerManual/MSA5B1905A_STIS.pdf",
+        "Subaru, 2021 WRX/WRX STI Owner's Manual (MSA5M2105A, edited 2020-10-01) (STI REV alarm level engine speed settable in 100 rpm steps 'within the range from 2,000 rpm to the red zone'): https://techinfo.subaru.com/stis/doc/ownerManual/MSA5M2105A_STIS-Opt.pdf",
+        "Subaru of America, 2021 Subaru WRX STI Specifications, Dec 2020 (310 hp @ 6,000 rpm; 290 lb-ft @ 4,000-5,200 rpm): https://s3.amazonaws.com/subarumedia.iconicweb.com/mediasite/attachments/2021_WRX_STI_Specs-FINAL.pdf",
+        "Wikipedia, Subaru EJ engine (last resort) (EJ257: 'increased redline of 6700 rpm'): https://en.wikipedia.org/wiki/Subaru_EJ_engine"
+      ],
+      "aspiration": [
+        "Subaru of America, 2021 Subaru WRX STI Specifications, Dec 2020 (turbocharged/intercooled; Fuel/Induction '... turbocharger, cross-flow intercooler'; max. boost 16.2 PSI): https://s3.amazonaws.com/subarumedia.iconicweb.com/mediasite/attachments/2021_WRX_STI_Specs-FINAL.pdf",
+        "Subaru of America, 2021 WRX & WRX STI Product Specifications, revised 12/10/2020 (WRX STI: 'TURBOCHARGER: SINGLE SCROLL, HIGH POWER'; maximum boost pressure 16.2 psi; PDF hosted by Subaru retailer site sube.net): https://www.sube.net/media/wysiwyg/landing_pages/wrx/2021_WRXSTI_Specifications.pdf"
+      ],
+      "gearbox": [
+        "Subaru of America, 2021 Subaru WRX STI Specifications, Subaru U.S. Media Center, Dec 2020 (6-speed manual; gear ratios 3.636/2.235/1.590/1.137/0.971/0.756, R 3.545; final drive 3.900; tires 245/35R19 89W): https://s3.amazonaws.com/subarumedia.iconicweb.com/mediasite/attachments/2021_WRX_STI_Specs-FINAL.pdf",
+        "Subaru of America, 2019 Subaru WRX STI Specifications, Nov 2018, and 2020 Subaru WRX STI Specifications, Nov 2019 (same gear ratios, final drive 3.900 and 245/35R19 89W tires): https://s3.amazonaws.com/subarumedia.iconicweb.com/mediasite/specs/2019_STI_specs_111918.PDF ; https://s3.amazonaws.com/subarumedia.iconicweb.com/mediasite/specs/3._2020_WRX_STI_Specs.pdf",
+        "Subaru of America, 2019 Subaru WRX STI press kit ('The 6-speed manual transmission features a revised 3rd gear ratio'; 310 horsepower): https://media.subaru.com/pressrelease/1290/1/2019-subaru-wrx-sti-press-kit",
+        "Subaru of America, 2015 Subaru WRX STI Specifications, Feb 2014 (pre-revision gear ratios 3.636/2.235/1.521/1.137/0.971/0.756, final drive 3.90; the MY2016 and MY2018 sheets repeat them): https://s3.amazonaws.com/subarumedia.iconicweb.com/mediasite/specs/2015_WRX_STI_Specs2.pdf",
+        "Subaru of America, 2021 WRX & WRX STI Product Specifications, revised 12/10/2020 (WRX STI: six-speed close-ratio manual transmission; manual transmission final-drive ratio 3.90:1; 245/35 R19 89W; PDF hosted by Subaru retailer site sube.net): https://www.sube.net/media/wysiwyg/landing_pages/wrx/2021_WRXSTI_Specifications.pdf",
+        "US EPA 2021 Test Car List, Subaru WRX STI (2.5 L, 310 hp, 6-speed manual, top gear ratio < 1, axle ratio 3.9, N/V 39.5): https://www.epa.gov/system/files/documents/2022-04/21-tstcar-2022-04-15.xlsx",
+        "Fuji Heavy Industries Ltd., 2004 Impreza Service Manual, General Information section, pub. no. G1870GE1, Specifications (export 2.0 STi 6MT 3.636/2.375/1.761/1.346/0.971/0.756, final reduction 3.900 - the earlier ratio set the plan expected, NOT used; see notes; copy of the FHI PDF hosted by subaruport.ru): https://subaruport.ru/imp4/imp04_gen.pdf"
+      ]
+    }
+  },
+  "voicing": {
+    "pulse": {
+      "widthDeg": 60,
+      "alpha": 9,
+      "beta": 4,
+      "evoOffsetDeg": 140,
+      "cycleAsymmetry": 0.1
+    },
+    "headersM": [
+      0.45,
+      0.75,
+      0.45,
+      0.75
+    ],
+    "collectors": [
+      {
+        "banks": [
+          0
+        ],
+        "lengthM": 0.35
+      },
+      {
+        "banks": [
+          1
+        ],
+        "lengthM": 0.35
+      }
+    ],
+    "turbine": {
+      "reflection": 0.45,
+      "lpHz": 1500
+    },
+    "exhaust": {
+      "midPipeM": 1.4,
+      "mufflerSectionsM": [
+        0.21,
+        0.34,
+        0.47
+      ],
+      "mufflerAction": 0.6,
+      "tailpipeM": 0.5,
+      "valve": {
+        "fitted": true,
+        "openGainDb": 4
+      }
+    },
+    "intake": {
+      "runnerM": 0.3,
+      "helmholtzHz": 140,
+      "gain": 0.4
+    },
+    "forcedInduction": {
+      "spoolTimeS": 0.6,
+      "maxShaftKrpm": 180,
+      "lift": "bov",
+      "cabinGainDb": -14
+    },
+    "mechanical": {
+      "blockGain": 0.3,
+      "valvetrainGain": 0.1
+    },
+    "overrun": {
+      "crackleRate": 0.5,
+      "fuelCutResumeRpm": 1250
+    },
+    "cabin": {
+      "lowpassHz": 600
+    },
+    "launchRpm": 3015,
+    "estimated": true
+  }
+}

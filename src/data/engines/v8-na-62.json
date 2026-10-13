@@ -1,0 +1,179 @@
+{
+  "id": "v8-na-62",
+  "name": "6.2 Small-Block V8 NA",
+  "inspiredBy": "Chevrolet Corvette (C8, LT2)",
+  "set": "american",
+  "notes": "Variant: Chevrolet Corvette Stingray (C8, LT2 6.2 L = 6,162 cc) with the Z51 Performance Package (performance exhaust: 495 hp / 369 kW at 6,450 rpm, 470 lb-ft / 637 Nm at 5,150 rpm; electronic limited-slip differential; Z51-specific axle ratio) and the M1L 8-speed dual-clutch transaxle (designed with TREMEC), on the standard Z51 rear (driven) tyre 305/30ZR20 (Michelin Pilot Sport 4S; front 245/35ZR19). Gear ratios 2.905/1.759/1.220/0.878/0.653/0.508/0.397/0.329 (reverse 2.632) and final drive 5.17 are from GM Specialty Vehicles' MY26 C8 Corvette Stingray specifications (Australian market, where Z51 is standard); the US Z51 car uses the same 5.17 (EPA Test Car List axle ratio 5.17). GM lists a single final drive, so overall ratio = gear x 5.17 for every gear; no other gear stage is applied. A 3.55 'ring and pinion' figure circulating for the C8 cannot be the overall reduction (8th x 3.55 would give N/V 14.9 against the EPA's 22.0). Checks: EPA MY2022-2025 Corvette (495 hp, 8 gears, RWD, axle 5.17) N/V 22.0, model 21.67 (-1.5 %; the MY2024 list also has a 5.17 row at N/V 21.8); the non-Z51 car (mechanical LSD, axle 4.89, EPA N/V 20.6, model with 4.89: 20.49) and the E-Ray (5.17, N/V 21.3 on 345/25ZR21, model 21.21) are not modelled but corroborate the ratios; GM's owner-manual paddle-downshift inhibit speeds for Z51 vs non-Z51 (4th 102 vs 108 mph, 5th 144 vs 152 mph) differ by factors 1.059 and 1.056, matching 5.17/4.89 = 1.057. Layout: 90-degree pushrod (OHV, 2 valves per cylinder) Gen V small-block V8, cross-plane crank, naturally aspirated, direct injection, Active Fuel Management. GM cylinder numbering: odd cylinders 1-3-5-7 on the left (driver's) bank = bank 0, even cylinders 2-4-6-8 on the right bank = bank 1 (Chevrolet Performance's Gen V LT1 harness views put the odd-side injector connector on the left bank and the even-side connector on the right). Combustion entries are listed in firing order 1-8-7-2-6-5-4-3 at even 90-degree intervals: banks L-R-L-R-R-L-R-L, bank 0 at 0/180/450/630, bank 1 at 90/270/360/540; GM's V4 (cylinder-deactivation) order 1-7-6-4 falls at 0/180/360/540, an even 180-degree subset, as it must. Conflict: the planning note expected a 6,600 rpm redline, but no GM document found states the LT2 redline; redline 6,500 rpm is from secondary press (CorvetteForum 2022: 'the base car's redline of 6,500 RPM', in an article quoting GM on the 4,000 rpm break-in limit). Estimated (not published in the sources used): limiter rpm 6,600 (GM's published 'Maximum Engine Speed 6600 RPM' for the closely related Gen V 6.2 LT1 crate engine, same bore, stroke, compression and firing order), limiter type fuel-soft with 150 rpm hysteresis, idle 700 rpm, and the DCT shift time 0.10 s (type default; GM only describes 'lightning-fast shifts').",
+  "spec": {
+    "layout": {
+      "type": "v",
+      "bankAngleDeg": 90,
+      "crank": "cross-plane",
+      "displacementL": 6.162
+    },
+    "cycleDeg": 720,
+    "combustion": [
+      {
+        "angleDeg": 0,
+        "bank": 0
+      },
+      {
+        "angleDeg": 90,
+        "bank": 1
+      },
+      {
+        "angleDeg": 180,
+        "bank": 0
+      },
+      {
+        "angleDeg": 270,
+        "bank": 1
+      },
+      {
+        "angleDeg": 360,
+        "bank": 1
+      },
+      {
+        "angleDeg": 450,
+        "bank": 0
+      },
+      {
+        "angleDeg": 540,
+        "bank": 1
+      },
+      {
+        "angleDeg": 630,
+        "bank": 0
+      }
+    ],
+    "rpm": {
+      "idle": 700,
+      "redline": 6500,
+      "limiter": {
+        "type": "fuel-soft",
+        "rpm": 6600,
+        "hysteresisRpm": 150
+      }
+    },
+    "aspiration": {
+      "type": "na",
+      "turbo": null,
+      "supercharger": null
+    },
+    "gearbox": {
+      "type": "dct",
+      "overallRatios": [
+        15.0189,
+        9.094,
+        6.3074,
+        4.5393,
+        3.376,
+        2.6264,
+        2.0525,
+        1.7009
+      ],
+      "drivenTyre": "305/30ZR20",
+      "shiftTimeS": 0.1,
+      "tc": null
+    },
+    "sources": {
+      "layout": [
+        "General Motors (Chevrolet Pressroom, United States), 2020 Chevrolet Corvette Stingray Preliminary Specifications, Wayback copy of 20 Sept 2019 (LT2 6.2L V8 VVT with direct injection and Active Fuel Management; bore x stroke 4.06 x 3.62 in / 103.25 x 92 mm; overhead valve, two valves per cylinder; compression 11.5:1): https://web.archive.org/web/20190920152437/https://media.chevrolet.com/media/us/en/chevrolet/vehicles/CorvetteGS/2020.tab1.html",
+        "General Motors, 2024 Chevrolet Corvette Owner Manual (84948178 A), Technical Data - Engine Specifications and Engine Data (6.2L V8 Engine (LT2) - Stingray and E-Ray, 6.2 L, 11.5:1; unaltered copy of the GM PDF hosted by corvetteblogger.com): https://www.corvetteblogger.com/docs/2024CorvetteOwnersManual.pdf",
+        "Displacement 6,162 cc = pi/4 x (103.25 mm)^2 x 92 mm x 8 from GM's bore and stroke (first principles)",
+        "Wikipedia, General Motors LS-based small-block engine, Generation V infobox (90-degree V8; 6162 cc) (last resort): https://en.wikipedia.org/wiki/General_Motors_LS-based_small-block_engine",
+        "Wikipedia, Chevrolet Corvette (C8) (LT2: naturally aspirated 6.2 L OHV V8 with crossplane crankshaft) (last resort): https://en.wikipedia.org/wiki/Chevrolet_Corvette_(C8)"
+      ],
+      "combustion": [
+        "General Motors (Chevrolet Pressroom, United States), 2020 Chevrolet Corvette Stingray Preliminary Specifications, Wayback copy of 20 Sept 2019 (Firing Order: 1-8-7-2-6-5-4-3 (all cylinders); 1-7-6-4 (with deactivation)): https://web.archive.org/web/20190920152437/https://media.chevrolet.com/media/us/en/chevrolet/vehicles/CorvetteGS/2020.tab1.html",
+        "General Motors, 2024 Chevrolet Corvette Owner Manual (84948178 A), Technical Data - Engine Specifications (6.2L V8 Engine (LT2): firing order 1-8-7-2-6-5-4-3; unaltered copy of the GM PDF hosted by corvetteblogger.com): https://www.corvetteblogger.com/docs/2024CorvetteOwnersManual.pdf",
+        "Chevrolet Performance (General Motors), LT1 E-ROD Instruction Sheet, part 19433066, rev 24 Jan 2023 (Gen V small block: 'Rear of LT1 Engine' view with the odd-side injector connector on the left bank and the even-side injector connector on the right bank; left/right side coil connectors; firing order 1-8-7-2-6-5-4-3): https://www.chevrolet.com/content/dam/chevrolet/na/us/english/index/performance/resources/installation-guides/crate-engines/02-pdf/lt1-e-rod-crate-engine-installation-guide.pdf",
+        "Cross-plane 90-degree V8 even firing interval 720/8 = 90 deg; with odd/even banks the order 1-8-7-2-6-5-4-3 gives each bank the cross-plane 180-270-180-90 interval pattern and puts the V4 order 1-7-6-4 at 0/180/360/540 (first principles)"
+      ],
+      "rpm": [
+        "CorvetteForum (Brett Foote), 'C8 Corvette Z06 LT6 Break in RPM Redline Revealed', 24 Feb 2022 (quotes a GM spokesperson on the break-in tachometer redlines; Stingray LT2 break-in limit 4,000 rpm; 'the base car's redline of 6,500 RPM'): https://www.corvetteforum.com/articles/c8-corvette-z06-lt6-break-in-rpm-redline-revealed/",
+        "Chevrolet Performance (General Motors), LT1 Wet Sump Crate Engine Installation Instructions, part 19431954, rev 24 Jan 2023 (Gen V LT1 6.2L: Maximum Engine Speed 6600 RPM; bore x stroke 103.25 x 92 mm; 11.5:1; firing order 1-8-7-2-6-5-4-3; basis of the LT2 limiter estimate): https://www.chevrolet.com/content/dam/chevrolet/na/us/english/index/performance/resources/installation-guides/crate-engines/03-pdf/LT1%20Crate%20Engine%20Installation%20Guide.pdf",
+        "General Motors (Chevrolet Pressroom, United States), 2020 Chevrolet Corvette Stingray Preliminary Specifications, Wayback copy of 20 Sept 2019 (SAE-certified 495 hp / 369 kW @ 6450 rpm and 470 lb-ft / 637 Nm @ 5150 rpm with performance exhaust): https://web.archive.org/web/20190920152437/https://media.chevrolet.com/media/us/en/chevrolet/vehicles/CorvetteGS/2020.tab1.html",
+        "General Motors, 2024 Chevrolet Corvette Owner Manual (84948178 A), New Vehicle Break-In ('Do not exceed 4000 rpm' for the first 500 mi) and Manual Paddle Shift ('At maximum engine speed (rpm), auto-shifts will occur after a specified time period to protect the engine'; unaltered copy of the GM PDF hosted by corvetteblogger.com): https://www.corvetteblogger.com/docs/2024CorvetteOwnersManual.pdf"
+      ],
+      "aspiration": [
+        "General Motors (Chevrolet Pressroom, United States), 2020 Chevrolet Corvette Stingray press release, Wayback copy of 20 Sept 2019 (\"Chevy's next-generation 6.2L Small Block V-8 LT2 engine, the only naturally aspirated V-8 in the segment\"; dry-sump lubrication): https://web.archive.org/web/20190920154440/https://media.chevrolet.com/media/us/en/chevrolet/vehicles/CorvetteGS/2020.print.html",
+        "GM Specialty Vehicles (General Motors, Australia/New Zealand), MY26 C8 Corvette Stingray Features & Specifications, October 2025 (6.2L LT2 V8 w/ Variable Valve Timing & Active Fuel Management; direct high-pressure fuel injection; overhead valve, two valves per cylinder; 369 kW / 637 Nm): https://news.chevroletanz.com/dld/content/Pages/news/anz/en/2025/oct/2026-Chevrolet-Corvette-range-revealed/_jcr_content/rightpar/sectioncontainer/par/download/file.res/GMSV-MY26-C8-Corvette-Stingray-Features-and-Specifications-Guide.pdf"
+      ],
+      "gearbox": [
+        "GM Specialty Vehicles (General Motors, Australia/New Zealand), MY26 C8 Corvette Stingray Features & Specifications, October 2025 (8-speed dual-clutch transmission; transmission ratios 2.905/1.759/1.220/0.878/0.653/0.508/0.397/0.329, reverse 2.632; final drive ratio 5.17; Z51 package standard: Michelin Pilot Sport 4S 245/35ZR19 front and 305/30ZR20 rear, electronic limited-slip differential, performance exhaust): https://news.chevroletanz.com/dld/content/Pages/news/anz/en/2025/oct/2026-Chevrolet-Corvette-range-revealed/_jcr_content/rightpar/sectioncontainer/par/download/file.res/GMSV-MY26-C8-Corvette-Stingray-Features-and-Specifications-Guide.pdf",
+        "General Motors (Chevrolet Pressroom, United States), 2021 Corvette Stingray fact sheet, 31 Aug 2020, Wayback copy of 11 Oct 2021 (eight-speed dual-clutch; Z51 Performance Package includes performance suspension, brakes, axle ratio, exhaust and eLSD): https://web.archive.org/web/20211011185620/https://media.chevrolet.com/content/media/us/en/chevrolet/vehicles/CorvetteGS/2021/_jcr_content/iconrow/textfile/file.res/2021%20Chevrolet%20Corvette%20Stingray.pdf",
+        "General Motors (Chevrolet Pressroom, United States), 2020 Chevrolet Corvette Stingray press release, Wayback copy of 20 Sept 2019 (eight-speed dual-clutch transmission designed with TREMEC; very low first gear, close-ratio gears 2-6, tall seventh and eighth): https://web.archive.org/web/20190920154440/https://media.chevrolet.com/media/us/en/chevrolet/vehicles/CorvetteGS/2020.print.html",
+        "General Motors, 2024 Chevrolet Corvette Owner Manual (84948178 A), Manual Paddle Shift tables for 'Stingray (LT2) with an Electronic Limited-Slip Differential (Z51)' and without Z51 (maximum downshift inhibit speeds into 4th/5th 102/144 mph vs 108/152 mph, factors 1.059/1.056 against 5.17/4.89 = 1.057; unaltered copy of the GM PDF hosted by corvetteblogger.com): https://www.corvetteblogger.com/docs/2024CorvetteOwnersManual.pdf",
+        "US EPA 2025 Test Car List, Chevrolet Corvette 6.2 L, 8-speed semi-automatic, RWD, 495 hp, test vehicle 621RYV2244 (axle ratio 5.17, N/V 22.0; non-Z51 test vehicle 621RYV2245: axle 4.89, N/V 20.6): https://www.epa.gov/system/files/documents/2026-01/25-testcar-2026-01-21.xlsx"
+      ]
+    }
+  },
+  "voicing": {
+    "pulse": {
+      "widthDeg": 60,
+      "alpha": 9,
+      "beta": 4,
+      "evoOffsetDeg": 140,
+      "cycleAsymmetry": 0.1
+    },
+    "headersM": [
+      0.55,
+      0.55,
+      0.643,
+      0.643,
+      0.585,
+      0.585,
+      0.678,
+      0.678
+    ],
+    "collectors": [
+      {
+        "banks": [
+          0
+        ],
+        "lengthM": 0.35
+      },
+      {
+        "banks": [
+          1
+        ],
+        "lengthM": 0.35
+      }
+    ],
+    "turbine": null,
+    "exhaust": {
+      "midPipeM": 1.4,
+      "mufflerSectionsM": [
+        0.21,
+        0.34,
+        0.47
+      ],
+      "mufflerAction": 0.6,
+      "tailpipeM": 0.5,
+      "valve": {
+        "fitted": true,
+        "openGainDb": 4
+      }
+    },
+    "intake": {
+      "runnerM": 0.3,
+      "helmholtzHz": 160,
+      "gain": 0.4
+    },
+    "forcedInduction": null,
+    "mechanical": {
+      "blockGain": 0.3,
+      "valvetrainGain": 0.1
+    },
+    "overrun": {
+      "crackleRate": 0.5,
+      "fuelCutResumeRpm": 1200
+    },
+    "cabin": {
+      "lowpassHz": 600
+    },
+    "launchRpm": 3575,
+    "estimated": true
+  }
+}

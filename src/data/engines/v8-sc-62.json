@@ -1,0 +1,189 @@
+{
+  "id": "v8-sc-62",
+  "name": "6.2 Supercharged V8",
+  "inspiredBy": "Dodge Challenger SRT Hellcat",
+  "set": "american",
+  "notes": "Variant: MY2015 US-market Dodge Challenger SRT Hellcat (non-Widebody; supercharged 6.2-liter HEMI Hellcat V-8, 6,166 cc, 707 bhp at 6,000 rpm, Max. Engine Speed 6,200 rpm) with the optional TorqueFlite 8HP90 eight-speed automatic (4.71/3.14/2.10/1.67/1.29/1.00/0.84/0.67, two decimals as printed by FCA) and the 2.62:1 asymmetric limited-slip final drive, on the standard 275/40ZR20 tyres (same size front and rear; the driven axle is the rear). Not modelled: the Tremec TR-6060 6-speed manual (3.70 axle), the Widebody (305/35ZR20), the Redeye/Super Stock (797/807 hp, 6,500 rpm) and the 3.09 axle; the MY2019-2023 FCA/Stellantis sheets rate the SRT Hellcat at 717 bhp but keep the 6,200 rpm max engine speed, the 8HP90 ratios, the 2.62 final drive and 275/40ZR20 tyres. Cylinder->bank: Chrysler numbering, odd cylinders 1-3-5-7 (front to rear) on the left/driver bank = bank 0 (the bank of cylinder 1), even cylinders 2-4-6-8 on the right/passenger bank = bank 1 (Mopar's harness layout puts 1-3-5-7 and 2-4-6-8 in separate banks with cylinder 1 at the front and its 'Bank 1' sensor on the left, OBD bank 1 being the bank of cylinder 1; Summit Racing's tech note gives 1-3-5-7 on the driver side). Combustion entries are listed in Mopar's firing order 1-8-4-3-6-5-7-2 at even 90-degree crank intervals, giving the per-bank pattern L-R-R-L-R-L-L-R (bank 0 at 0/270/450/540, bank 1 at 90/180/360/630). Cross-plane crank derived from that firing order: 8-4 and 5-7 fire the same bank in succession, which a flat-plane V8 (banks strictly alternating) cannot do. Supercharger: IHI 2,380 cc/rev Lysholm twin-screw with 3-lobe male / 5-lobe female rotors. FCA's 2.36:1 drive ratio is the belt drive (pulleyRatio 2.36) turning the low-speed rotor (2.36 x 6,200 = 14,632 rpm; FCA: 'maximum speed of 14,600 rpm'); the 3-lobe male rotor turns 5/3 as fast through the rotor timing gears (gearRatio 1.6667, first principles; SRT's chief engineer quotes 14,500 / 24,000 rpm for the low-/high-speed rotors), so the whine order pulleyRatio x gearRatio x 3 male lobes = 11.8 per engine revolution (= 2.36 x 5 female lobes). The lobe counts and rotor speeds come from secondary press (EngineLabs interview with SRT chief engineer Gregg Black); FCA's own press kit states twin-screw, 2,380 cc/rev, 2.36:1 and 14,600 rpm. shiftTimeS 0.16 s = FCA's '160 millisecond shifts' for the Hellcat's 8HP90 (2016 press kit). EPA: the MY2015 Test Car List row 'Challenger SRT8' (FCA US LLC, 6.2 L, 707 hp, 8-speed automatic with lockup, top gear ratio < 1, axle 2.62, N/V 21.1), carried over unchanged through MY2023, matches 8th gear (0.67 x 2.62 = 1.7554; FCA's 720.9 revs/mile x 1.7554 / 60 = 21.09); the model gives 21.22 rpm/mph (+0.6 %). Source conflicts: SAE Automotive Engineering (May 2014) names the automatic '845RE', while FCA's spec sheets and press kits call it the TorqueFlite 8HP90 (FCA used); FCA's 2017 sheet lists the 707 bhp at 6,200 rpm versus 6,000 rpm in the 2015 sheet (peak-power rpm is not used by the model). Estimated (not published in the sources used): idle 700 rpm; limiter type fuel-soft at the published 6,200 rpm max engine speed with 150 rpm hysteresis; torque converter stallRpmWot 2,500 rpm (FCA only states that the 2018 Demon's converter stall speed is 11 percent higher than the Hellcat's), lockupTurbineRpm 1,200 rpm and couplingSR 0.90.",
+  "spec": {
+    "layout": {
+      "type": "v",
+      "bankAngleDeg": 90,
+      "crank": "cross-plane",
+      "displacementL": 6.166
+    },
+    "cycleDeg": 720,
+    "combustion": [
+      {
+        "angleDeg": 0,
+        "bank": 0
+      },
+      {
+        "angleDeg": 90,
+        "bank": 1
+      },
+      {
+        "angleDeg": 180,
+        "bank": 1
+      },
+      {
+        "angleDeg": 270,
+        "bank": 0
+      },
+      {
+        "angleDeg": 360,
+        "bank": 1
+      },
+      {
+        "angleDeg": 450,
+        "bank": 0
+      },
+      {
+        "angleDeg": 540,
+        "bank": 0
+      },
+      {
+        "angleDeg": 630,
+        "bank": 1
+      }
+    ],
+    "rpm": {
+      "idle": 700,
+      "redline": 6200,
+      "limiter": {
+        "type": "fuel-soft",
+        "rpm": 6200,
+        "hysteresisRpm": 150
+      }
+    },
+    "aspiration": {
+      "type": "supercharger",
+      "turbo": null,
+      "supercharger": {
+        "kind": "twin-screw",
+        "pulleyRatio": 2.36,
+        "gearRatio": 1.6667,
+        "lobes": 3
+      }
+    },
+    "gearbox": {
+      "type": "tc-auto",
+      "overallRatios": [
+        12.3402,
+        8.2268,
+        5.502,
+        4.3754,
+        3.3798,
+        2.62,
+        2.2008,
+        1.7554
+      ],
+      "drivenTyre": "275/40ZR20",
+      "shiftTimeS": 0.16,
+      "tc": {
+        "stallRpmWot": 2500,
+        "lockupTurbineRpm": 1200,
+        "couplingSR": 0.9
+      }
+    },
+    "sources": {
+      "layout": [
+        "FCA US LLC, 2015 Dodge Challenger SRT Specifications (FCA North America media site) (Engine: Supercharged 6.2-liter HEMI Hellcat V-8 - 90-degree V-type, liquid-cooled; 376 cu. in. (6,166 cu. cm); bore x stroke 103.9 x 90.9 mm; pushrod-operated overhead valves, 16 valves): https://s3.amazonaws.com/chryslermedia.iconicweb.com/mediasite/specs/2015_DG_Challenger_SRT_SP.pdf",
+        "Mopar (FCA US LLC), Hellcrate 6.2L Supercharged Crate HEMI Engine Kit Instruction Sheet K6862743AB, 1/24/2022 (8 coil and 8 injector connectors, 4 on each side; harness layout with cylinders 1-3-5-7 in one bank and 2-4-6-8 in the other): https://www.moparoriginalparts.com/docs/77072452AE.pdf",
+        "Cross-plane crank: the firing order 1-8-4-3-6-5-7-2 fires the same bank twice in succession (8-4, 5-7), which a flat-plane V8 never does (its banks strictly alternate) (first principles)"
+      ],
+      "combustion": [
+        "Mopar (FCA US LLC), Hellcrate 6.2L Supercharged Crate HEMI Engine Kit Instruction Sheet K6862743AB, 1/24/2022, Ignition & Fuel ('The engine's firing order is 1-8-4-3-6-5-7-2'; Engine Harness Layout: cylinders 1-3-5-7 one bank, 2-4-6-8 the other, cylinders 1 and 2 at the front; 'Bank 1 TMAP (ACT) sensor is located on the left rear bottom of the supercharger'): https://www.moparoriginalparts.com/docs/77072452AE.pdf",
+        "Summit Racing Help Center, 'What is the Chrysler Gen. 3 Hemi Firing Order?' (secondary; 1-8-4-3-6-5-7-2; front to back 1, 3, 5, 7 on the driver side and 2, 4, 6, 8 on the passenger side): https://help.summitracing.com/knowledgebase/article/HE-04972/en-us",
+        "Cross-plane V8 even firing interval 720/8 = 90 deg (first principles)"
+      ],
+      "rpm": [
+        "FCA US LLC, 2015 Dodge Challenger SRT Specifications (Power (estimated SAE net) 707 bhp (527 kW) @ 6,000 rpm; Max. Engine Speed 6,200 rpm): https://s3.amazonaws.com/chryslermedia.iconicweb.com/mediasite/specs/2015_DG_Challenger_SRT_SP.pdf",
+        "Stellantis (FCA US LLC), 2023 Dodge Challenger / Challenger SRT Specifications (SRT Hellcat: 717 bhp (535 kW) @ 6,000 rpm; Max. Engine Speed 6,200 rpm): https://s3.amazonaws.com/chryslermedia.iconicweb.com/mediasite/specs/2023_DG_Challenger_ChallengerSRT_SP.pdf"
+      ],
+      "aspiration": [
+        "FCA US LLC (Chrysler Group), Press Kit: 2015 Dodge Challenger SRT, 'New Supercharged 6.2-liter HEMI with 707 Horsepower Is Most Powerful V-8 Ever Produced by Chrysler Group', 21 July 2014 ('The 2,380cc/rev blower features integral charge coolers and an integrated electronic bypass valve to regulate boost pressure to a maximum of 80 kPa (11.6 psi). Its twin-screw rotors ...'; 'a drive ratio of 2.36:1 and a maximum speed of 14,600 rpm'; one-way clutch de-coupler): https://media.stellantisnorthamerica.com/newsrelease.do?id=15663",
+        "EngineLabs (Mike Magda), 'SRT Engineer Explains How Hellcat Hemi Pulls 707 Horsepower', 24 July 2014, quoting Hellcat Hemi chief engineer Gregg Black (secondary; IHI twin-screw; 'The twin rotors (3-lobe male, 5-lobe female) are a helical design'; 'The supercharger is driven 2.36:1 over the engine crank speed, resulting in the low-speed rotor turning a maximum of 14,500 and the high-speed rotor spinning as high as 24,000 rpm'): https://www.enginelabs.com/news/hellcat-hemi-chief-engineer-provides-engine-details/",
+        "SAE International, Automotive Engineering (Lindsay Brooke), 'Chrysler's New Hellcat V8 Gets 707-Hp SAE Rating', 21 May 2014 (secondary; Lysholm-type (twin-screw) positive-displacement supercharger from IHI, 2380 cm3, 2.36:1 drive ratio, 14,600-rpm maximum operating speed): https://www.mobilityengineeringtech.com/component/content/article/41373-sae-ma-00521",
+        "gearRatio 5/3 = 1.6667: a 3-lobe male rotor meshing with a 5-lobe female rotor turns 5/3 as fast; the 2.36:1 belt drive turns the low-speed (female) rotor, so the male rotor turns 2.36 x 5/3 = 3.93 x crank speed (24,387 rpm at 6,200 rpm; quoted 'as high as 24,000 rpm') (first principles)"
+      ],
+      "gearbox": [
+        "FCA US LLC, 2015 Dodge Challenger SRT Specifications (TorqueFlite 8HP90 for the supercharged 6.2-liter HEMI Hellcat: gear ratios 4.71/3.14/2.10/1.67/1.29/1.00/0.84/0.67, reverse 3.30; final drive ratio 2.62 (6.2 liter); overall top gear 1.76; tires front and rear 275/40ZR20, 720.9 revs per mile): https://s3.amazonaws.com/chryslermedia.iconicweb.com/mediasite/specs/2015_DG_Challenger_SRT_SP.pdf",
+        "FCA US LLC (Chrysler Group), Press Kit: 2015 Dodge Challenger SRT, 21 July 2014 (eight-speed TorqueFlite gear ratios 4.71/3.14/2.10/1.67/1.29/1.00/0.84/0.67; 'The final-drive ratio for the TorqueFlite, as paired with the supercharged 6.2-liter HEMI V-8, is 2.62. The transmission's overall top gear is 1.76.'): https://media.stellantisnorthamerica.com/newsrelease.do?id=15663",
+        "FCA US LLC, Press Kit: 2016 Dodge Challenger and Challenger SRT, 31 Aug 2015 ('The Challenger SRT Hellcat puts its power to the ground via the upgraded TorqueFlite 8HP90, which features maximum engine-torque capacity and 160 millisecond shifts with rev-matching'): https://media.stellantisnorthamerica.com/newsrelease.do?id=16938",
+        "US EPA 2015 Test Car List, Dodge Challenger SRT8 (FCA US LLC; 6.2 L, 707 hp, automatic, 8 gears, lockup, top gear ratio < 1, 2-wheel drive rear; axle ratio 2.62, N/V 21.1): https://www.epa.gov/sites/default/files/2016-07/15tstcar.csv"
+      ]
+    }
+  },
+  "voicing": {
+    "pulse": {
+      "widthDeg": 60,
+      "alpha": 9,
+      "beta": 4,
+      "evoOffsetDeg": 140,
+      "cycleAsymmetry": 0.1
+    },
+    "headersM": [
+      0.55,
+      0.55,
+      0.643,
+      0.643,
+      0.585,
+      0.585,
+      0.678,
+      0.678
+    ],
+    "collectors": [
+      {
+        "banks": [
+          0
+        ],
+        "lengthM": 0.35
+      },
+      {
+        "banks": [
+          1
+        ],
+        "lengthM": 0.35
+      }
+    ],
+    "turbine": null,
+    "exhaust": {
+      "midPipeM": 1.4,
+      "mufflerSectionsM": [
+        0.21,
+        0.34,
+        0.47
+      ],
+      "mufflerAction": 0.6,
+      "tailpipeM": 0.5,
+      "valve": {
+        "fitted": true,
+        "openGainDb": 4
+      }
+    },
+    "intake": {
+      "runnerM": 0.3,
+      "helmholtzHz": 160,
+      "gain": 0.4
+    },
+    "forcedInduction": {
+      "spoolTimeS": 0.05,
+      "maxShaftKrpm": 180,
+      "lift": "bov",
+      "cabinGainDb": -14
+    },
+    "mechanical": {
+      "blockGain": 0.3,
+      "valvetrainGain": 0.1
+    },
+    "overrun": {
+      "crackleRate": 0.5,
+      "fuelCutResumeRpm": 1200
+    },
+    "cabin": {
+      "lowpassHz": 600
+    },
+    "launchRpm": 2790,
+    "estimated": true
+  }
+}

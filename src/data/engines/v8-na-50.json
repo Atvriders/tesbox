@@ -1,0 +1,168 @@
+{
+  "id": "v8-na-50",
+  "name": "5.0 V8 NA",
+  "inspiredBy": "Ford Mustang GT (Coyote)",
+  "set": "american",
+  "notes": "Variant: 2024+ Ford Mustang GT fastback (S650, Gen 4 5.0 Coyote, 5,038 cc) with the standard 6-speed manual (Getrag MT-82: 3.237/2.104/1.422/1.000/0.814/0.622) and the 3.55:1 limited-slip axle; the 10R80 automatic and the 3.15/3.73 axles are not modelled. Cross-plane 90-degree V8, Ford numbering: right (passenger) bank cylinders 1-4 = bank 0, left bank 5-8 = bank 1. Combustion entries are listed in firing order 1-5-4-8-6-3-7-2 at even 90-degree crank intervals, giving the uneven per-bank pattern R-L-R-L-L-R-L-R (bank 0 at 0/180/450/630). The firing order is taken from the 2014 (Gen 2) Mustang workshop manual and carried forward to Gen 4 per the Haltech Coyote reference (2011-on unchanged). Driven tyre is the standard GT rear 255/45R18 (the optional 255/40R19 has the same diameter within 0.1 mm). EPA MY2024 Mustang 6-speed manual, axle 3.55: N/V 28.3. Redline 7,500 rpm is from secondary press coverage (Ford's own figures give 480 hp at 7,150 rpm); limiter type/hysteresis, idle 700 rpm and the 0.30 s manual shift time are estimates.",
+  "spec": {
+    "layout": {
+      "type": "v",
+      "bankAngleDeg": 90,
+      "crank": "cross-plane",
+      "displacementL": 5.038
+    },
+    "cycleDeg": 720,
+    "combustion": [
+      {
+        "angleDeg": 0,
+        "bank": 0
+      },
+      {
+        "angleDeg": 90,
+        "bank": 1
+      },
+      {
+        "angleDeg": 180,
+        "bank": 0
+      },
+      {
+        "angleDeg": 270,
+        "bank": 1
+      },
+      {
+        "angleDeg": 360,
+        "bank": 1
+      },
+      {
+        "angleDeg": 450,
+        "bank": 0
+      },
+      {
+        "angleDeg": 540,
+        "bank": 1
+      },
+      {
+        "angleDeg": 630,
+        "bank": 0
+      }
+    ],
+    "rpm": {
+      "idle": 700,
+      "redline": 7500,
+      "limiter": {
+        "type": "fuel-soft",
+        "rpm": 7500,
+        "hysteresisRpm": 150
+      }
+    },
+    "aspiration": {
+      "type": "na",
+      "turbo": null,
+      "supercharger": null
+    },
+    "gearbox": {
+      "type": "manual",
+      "overallRatios": [
+        11.4914,
+        7.4692,
+        5.0481,
+        3.55,
+        2.8897,
+        2.2081
+      ],
+      "drivenTyre": "255/45R18",
+      "shiftTimeS": 0.3,
+      "tc": null
+    },
+    "sources": {
+      "layout": [
+        "Ford Motor Co., 2024 Ford Mustang Preliminary Technical Specifications, 22 Sept 2022 (5.0-liter V8, 5,038 cc, 93 x 92.7 mm, DOHC Ti-VCT): https://ffperformance.co/wp-content/uploads/2023/04/2024-mustang-technical-specifications.pdf",
+        "Ford Performance Parts, Gen 4 5.0L Coyote Dark Horse long block M-6006-M50DH (DOHC 32-valve V-8, forged crankshaft): https://performanceparts.ford.com/part/M-6006-M50DH",
+        "Cross-plane crank: Wikipedia, Ford Modular engine (last resort): https://en.wikipedia.org/wiki/Ford_Modular_engine"
+      ],
+      "combustion": [
+        "Ford 2014 Mustang Workshop Manual, Section 303-07B Engine Ignition 5.0L (4V), firing order 1-5-4-8-6-3-7-2: https://reichwein.it/manuals/Mustang_2014/Workshop_Manual_Wiring_Diagrams/Resources/Service_Manual/seb37b01.htm",
+        "Haltech knowledge base, Coyote V8 5.0L (cylinders 1-4 passenger/right bank, 5-8 driver/left bank; firing order unchanged since 2011): https://support.haltech.com/portal/en/kb/articles/coyote-engine",
+        "Cross-plane V8 even firing interval 720/8 = 90 deg (first principles)"
+      ],
+      "rpm": [
+        "Ford Performance, Gen 4 Coyote crate engines (480 hp @ 7,150 rpm, 415 lb-ft @ 4,900 rpm): https://www.fordracing.com/articles/enthusiasts/media-room/2024/4/ford-performance-parts-gen-4-coyote-engines",
+        "Ford Authority, 2024 Mustang GT power figures (7,500 rpm redline): https://fordauthority.com/2022/12/2024-ford-mustang-horsepower-figures-officially-revealed/"
+      ],
+      "aspiration": [
+        "Ford 2024 Mustang Preliminary Technical Specifications (Induction: naturally aspirated with dual air boxes and throttle bodies): https://ffperformance.co/wp-content/uploads/2023/04/2024-mustang-technical-specifications.pdf"
+      ],
+      "gearbox": [
+        "Ford 2024 Mustang Preliminary Technical Specifications (GT 6-speed manual Getrag MT-82 ratios; final drive 3.15:1 / 3.55:1; standard tyre 255/45R18): https://ffperformance.co/wp-content/uploads/2023/04/2024-mustang-technical-specifications.pdf",
+        "US EPA 2024 Test Car List, Ford Mustang 5.0 L 6-speed manual (axle ratio 3.55, N/V 28.3): https://www.epa.gov/system/files/documents/2025-05/24-testcar-2025-05.xlsx"
+      ]
+    }
+  },
+  "voicing": {
+    "pulse": {
+      "widthDeg": 60,
+      "alpha": 9,
+      "beta": 4,
+      "evoOffsetDeg": 140,
+      "cycleAsymmetry": 0.1
+    },
+    "headersM": [
+      0.55,
+      0.55,
+      0.643,
+      0.643,
+      0.585,
+      0.585,
+      0.678,
+      0.678
+    ],
+    "collectors": [
+      {
+        "banks": [
+          0
+        ],
+        "lengthM": 0.35
+      },
+      {
+        "banks": [
+          1
+        ],
+        "lengthM": 0.35
+      }
+    ],
+    "turbine": null,
+    "exhaust": {
+      "midPipeM": 1.4,
+      "mufflerSectionsM": [
+        0.21,
+        0.34,
+        0.47
+      ],
+      "mufflerAction": 0.6,
+      "tailpipeM": 0.5,
+      "valve": {
+        "fitted": true,
+        "openGainDb": 4
+      }
+    },
+    "intake": {
+      "runnerM": 0.3,
+      "helmholtzHz": 160,
+      "gain": 0.4
+    },
+    "forcedInduction": null,
+    "mechanical": {
+      "blockGain": 0.3,
+      "valvetrainGain": 0.1
+    },
+    "overrun": {
+      "crackleRate": 0.5,
+      "fuelCutResumeRpm": 1200
+    },
+    "cabin": {
+      "lowpassHz": 600
+    },
+    "launchRpm": 4125,
+    "estimated": true
+  }
+}

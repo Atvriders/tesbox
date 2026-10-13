@@ -1,0 +1,192 @@
+{
+  "id": "v12-na-65",
+  "name": "6.5 V12 NA",
+  "inspiredBy": "Ferrari 812 Superfast",
+  "set": "exotic",
+  "notes": "Variant: Ferrari 812 Superfast (type F152 BC; Swiss/EU type approvals 2017-2021, US model years 2018-2021; F140 GA 6,496 cc 65-degree V12, 588 kW / 800 cv at 8,500 rpm, 8,900 rpm maximum engine speed) with the 7-speed F1 dual-clutch transmission in the rear transaxle (front-mid engine, rear-wheel drive), on the standard rear 315/35 ZR20 tyre (driven axle; front 275/35 ZR20). Gearbox: no Ferrari or type-approval document listing the per-gear ratios was found (Ferrari's press release and its model pages for the 812 Superfast, 812 GTS, 812 Competizione, F12berlinetta and 12Cilindri give none; the US EPA and Swiss ASTRA data give only the axle ratio), nor a variant of this car/engine with primary-sourced ratios, so the gear ratios 3.34/2.29/1.73/1.37/1.11/0.90/0.70 come from auto motor und sport's technical data for its 812 Superfast test car (secondary press, two decimals) - flagged; replace them if a Ferrari or type-approval document with the ratios is found. Final drive: the US EPA Test Car List gives axle 4.37 for the 812 Superfast (MY2018-2021; also for the F12 Berlinetta) and 4.38 for the 812 GTS and 812 Competizione, and every Swiss federal type approval of the 812 (and F12) in ASTRA's TARGA data gives iA 4,38; 4.375 (= 35/8, consistent with both two-decimal figures) is used, so overall ratio = gear x 4.375. EPA N/V cross-check: 7th (0.70 x 4.375 = 3.0625) on 315/35ZR20 gives 37.00 rpm/mph vs the EPA 36.2 (+2.2 %, inside the 2.5 % tolerance); the EPA figure alone would imply a 7th of about 0.685, slightly taller than the secondary 0.70 (the EPA F12 Berlinetta row, same 4.37 axle and 315/35 ZR20 rear tyre, N/V 36.9, implies 0.698). The EPA 812 GTS and 812 Competizione rows (axle 4.38, N/V 36.2) belong to other variants and are not used. Combustion: 65-degree V12 (Ferrari); entries listed in firing order at an even 720/12 = 60-degree interval with banks strictly alternating; bank 0 = the bank of the cylinder that fires first, bank 1 = the other bank (Ferrari's cylinder numbering was not verified). Neither the firing order nor the crankpin arrangement was found in a Ferrari document: the even 60-degree interval assumes crankpins phased for even firing; with six common crankpins (two rods per pin) a 65-degree vee would instead fire at alternating 65/55-degree intervals (0, 65, 120, 185, 240, 305, 360, 425, 480, 545, 600, 665) - revisit if a Ferrari source is found. Any bank-alternating firing order gives the same angle/bank data. RPM: redline and limiter at the published 8,900 rpm maximum engine speed (Ferrari's 812 GTS page calls it the '8900 rpm rev limit'; same F140 GA engine); the 812 Superfast page text also speaks of power rising 'all the way to the maximum revs of 8,500 rpm', which is the power peak, not the rev limit. Estimated (not published in the sources used): idle 850 rpm; limiter type fuel-soft with 150 rpm hysteresis; shift time 0.10 s (DCT default).",
+  "spec": {
+    "layout": {
+      "type": "v",
+      "bankAngleDeg": 65,
+      "crank": "n/a",
+      "displacementL": 6.496
+    },
+    "cycleDeg": 720,
+    "combustion": [
+      {
+        "angleDeg": 0,
+        "bank": 0
+      },
+      {
+        "angleDeg": 60,
+        "bank": 1
+      },
+      {
+        "angleDeg": 120,
+        "bank": 0
+      },
+      {
+        "angleDeg": 180,
+        "bank": 1
+      },
+      {
+        "angleDeg": 240,
+        "bank": 0
+      },
+      {
+        "angleDeg": 300,
+        "bank": 1
+      },
+      {
+        "angleDeg": 360,
+        "bank": 0
+      },
+      {
+        "angleDeg": 420,
+        "bank": 1
+      },
+      {
+        "angleDeg": 480,
+        "bank": 0
+      },
+      {
+        "angleDeg": 540,
+        "bank": 1
+      },
+      {
+        "angleDeg": 600,
+        "bank": 0
+      },
+      {
+        "angleDeg": 660,
+        "bank": 1
+      }
+    ],
+    "rpm": {
+      "idle": 850,
+      "redline": 8900,
+      "limiter": {
+        "type": "fuel-soft",
+        "rpm": 8900,
+        "hysteresisRpm": 150
+      }
+    },
+    "aspiration": {
+      "type": "na",
+      "turbo": null,
+      "supercharger": null
+    },
+    "gearbox": {
+      "type": "dct",
+      "overallRatios": [
+        14.6125,
+        10.0188,
+        7.5688,
+        5.9938,
+        4.8563,
+        3.9375,
+        3.0625
+      ],
+      "drivenTyre": "315/35ZR20",
+      "shiftTimeS": 0.1,
+      "tc": null
+    },
+    "sources": {
+      "layout": [
+        "Ferrari S.p.A., ferrari.com model page '812 Superfast', technical specifications (Engine type V12 - 65 deg; overall displacement 6496 cc; bore and stroke 94 x 78 mm; compression ratio 13.6:1): https://www.ferrari.com/en-EN/auto/812-superfast",
+        "Ferrari S.p.A., press release 'The Ferrari 812 Superfast: Geneva world premiere for the new, extreme performance V12 berlinetta', Maranello, 16 February 2017 (new 6.5-litre V12; technical specifications: Type V12 - 65 deg, overall displacement 6,496 cc): https://www.ferrari.com/content/dam/ferrari-fcom/old/pdf/cs_ferrari_812_superfast_gbr.pdf",
+        "Swiss Federal Roads Office (ASTRA), TARGA type-approval open data, TG-Automobil dataset, type approvals 1FA185 (28 June 2017), 1FA190, 1FA196, 1FA202 and 1FA215 for the FERRARI 812 Superfast F152 BC (engine FERRARI F140GA, 4-stroke / 12 cylinders / V, direct injection, 6496 cm3): https://opendata.astra.admin.ch/ivzod/2000-Typengenehmigungen_TG_TARGA/2200-Basisdaten_TG_ab_1995/TG-Automobil.txt",
+        "US EPA 2018 Test Car List, Ferrari 812 Superfast (engine code F 140 GA, 12 cylinders, 6.5 L): https://www.epa.gov/sites/default/files/2018-10/18tstcar-2018-10-24.xlsx"
+      ],
+      "combustion": [
+        "Ferrari S.p.A., ferrari.com model page '812 Superfast', technical specifications (V12 - 65 deg): https://www.ferrari.com/en-EN/auto/812-superfast",
+        "Four-stroke V12 even firing interval = 720 deg / 12 cylinders = 60 deg with banks alternating (first principles; assumes crankpins phased for even firing - with six common crankpins a 65 deg vee would fire at alternating 65/55 deg; no Ferrari document seen states the crankpin arrangement or the firing order, see notes)"
+      ],
+      "rpm": [
+        "Ferrari S.p.A., ferrari.com model page '812 Superfast', technical specifications (max. power output 588 kW (800 cv) at 8,500 rpm; max. torque 718 Nm at 7,000 rpm; max. engine speed 8900 rpm): https://www.ferrari.com/en-EN/auto/812-superfast",
+        "Ferrari S.p.A., ferrari.com model page '812 GTS' (same 800 cv F140 GA V12; 'the heady 8900 rpm rev limit'): https://www.ferrari.com/en-EN/auto/812-gts"
+      ],
+      "aspiration": [
+        "Ferrari S.p.A., ferrari.com model page '812 Superfast' (718 Nm at 7,000 rpm, 'a completely unprecedented achievement for a naturally-aspirated Ferrari production engine'): https://www.ferrari.com/en-EN/auto/812-superfast",
+        "Ferrari S.p.A., press release, Maranello, 16 February 2017 (350 bar direct injection with variable geometry intake tracts 'conceptually derived from those of naturally-aspirated F1 engines'): https://www.ferrari.com/content/dam/ferrari-fcom/old/pdf/cs_ferrari_812_superfast_gbr.pdf"
+      ],
+      "gearbox": [
+        "Ferrari S.p.A., ferrari.com model page '812 Superfast' (7-speed F1 DCT; transaxle architecture coupling a front-mounted engine with a rear-mounted transmission; tyres front 275/35 ZR20 10J x 20, rear 315/35 ZR20 11.5J x 20): https://www.ferrari.com/en-EN/auto/812-superfast",
+        "Swiss Federal Roads Office (ASTRA), TARGA type-approval open data, TG-Automobil dataset, type approvals 1FA185, 1FA190, 1FA196, 1FA202 and 1FA215 for the FERRARI 812 Superfast (final drive rear; transmission m7a; axle ratio iA 4,38; Vmax 340 km/h): https://opendata.astra.admin.ch/ivzod/2000-Typengenehmigungen_TG_TARGA/2200-Basisdaten_TG_ab_1995/TG-Automobil.txt",
+        "US EPA 2018 Test Car List, Ferrari 812 Superfast (automated manual, 7 gears, top gear ratio < 1, 2-wheel drive rear; axle ratio 4.37, N/V 36.2; identical rows MY2019-2021): https://www.epa.gov/sites/default/files/2018-10/18tstcar-2018-10-24.xlsx",
+        "auto motor und sport (Motor Presse Stuttgart), 'Ferrari 812 Superfast: Technische Daten', test-car data, build dates 01/2018 to 07/2019 (7-speed dual-clutch gearbox; ratios I 3,34 / II 2,29 / III 1,73 / IV 1,37 / V 1,11 / VI 0,90 / VII 0,70 / R 2,98; rear-wheel drive) - secondary press, used because no Ferrari document with per-gear ratios was found: https://www.auto-motor-und-sport.de/news/ferrari-812-superfast-daten-infos-preise-marktstart/technische-daten/"
+      ]
+    }
+  },
+  "voicing": {
+    "pulse": {
+      "widthDeg": 60,
+      "alpha": 9,
+      "beta": 4,
+      "evoOffsetDeg": 140,
+      "cycleAsymmetry": 0.1
+    },
+    "headersM": [
+      0.55,
+      0.55,
+      0.643,
+      0.643,
+      0.585,
+      0.585,
+      0.678,
+      0.678,
+      0.621,
+      0.621,
+      0.564,
+      0.564
+    ],
+    "collectors": [
+      {
+        "banks": [
+          0
+        ],
+        "lengthM": 0.35
+      },
+      {
+        "banks": [
+          1
+        ],
+        "lengthM": 0.35
+      }
+    ],
+    "turbine": null,
+    "exhaust": {
+      "midPipeM": 1.4,
+      "mufflerSectionsM": [
+        0.21,
+        0.34,
+        0.47
+      ],
+      "mufflerAction": 0.6,
+      "tailpipeM": 0.5,
+      "valve": {
+        "fitted": true,
+        "openGainDb": 4
+      }
+    },
+    "intake": {
+      "runnerM": 0.3,
+      "helmholtzHz": 180,
+      "gain": 0.4
+    },
+    "forcedInduction": null,
+    "mechanical": {
+      "blockGain": 0.3,
+      "valvetrainGain": 0.1
+    },
+    "overrun": {
+      "crackleRate": 0.5,
+      "fuelCutResumeRpm": 1350
+    },
+    "cabin": {
+      "lowpassHz": 600
+    },
+    "launchRpm": 4895,
+    "estimated": true
+  }
+}

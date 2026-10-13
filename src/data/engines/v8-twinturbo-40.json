@@ -1,0 +1,191 @@
+{
+  "id": "v8-twinturbo-40",
+  "name": "4.0 Twin-Turbo V8",
+  "inspiredBy": "Audi RS 6 Avant (C8)",
+  "set": "exotic",
+  "notes": "Variant: Audi RS 6 Avant (C8, 2019-2025 generation), base 4.0 TFSI 441 kW / 600 PS version as specified in Audi's eTD (Program for Germany, status 06/13/2024), with the standard 8-speed tiptronic (hydraulic torque converter with lock-up clutch) and quattro permanent all-wheel drive (mechanical centre differential, 40:60). The RS 6 Avant performance (463 kW, eTD status 10/08/2024) has identical gear ratios, final drive and base tyre size, so the gearbox data apply to it unchanged. Overall ratios = gear ratio x the single 3.204 final drive (the eTD lists no second final-drive stage): 4.714/3.143/2.106/1.667/1.285/1.000/0.839/0.667 x 3.204. Driven tyre: the base 275/35 R21 (same size on both axles; longitudinal quattro, so the rear axle is used); the optional 22-inch 285/30 R22 is 0.5 % larger in rolling circumference. Layout: 90-degree V8, 3,996 cc (86.0 x 86.0 mm), hot-V with one twin-scroll turbocharger per cylinder bank in the inside V (parallel twin-turbo). Firing order 1-3-7-2-6-5-4-8 per Audi's press kit and the EA825 self-study programme (not the 1-5-4-8-6-3-7-2 order of Ford-numbered V8s), at even 720/8 = 90-degree intervals. Audi numbering: cylinder bank 1 = right bank (in the direction of travel) = cylinders 1-4 = bank 0; cylinder bank 2 = left bank = cylinders 5-8 = bank 1 (SSP 920493: bank 1 right / bank 2 left; its cylinder-on-demand figure shows cylinder 1 at the front of the right bank, which carries the cylinder 2 and 3 cam actuators, with the cylinder 5 and 8 actuators on the left bank; injectors and ignition coils are grouped 1-4 / 5-8). Combustion entries in firing order give the bank pattern 0,0,1,0,1,1,0,1 (bank 0 fires at 0/90/270/540 deg, bank 1 at 180/360/450/630 deg): the uneven per-bank intervals (90/180/270/180) of a cross-plane crank, matching the SSP's statement that the firing order on each bank creates a 180-degree interval for some cylinders; with cylinders 2, 3, 5 and 8 deactivated (cylinder on demand) the remaining order 1-7-6-4 fires every 180 deg. The cross-plane crank is derived (first principles): Audi's documents state shared crankpins (opposite cylinders on one journal) and five main bearings but do not name the crank plane. EPA: the US Test Car List rows for this powertrain are screened out of the N/V check - MY2023 'RS6 Avant' (591 hp) and MY2024-2026 'RS 6 Avant' (621 hp, the performance): 8 gears, axle 3.2, N/V 25.0, whereas the test's rolling-circumference model gives 25.91 rpm/mph in 8th on 275/35R21 (+3.6 %; 25.78 on 285/30R22, +3.1 %). 25.0 equals 0.667 x 3.204 on the UNLOADED 285/30 R22 circumference (25.00), i.e. the filed N/V uses no rolling-radius reduction; the MY2021-2022 rows for the same powertrain filed as 'RS7' (591 hp, 8 gears, axle 3.2) give N/V 26.3 (model -1.5 %), so the filed values for one gear set and tyre size differ by 5 % and none is used. Sources disagree on the 441 kW compression ratio (10.1:1 in the 2023 press kit, 9.7:1 in the 2024 eTD; not used by the model). Estimated (not published by Audi in the documents used): redline and limiter 6,800 rpm, taken from Porsche's published maximum engine speed for its closely related 3,996 cc 86.0 x 86.0 mm V8 biturbo (Cayenne Turbo technical data, MY N, 04/2021) and above the 6,000-6,250 rpm band of Audi's rated 441 kW; limiter type fuel-soft with 150 rpm hysteresis; idle 650 rpm; shift time 0.20 s (torque-converter automatic default; Audi states only 'optimized shift times'); torque converter stallRpmWot 2,500 rpm, lockupTurbineRpm 1,200 rpm, couplingSR 0.90.",
+  "spec": {
+    "layout": {
+      "type": "v",
+      "bankAngleDeg": 90,
+      "crank": "cross-plane",
+      "displacementL": 3.996
+    },
+    "cycleDeg": 720,
+    "combustion": [
+      {
+        "angleDeg": 0,
+        "bank": 0
+      },
+      {
+        "angleDeg": 90,
+        "bank": 0
+      },
+      {
+        "angleDeg": 180,
+        "bank": 1
+      },
+      {
+        "angleDeg": 270,
+        "bank": 0
+      },
+      {
+        "angleDeg": 360,
+        "bank": 1
+      },
+      {
+        "angleDeg": 450,
+        "bank": 1
+      },
+      {
+        "angleDeg": 540,
+        "bank": 0
+      },
+      {
+        "angleDeg": 630,
+        "bank": 1
+      }
+    ],
+    "rpm": {
+      "idle": 650,
+      "redline": 6800,
+      "limiter": {
+        "type": "fuel-soft",
+        "rpm": 6800,
+        "hysteresisRpm": 150
+      }
+    },
+    "aspiration": {
+      "type": "turbo",
+      "turbo": {
+        "count": 2,
+        "layout": "parallel"
+      },
+      "supercharger": null
+    },
+    "gearbox": {
+      "type": "tc-auto",
+      "overallRatios": [
+        15.1037,
+        10.0702,
+        6.7476,
+        5.3411,
+        4.1171,
+        3.204,
+        2.6882,
+        2.1371
+      ],
+      "drivenTyre": "275/35R21",
+      "shiftTimeS": 0.2,
+      "tc": {
+        "stallRpmWot": 2500,
+        "lockupTurbineRpm": 1200,
+        "couplingSR": 0.9
+      }
+    },
+    "sources": {
+      "layout": [
+        "Audi AG, Technical data sheet (eTD) Audi RS 6 Avant TFSI 441 kW, Program for Germany, status 06/13/2024 (engine type V8 engine; displacement 3996 cc; bore x stroke 86.0 x 86.0 mm): https://uploads.audi.com/system/production/car_motorizations/1184/file_en/6124caef9007249169df603b05d8cb70b2982f3f/eTD-Audi-RS6-Avant-TFSI-441kW_240613.pdf",
+        "Audi AG, Audi MediaCenter, 'The Audi RS 6 Avant and the new Audi RS 6 Avant performance' - Engine, 28 June 2023 ('The twin-turbo V8 engine has a conventional 90-degree bank angle and a displacement of 3,996 cc (bore x stroke: 86.0 x 86.0 millimeters)'): https://www.audi.com/en/the-audi-rs-6-avant-and-the-new-audi-rs-6-avant-performance-12345/engine-12348",
+        "Audi of America, LLC Service Training, eSelf-Study Program 920493 'The Audi 4.0l V8 TFSI engine from the EA825 series', February 2020, as filed with NHTSA ('Eight-cylinder V-engine with 90 deg bank angle'; forged crankshaft on five main bearings, 'connecting rods of the cylinders opposite of each other sharing the same bearing journal'): https://static.nhtsa.gov/odi/tsbs/2020/MC-10172005-0001.pdf",
+        "Cross-plane crank: firing order 1-3-7-2-6-5-4-8 with cylinders 1-4 on one bank gives uneven per-bank firing intervals of 90/180/270/180 deg, which a flat-plane crank (strictly alternating banks, 180 deg per bank) cannot produce (first principles)"
+      ],
+      "combustion": [
+        "Audi AG, Audi MediaCenter, 'The Audi RS 6 Avant and the new Audi RS 6 Avant performance' - Engine, 28 June 2023 ('The firing order is the same as that of the predecessor engine: 1-3-7-2-6-5-4-8'; cylinder on demand switches off cylinders 2, 3, 5 and 8): https://www.audi.com/en/the-audi-rs-6-avant-and-the-new-audi-rs-6-avant-performance-12345/engine-12348",
+        "Audi of America, LLC Service Training, eSelf-Study Program 920493, February 2020, as filed with NHTSA (technical data: firing order 1-3-7-2-6-5-4-8, 1-7-6-4 with cylinders 2, 3, 5, 8 shut off; 'cylinder bank 1 (right bank) and cylinder bank 2 (left bank)'; cylinder-on-demand figure 676_032: cylinder 1 at the front of the right bank, cylinder 2 and 3 cam actuators on the right bank, cylinder 5 and 8 actuators on the left bank; fuel injectors and ignition coils grouped cylinders 1-4 / 5-8; 'The firing order on each cylinder bank creates a 180 deg firing interval for some cylinders'): https://static.nhtsa.gov/odi/tsbs/2020/MC-10172005-0001.pdf",
+        "Cross-plane V8 even firing interval 720/8 = 90 deg; the 4-cylinder-mode order 1-7-6-4 then fires every 180 deg (first principles)"
+      ],
+      "rpm": [
+        "Audi AG, eTD Audi RS 6 Avant TFSI 441 kW, Program for Germany, status 06/13/2024 (max. power output 441 kW (600 PS) at 6000-6250 rpm; max. torque 800 Nm at 2050-4500 rpm; no maximum engine speed listed): https://uploads.audi.com/system/production/car_motorizations/1184/file_en/6124caef9007249169df603b05d8cb70b2982f3f/eTD-Audi-RS6-Avant-TFSI-441kW_240613.pdf",
+        "Porsche AG, Technical data Cayenne Turbo, MY N, 04/2021 (closely related V8 biturbo, 3,996 cm3, bore x stroke 86.0 x 86.0 mm, compression 10.1:1: maximum engine speed 6,800 rpm - basis of the estimated redline and limiter, see notes): https://newsroom.porsche.com/dam/jcr:5e228249-b704-47ab-943f-3fa34d19b003/PAG_Cayenne_Turbo_TD_EN.pdf"
+      ],
+      "aspiration": [
+        "Audi AG, eTD Audi RS 6 Avant TFSI 441 kW, Program for Germany, status 06/13/2024 (mixture preparation: direct injection, lambda control, knock control, turbocharger, intercooler): https://uploads.audi.com/system/production/car_motorizations/1184/file_en/6124caef9007249169df603b05d8cb70b2982f3f/eTD-Audi-RS6-Avant-TFSI-441kW_240613.pdf",
+        "Audi AG, Audi MediaCenter, 'The Audi RS 6 Avant and the new Audi RS 6 Avant performance' - Engine, 28 June 2023 ('two twin-scroll turbochargers'; 'Each turbo supplies one cylinder bank'; turbochargers in the 90-degree inside V): https://www.audi.com/en/the-audi-rs-6-avant-and-the-new-audi-rs-6-avant-performance-12345/engine-12348",
+        "Audi of America, LLC Service Training, eSelf-Study Program 920493, February 2020, as filed with NHTSA ('Hot Side Inside' twin-scroll turbochargers located centrally in the inner V; turbocharger bank 1 (right-side) and turbocharger bank 2 (left-side), turbines rotating in opposite directions): https://static.nhtsa.gov/odi/tsbs/2020/MC-10172005-0001.pdf"
+      ],
+      "gearbox": [
+        "Audi AG, eTD Audi RS 6 Avant TFSI 441 kW, Program for Germany, status 06/13/2024 (clutch: hydraulic torque converter with lock-up clutch; 8-speed tiptronic; transmission ratios 4.714/3.143/2.106/1.667/1.285/1.000/0.839/0.667; reverse -3.317; final drive ratio 3.204; tires (basic) 275/35 R 21 on cast aluminum 10.5 J x 21; quattro permanent all-wheel drive): https://uploads.audi.com/system/production/car_motorizations/1184/file_en/6124caef9007249169df603b05d8cb70b2982f3f/eTD-Audi-RS6-Avant-TFSI-441kW_240613.pdf",
+        "Audi AG, eTD Audi RS 6 Avant performance TFSI 463 kW, Program for Germany, status 10/08/2024 (identical 8-speed tiptronic ratios and 3.204 final drive; tires (basic) 275/35 ZR 21): https://uploads.audi.com/system/production/car_motorizations/1370/file_en/166de9727de38a5c299b6abc81e611a4b7b28256/eTD-Audi-RS6-Avant-performance-TFSI-463kW_241008.pdf",
+        "Audi AG, Audi MediaCenter, 'The Audi RS 6 Avant and the new Audi RS 6 Avant performance' - Transmission, 28 June 2023 (standard eight-speed tiptronic; purely mechanical center differential, 40:60 front:rear): https://www.audi.com/en/the-audi-rs-6-avant-and-the-new-audi-rs-6-avant-performance-12345/transmission-12349",
+        "Audi MediaInfo A19/36N (Dutch edition of Audi's launch release 'The fourth generation of the RS icon: the new Audi RS 6 Avant'), 20 August 2019 (standard eight-speed tiptronic with optimized shift times and launch control; standard 21-inch wheels with 275/35 tyres, optional 22-inch wheels with 285/30 tyres): https://cdn.uc.assets.prezly.com/b79cb03c-5425-4df9-b349-58fd565bf23e/-/inline/no/A19-36N%20-%20RS%206%20Avant%20(5p).pdf",
+        "US EPA 2023 Test Car List, Audi RS6 Avant (591 hp, 8 gears, axle ratio 3.2, N/V 25.0 - axle ratio consistent with 3.204; N/V screened out, see notes): https://www.epa.gov/system/files/documents/2024-05/23-testcar-2024-05-17_0.xlsx"
+      ]
+    }
+  },
+  "voicing": {
+    "pulse": {
+      "widthDeg": 60,
+      "alpha": 9,
+      "beta": 4,
+      "evoOffsetDeg": 140,
+      "cycleAsymmetry": 0.1
+    },
+    "headersM": [
+      0.55,
+      0.643,
+      0.55,
+      0.585,
+      0.643,
+      0.585,
+      0.678,
+      0.678
+    ],
+    "collectors": [
+      {
+        "banks": [
+          0
+        ],
+        "lengthM": 0.35
+      },
+      {
+        "banks": [
+          1
+        ],
+        "lengthM": 0.35
+      }
+    ],
+    "turbine": {
+      "reflection": 0.45,
+      "lpHz": 1500
+    },
+    "exhaust": {
+      "midPipeM": 1.4,
+      "mufflerSectionsM": [
+        0.21,
+        0.34,
+        0.47
+      ],
+      "mufflerAction": 0.6,
+      "tailpipeM": 0.5,
+      "valve": {
+        "fitted": true,
+        "openGainDb": 4
+      }
+    },
+    "intake": {
+      "runnerM": 0.3,
+      "helmholtzHz": 160,
+      "gain": 0.4
+    },
+    "forcedInduction": {
+      "spoolTimeS": 0.6,
+      "maxShaftKrpm": 180,
+      "lift": "bov",
+      "cabinGainDb": -14
+    },
+    "mechanical": {
+      "blockGain": 0.3,
+      "valvetrainGain": 0.1
+    },
+    "overrun": {
+      "crackleRate": 0.5,
+      "fuelCutResumeRpm": 1150
+    },
+    "cabin": {
+      "lowpassHz": 600
+    },
+    "launchRpm": 3060,
+    "estimated": true
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "id": "v8-flatplane-45",
+  "name": "4.5 Flat-Plane V8",
+  "inspiredBy": "Ferrari 458 Italia",
+  "set": "exotic",
+  "notes": "Variant: Ferrari 458 Italia coupe (project F142, 2009-2015, US model years 2010-2015; F136 FB engine; owner's manual rating 416 kW / 565 HP at 9,000 rpm, European rating 419 kW / 570 CV including 5 CV of ram effect) with the 7-speed F1 dual-clutch gearbox (rear transaxle, no torque converter) on the standard rear 295/35 ZR20 tyre (rear-wheel drive with E-Diff 3; the optional 285/35 ZR20 winter tyre is not modelled). Gearbox data are from Ferrari's 458 Italia Owner's Manual (2nd Edition January 2010, p. 27): gear ratios 3.077/2.185/1.626/1.286/1.028/0.839/0.693 and one differential/bevel gear pair ratio of 5.143 shared by every gear, so overall ratio = gear x 5.143 (no other fixed gear stage is listed). The 458 Spider owner's manual (p. 27) lists the same gear ratios, bevel gear pair ratio, F 136 FB engine and 9,200 rpm limit. Displacement conflict: the 2009 brochure and the January 2010 owner's manual print 4,499 cm3 (274.5 cu in), while ferrari.com, the later 458 Spider and 458 Speciale owner's manuals and the EPA engine code 'F136FB/4497' give 4,497 cc, which is also what 94 x 81 mm x 8 cylinders gives (4,496.7 cc); 4.497 L is used. Combustion: Ferrari describes a 90-degree V8 with a flat-plane crankshaft (180 degrees between the throws) whose 'even firing order between banks' suits the exhaust manifolds, so each bank fires every 180 deg and the two banks alternate at even 720/8 = 90 deg intervals (first principles). Entries are listed in firing order; bank 0 = the bank whose cylinder fires first (bank 0 at 0/180/360/540, bank 1 at 90/270/450/630). No readable Ferrari document gives the cylinder-numbered firing order: forum posts reportedly quoting the Ferrari service manual give 1-8-3-6-4-5-2-7 in Ferrari's numbering (cylinders 1-4 right bank front to rear, 5-8 left bank rear to front), which is 1-5-3-7-4-8-2-6 if both banks are numbered front to rear; either way the banks strictly alternate, so the angle/bank data do not depend on it (bank 0 would be the right bank, cylinders 1-4). RPM: redline 9,000 rpm = Ferrari's 'maximum revs per minute' (brochure; peak power is also at 9,000 rpm); limiter rpm 9,200 = the owner's manual 'Maximum RPM 9200 RPM (with limiting device)'; the optional steering-wheel shift LEDs light at 5,500/6,250/7,000/7,750/8,920 rpm. Estimated (not published in the sources used): idle 900 rpm; limiter type fuel-soft with 150 rpm hysteresis; shift time 0.10 s (DCT default: Ferrari quotes a zero 'gear shifting time' defined as the overlap of the two clutches' opening and closing phases, i.e. no torque interruption, but no shift duration). EPA Test Car Lists MY2010-2015 carry a single 458 row (test vehicle ZFF67NHB000171765, labelled '458 Italia Spyder' in every year including MY2010; engine code F136FB, 7 gears, rear drive, axle 5.14, N/V 43.5): it equals 7th x 5.143 on 295/35ZR20 within 1 % (model 43.91 rpm/mph) and is used in the EPA N/V check. In the same model 7th gear at 9,000 rpm gives about 205 mph (330 km/h), consistent with Ferrari's statement that seventh gear takes the car up to its >325 km/h maximum speed.",
+  "spec": {
+    "layout": {
+      "type": "v",
+      "bankAngleDeg": 90,
+      "crank": "flat-plane",
+      "displacementL": 4.497
+    },
+    "cycleDeg": 720,
+    "combustion": [
+      {
+        "angleDeg": 0,
+        "bank": 0
+      },
+      {
+        "angleDeg": 90,
+        "bank": 1
+      },
+      {
+        "angleDeg": 180,
+        "bank": 0
+      },
+      {
+        "angleDeg": 270,
+        "bank": 1
+      },
+      {
+        "angleDeg": 360,
+        "bank": 0
+      },
+      {
+        "angleDeg": 450,
+        "bank": 1
+      },
+      {
+        "angleDeg": 540,
+        "bank": 0
+      },
+      {
+        "angleDeg": 630,
+        "bank": 1
+      }
+    ],
+    "rpm": {
+      "idle": 900,
+      "redline": 9000,
+      "limiter": {
+        "type": "fuel-soft",
+        "rpm": 9200,
+        "hysteresisRpm": 150
+      }
+    },
+    "aspiration": {
+      "type": "na",
+      "turbo": null,
+      "supercharger": null
+    },
+    "gearbox": {
+      "type": "dct",
+      "overallRatios": [
+        15.825,
+        11.2375,
+        8.3625,
+        6.6139,
+        5.287,
+        4.315,
+        3.5641
+      ],
+      "drivenTyre": "295/35ZR20",
+      "shiftTimeS": 0.1,
+      "tc": null
+    },
+    "sources": {
+      "layout": [
+        "Ferrari S.p.A., Ferrari 458 Italia Owner's Manual, code no. 82933600, catalogue no. 3586/09, 2nd Edition January 2010, p. 27 Main engine specifications (Type F 136 FB; number of cylinders 8; cylinder sequence V 90 deg; cylinder bore 94 mm; piston stroke 81 mm; total displacement printed as 4499 cm3 (274.55 cu in); ManualsLib copy hosted by Rosso Corsa, independent Ferrari specialist, also at https://www.manualslib.com/manual/900232/Ferrari-458-Italia.html?page=27): https://www.rossocorsa.com/wp-content/uploads/2023/03/458italia.pdf",
+        "Ferrari S.p.A., Ferrari 458 Italia brochure (c) 2009 (back-cover codes 3580/09 and 95993236; archive.org scan), 'Engine, performance, sound' p. 17 ('a 90 degree V8 ... mounted in a mid-rear position'; 'flat-plane crankshaft with a 180 deg angle between the throws') and Technical Specifications (Type V8 - 90 deg; bore and stroke 94 x 81 mm; total displacement printed as 4499 cm3 / 274.5 cu in): https://archive.org/details/brochure-f-458_202109",
+        "Ferrari S.p.A., ferrari.com model page 'Ferrari 458 Italia (2009)', technical specifications (Engine type V8 - 90 deg; total displacement 274.4 cu in (4497 cc)): https://www.ferrari.com/en-EN/auto/458-italia",
+        "US EPA 2015 Test Car List, Ferrari 458 Italia Spyder (engine code F136FB/4497; 4.5 L; 8 cylinders): https://www.epa.gov/sites/default/files/2016-07/15tstcar.csv"
+      ],
+      "combustion": [
+        "Ferrari S.p.A., Ferrari 458 Italia brochure (c) 2009 (archive.org scan), 'Engine, performance, sound' p. 17 (90 degree V8; 'flat-plane crankshaft with a 180 deg angle between the throws' ... 'the even firing order between banks allows an optimal exhaust manifold design'): https://archive.org/details/brochure-f-458_202109",
+        "90-degree V8 with a flat-plane (180-degree) crankshaft: each bank fires like an inline four every 180 deg and the banks are offset by the 90 deg vee angle, so firings are evenly 720/8 = 90 deg apart with the banks strictly alternating (first principles)"
+      ],
+      "rpm": [
+        "Ferrari S.p.A., Ferrari 458 Italia Owner's Manual, code no. 82933600, 2nd Edition January 2010, p. 27 ('Maximum RPM (with limiting device) 9200 RPM'; max. power 416 kW (565 HP) at 9000 RPM; max. torque 540 Nm at 6000 RPM) and p. 120 (optional steering-wheel rev LEDs light at 5500, 6250, 7000, 7750 and 8920 RPM; ManualsLib copy hosted by Rosso Corsa): https://www.rossocorsa.com/wp-content/uploads/2023/03/458italia.pdf",
+        "Ferrari S.p.A., Ferrari 458 Italia brochure (c) 2009 (archive.org scan), Technical Specifications ('Maximum revs per minute 9000 rpm'; maximum power 419 kW (570 CV) at 9000 rpm, including 5 CV / 3.7 kW 'by dynamic over pressure'; maximum torque 540 Nm at 6000 rpm) and p. 17 ('designed with the aim of delivering a maximum of 9,000 rpm'): https://archive.org/details/brochure-f-458_202109",
+        "Ferrari S.p.A., ferrari.com model page 'Ferrari 458 Italia (2009)' ('engineered to reach a maximum of 9,000 rpm'; maximum power 419 kW (570 CV) @ 9000 rpm; maximum torque 540 Nm @ 6000 rpm): https://www.ferrari.com/en-EN/auto/458-italia"
+      ],
+      "aspiration": [
+        "Ferrari S.p.A., ferrari.com model page 'Ferrari 458 Italia (2009)' ('a benchmark for a naturally-aspirated production engine', 127 cv/l; 570 CV 'including 5 CV of ram effect'): https://www.ferrari.com/en-EN/auto/458-italia",
+        "Ferrari S.p.A., Ferrari 458 Italia brochure (c) 2009 (archive.org scan), engine section pp. 18-20 (GDI with Split Injection; aluminium intake manifold whose geometry is varied by three pneumatic throttle valves between the two plenums) and Technical Specifications (no turbocharger or supercharger listed; maximum power 'Included 3,7 kW by dynamic over pressure', i.e. ram effect): https://archive.org/details/brochure-f-458_202109"
+      ],
+      "gearbox": [
+        "Ferrari S.p.A., Ferrari 458 Italia Owner's Manual, code no. 82933600, catalogue no. 3586/09, 2nd Edition January 2010, p. 27 Transmission ratios (gearbox ratios 1 = 3.077, 2 = 2.185, 3 = 1.626, 4 = 1.286, 5 = 1.028, 6 = 0.839, 7 = 0.693, R = 2.791; differential/bevel gear pair ratio 5.143) and p. 28 Wheel rims and tyres (front 8.5 J x 20 with 235/35 ZR20, rear 10.5 J x 20 with 295/35 ZR20; ManualsLib copy hosted by Rosso Corsa, also at https://www.manualslib.com/manual/900232/Ferrari-458-Italia.html?page=27): https://www.rossocorsa.com/wp-content/uploads/2023/03/458italia.pdf",
+        "Ferrari S.p.A., Ferrari 458 Italia brochure (c) 2009 (archive.org scan), 'Dual-clutch F1 gearbox' p. 29 (seven-speed electro-hydraulic dual-clutch gearbox mounted longitudinally at the rear, without torque converter; 'gear shifting time (the overlap between the opening and closing phases of the two clutches) is zero'; 'specific work done on the final gear ratio and on first and seventh gears'; seventh gear 'takes the car up to its maximum speed') and Technical Specifications ('F1 dual clutch transmission 7 gears'; tyres front 235/35 ZR20 8.5 in, rear 295/35 ZR20 10.5 in): https://archive.org/details/brochure-f-458_202109",
+        "Ferrari S.p.A., ferrari.com model page 'Ferrari 458 Italia (2009)' (gearbox 'Dual-clutch, 7-speed F1'; tyres front 235/35 ZR20 8.5 in, rear 295/35 ZR20 10.5 in; 'specific, sportier gear ratios' than the California): https://www.ferrari.com/en-EN/auto/458-italia",
+        "US EPA 2015 Test Car List, Ferrari 458 Italia Spyder (engine code F136FB; 7 gears; 2-wheel drive rear; axle ratio 5.14; N/V 43.5; the same test vehicle ZFF67NHB000171765 row is in every list MY2010-2015): https://www.epa.gov/sites/default/files/2016-07/15tstcar.csv"
+      ]
+    }
+  },
+  "voicing": {
+    "pulse": {
+      "widthDeg": 60,
+      "alpha": 9,
+      "beta": 4,
+      "evoOffsetDeg": 140,
+      "cycleAsymmetry": 0.1
+    },
+    "headersM": [
+      0.55,
+      0.55,
+      0.643,
+      0.643,
+      0.585,
+      0.585,
+      0.678,
+      0.678
+    ],
+    "collectors": [
+      {
+        "banks": [
+          0
+        ],
+        "lengthM": 0.35
+      },
+      {
+        "banks": [
+          1
+        ],
+        "lengthM": 0.35
+      }
+    ],
+    "turbine": null,
+    "exhaust": {
+      "midPipeM": 1.4,
+      "mufflerSectionsM": [
+        0.21,
+        0.34,
+        0.47
+      ],
+      "mufflerAction": 0.6,
+      "tailpipeM": 0.5,
+      "valve": {
+        "fitted": true,
+        "openGainDb": 4
+      }
+    },
+    "intake": {
+      "runnerM": 0.3,
+      "helmholtzHz": 160,
+      "gain": 0.4
+    },
+    "forcedInduction": null,
+    "mechanical": {
+      "blockGain": 0.3,
+      "valvetrainGain": 0.1
+    },
+    "overrun": {
+      "crackleRate": 0.5,
+      "fuelCutResumeRpm": 1400
+    },
+    "cabin": {
+      "lowpassHz": 600
+    },
+    "launchRpm": 4950,
+    "estimated": true
+  }
+}

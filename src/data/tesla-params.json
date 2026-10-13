@@ -1,0 +1,367 @@
+{
+  "models-2012-40": {
+    "massKg": 2074,
+    "fTracN": 10166.6,
+    "pEffW": 224500
+  },
+  "models-2012-60": {
+    "massKg": 2074,
+    "fTracN": 10166.6,
+    "pEffW": 224500
+  },
+  "models-2012-85": {
+    "massKg": 2175,
+    "fTracN": 11420.4,
+    "pEffW": 269900
+  },
+  "models-2012-p85": {
+    "massKg": 2175,
+    "fTracN": 15288.9,
+    "pEffW": 310000
+  },
+  "models-2012-p85plus": {
+    "massKg": 2175,
+    "fTracN": 15288.9,
+    "pEffW": 310000
+  },
+  "models-2012-70": {
+    "massKg": 2102,
+    "fTracN": 11214.9,
+    "pEffW": 234900
+  },
+  "models-2012-70d": {
+    "massKg": 2183,
+    "fTracN": 11862.1,
+    "pEffW": 280400
+  },
+  "models-2012-85d": {
+    "massKg": 2223,
+    "fTracN": 17330.6,
+    "pEffW": 280400
+  },
+  "models-2012-p85d": {
+    "massKg": 2271,
+    "fTracN": 24466.3,
+    "pEffW": 334800
+  },
+  "models-2012-90d": {
+    "massKg": 2223,
+    "fTracN": 17299,
+    "pEffW": 280400
+  },
+  "models-2012-p90d": {
+    "massKg": 2271,
+    "fTracN": 23858.3,
+    "pEffW": 396700
+  },
+  "models-2016-60": {
+    "massKg": 2102,
+    "fTracN": 10610.2,
+    "pEffW": 280400
+  },
+  "models-2016-60d": {
+    "massKg": 2183,
+    "fTracN": 11848.7,
+    "pEffW": 280400
+  },
+  "models-2016-75": {
+    "massKg": 2102,
+    "fTracN": 14841.6,
+    "pEffW": 280400
+  },
+  "models-2016-75d": {
+    "massKg": 2183,
+    "fTracN": 16638.1,
+    "pEffW": 280400
+  },
+  "models-2016-90d": {
+    "massKg": 2223,
+    "fTracN": 17299,
+    "pEffW": 280400
+  },
+  "models-2016-p90d": {
+    "massKg": 2271,
+    "fTracN": 28952.2,
+    "pEffW": 354191
+  },
+  "models-2016-100d": {
+    "massKg": 2290,
+    "fTracN": 19769.1,
+    "pEffW": 280400
+  },
+  "models-2016-p100d": {
+    "massKg": 2316,
+    "fTracN": 29525.9,
+    "pEffW": 419589
+  },
+  "models-2018-75d": {
+    "massKg": 2238,
+    "fTracN": 17549.5,
+    "pEffW": 280400
+  },
+  "models-2018-100d": {
+    "massKg": 2290,
+    "fTracN": 19769.1,
+    "pEffW": 280400
+  },
+  "models-2018-p100d": {
+    "massKg": 2316,
+    "fTracN": 29525.9,
+    "pEffW": 419589
+  },
+  "models-2018-standard-range": {
+    "massKg": 2238,
+    "fTracN": 15449.7,
+    "pEffW": 398200
+  },
+  "models-2018-long-range": {
+    "massKg": 2290,
+    "fTracN": 23957.7,
+    "pEffW": 296800
+  },
+  "models-2018-performance": {
+    "massKg": 2316,
+    "fTracN": 29525.9,
+    "pEffW": 476720
+  },
+  "models-2018-long-range-plus": {
+    "massKg": 2290,
+    "fTracN": 17503.1,
+    "pEffW": 398200
+  },
+  "models-2021-long-range": {
+    "massKg": 2143,
+    "fTracN": 18964.3,
+    "pEffW": 490700
+  },
+  "models-2021-plaid": {
+    "massKg": 2241,
+    "fTracN": 27172.4,
+    "pEffW": 750200
+  },
+  "models-2021-standard-range": {
+    "massKg": 2143,
+    "fTracN": 16485.1,
+    "pEffW": 366100
+  },
+  "modelx-2015-60d": {
+    "massKg": 2427,
+    "fTracN": 11165.1,
+    "pEffW": 311000
+  },
+  "modelx-2015-75d": {
+    "massKg": 2427,
+    "fTracN": 14262.1,
+    "pEffW": 311000
+  },
+  "modelx-2015-90d": {
+    "massKg": 2464,
+    "fTracN": 15031.5,
+    "pEffW": 311000
+  },
+  "modelx-2015-p90d": {
+    "massKg": 2514,
+    "fTracN": 22923.3,
+    "pEffW": 396700
+  },
+  "modelx-2015-100d": {
+    "massKg": 2534,
+    "fTracN": 14908,
+    "pEffW": 385500
+  },
+  "modelx-2015-p100d": {
+    "massKg": 2562,
+    "fTracN": 22814.3,
+    "pEffW": 531700
+  },
+  "modelx-2018-75d": {
+    "massKg": 2482,
+    "fTracN": 14733.1,
+    "pEffW": 311000
+  },
+  "modelx-2018-100d": {
+    "massKg": 2534,
+    "fTracN": 14908,
+    "pEffW": 385500
+  },
+  "modelx-2018-p100d": {
+    "massKg": 2584,
+    "fTracN": 25963.6,
+    "pEffW": 531700
+  },
+  "modelx-2018-standard-range": {
+    "massKg": 2482,
+    "fTracN": 14865.8,
+    "pEffW": 398200
+  },
+  "modelx-2018-long-range": {
+    "massKg": 2534,
+    "fTracN": 16036,
+    "pEffW": 398200
+  },
+  "modelx-2018-performance": {
+    "massKg": 2584,
+    "fTracN": 29323.4,
+    "pEffW": 580200
+  },
+  "modelx-2018-long-range-plus": {
+    "massKg": 2534,
+    "fTracN": 16006.3,
+    "pEffW": 398200
+  },
+  "modelx-2021-long-range": {
+    "massKg": 2412,
+    "fTracN": 17310.7,
+    "pEffW": 496600
+  },
+  "modelx-2021-plaid": {
+    "massKg": 2540,
+    "fTracN": 25138.9,
+    "pEffW": 689800
+  },
+  "modelx-2021-standard-range": {
+    "massKg": 2410,
+    "fTracN": 15332.1,
+    "pEffW": 369900
+  },
+  "model3-2017-lr-rwd": {
+    "massKg": 1801,
+    "fTracN": 11840.6,
+    "pEffW": 192400
+  },
+  "model3-2017-mid-range": {
+    "massKg": 1747,
+    "fTracN": 9987.4,
+    "pEffW": 201300
+  },
+  "model3-2017-standard-range": {
+    "massKg": 1720,
+    "fTracN": 8653.7,
+    "pEffW": 210300
+  },
+  "model3-2017-sr-plus": {
+    "massKg": 1687,
+    "fTracN": 9041.7,
+    "pEffW": 210300
+  },
+  "model3-2017-rwd": {
+    "massKg": 1827,
+    "fTracN": 9328.5,
+    "pEffW": 191600
+  },
+  "model3-2017-lr-awd": {
+    "massKg": 1919,
+    "fTracN": 13004.5,
+    "pEffW": 293100
+  },
+  "model3-2017-performance": {
+    "massKg": 1919,
+    "fTracN": 17664.3,
+    "pEffW": 320700
+  },
+  "model3-highland-rwd": {
+    "massKg": 1840,
+    "fTracN": 9390.2,
+    "pEffW": 191600
+  },
+  "model3-highland-lr-rwd": {
+    "massKg": 1840,
+    "fTracN": 11082.9,
+    "pEffW": 225200
+  },
+  "model3-highland-lr-awd": {
+    "massKg": 1903,
+    "fTracN": 12796.8,
+    "pEffW": 296000
+  },
+  "model3-highland-performance": {
+    "massKg": 1914,
+    "fTracN": 17369.3,
+    "pEffW": 380300
+  },
+  "model3-highland-standard": {
+    "massKg": 1780,
+    "fTracN": 8493.7,
+    "pEffW": 227400
+  },
+  "modely-2020-lr-awd": {
+    "massKg": 2054,
+    "fTracN": 12010.7,
+    "pEffW": 290800
+  },
+  "modely-2020-performance": {
+    "massKg": 2070,
+    "fTracN": 16060.6,
+    "pEffW": 337100
+  },
+  "modely-2020-sr-rwd": {
+    "massKg": 1853,
+    "fTracN": 10412,
+    "pEffW": 208800
+  },
+  "modely-2020-awd": {
+    "massKg": 2054,
+    "fTracN": 11436.8,
+    "pEffW": 290800
+  },
+  "modely-2020-rwd": {
+    "massKg": 1959,
+    "fTracN": 8421.8,
+    "pEffW": 202800
+  },
+  "modely-2020-lr-rwd": {
+    "massKg": 1959,
+    "fTracN": 8420,
+    "pEffW": 220700
+  },
+  "modely-juniper-rwd-eu": {
+    "massKg": 2003,
+    "fTracN": 10396.8,
+    "pEffW": 220700
+  },
+  "modely-juniper-standard-rwd": {
+    "massKg": 1917,
+    "fTracN": 7821.1,
+    "pEffW": 220700
+  },
+  "modely-juniper-standard-awd": {
+    "massKg": 2001,
+    "fTracN": 12241.2,
+    "pEffW": 290800
+  },
+  "modely-juniper-lr-rwd": {
+    "massKg": 1973,
+    "fTracN": 10792.5,
+    "pEffW": 220700
+  },
+  "modely-juniper-lr-awd": {
+    "massKg": 2104,
+    "fTracN": 13082,
+    "pEffW": 290800
+  },
+  "modely-juniper-performance": {
+    "massKg": 2101,
+    "fTracN": 16739.9,
+    "pEffW": 380300
+  },
+  "modelyl-2025-awd": {
+    "massKg": 2163,
+    "fTracN": 14025.4,
+    "pEffW": 340000
+  },
+  "cybertruck-awd": {
+    "massKg": 3084,
+    "fTracN": 21749.1,
+    "pEffW": 463100
+  },
+  "cybertruck-cyberbeast": {
+    "massKg": 3188,
+    "fTracN": 33855.8,
+    "pEffW": 630100
+  },
+  "cybertruck-lr-rwd": {
+    "massKg": 2850,
+    "fTracN": 15868.4,
+    "pEffW": 239400
+  }
+}

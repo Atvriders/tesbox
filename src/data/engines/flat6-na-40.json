@@ -1,0 +1,163 @@
+{
+  "id": "flat6-na-40",
+  "name": "4.0 Flat-Six NA",
+  "inspiredBy": "Porsche 911 GT3 (992)",
+  "set": "euro",
+  "notes": "Variant: Porsche 911 GT3 (992.2, model year 2025 on; Porsche technical data '911 GT3 (PDK)', MY S 10/2024, EU model) with the standard seven-speed PDK (3.75/2.38/1.72/1.34/1.11/0.96/0.84) and the 4.54 rear-axle ratio, rear-wheel drive, on the standard rear 315/30 ZR 21 tyre (driven axle; front 255/35 ZR 20). Overall ratio = gear x 4.54 (Porsche lists no other fixed stage). The optional six-speed GT manual and the Touring Package are not modelled. Engine: 3,996 cc (102.0 x 81.5 mm) naturally aspirated flat-six (boxer), 375 kW (510 PS) at 8,500 rpm, 450 Nm at 6,250 rpm (the 2025 US press kit gives 502 hp and 331 lb-ft), maximum engine speed 9,000 rpm, which is also the US press kit's '9,000 rpm redline'. Combustion entries are listed in firing order 1-6-2-4-3-5 at the even 720/6 = 120 deg interval. Porsche numbers cylinders 1-3 on one bank and 4-6 on the other, so bank 0 = cylinders 1-3 and bank 1 = cylinders 4-6, and the banks strictly alternate (bank 0 at 0/240/480, bank 1 at 120/360/600). Which physical side is bank 0 is not needed for angle/bank data. Source caveat: the firing order is printed in Porsche's 911 Carrera (996) workshop manual (water-cooled M96 flat-six, 1997 and MY2002 pages); no public Porsche document seen states it for the 992 GT3 engine itself, so the Porsche flat-six order is assumed unchanged. The 1-3 / 4-6 bank grouping is confirmed by Porsche for the 991 GT3 (Technical Information 59/15: per-bank camshafts 'Cylinders 1-3' / 'Cylinders 4-6') and for the 4.0 GT3 Cup (991 II) engine ('Lambda cyl. 1-3/4-6'). EPA: every 911 GT3 row in the EPA Test Car Lists is the 992.1 predecessor (MY2022-2024): PDK axle 4.19, N/V 43.0 (the MY2022-2023 PDK rows give 8 gears, a data-entry quirk for the 7-speed PDK; MY2024 lists 7), and manual axle 3.76 (N/V 40.3, MY2022-2023) or 3.96 (N/V 43.0, MY2024). The MY2025 and MY2026 lists (versions of 2026-01-21) have no 911 GT3 row. EPA rows are for the 992.1 (axle 4.19 PDK / 3.96 manual); no N/V row. Consistency checks (not automated): Porsche's US press kit states that the 992.2 final drive is 'eight percent shorter than in the predecessor', and Porsche's 992.1 PDK sheet (02/2021) lists the same seven gear ratios with a 4.19 final drive (4.54 / 4.19 = 1.084). Scaling the EPA 992.1 N/V 43.0 by 1.084 gives 46.6 rpm/mph, against 46.47 from this model (-0.3 %). The model also puts 9,000 rpm in 7th at 311.7 km/h (193.7 mph), matching Porsche's 311 km/h (US: 193 mph) top speed, which is therefore reached at the rev limit. Generation differences, not conflicts: the 992.1 made 375 kW at 8,400 rpm and 470 Nm at 6,100 rpm with a 318 km/h top speed. Estimated (not published in the sources used): idle 800 rpm; limiter type fuel-hard at the published 9,000 rpm maximum with 150 rpm hysteresis (Porsche documents rev limitation 'by fuel cutoff and E-gas' for the 996 flat-six; hard vs soft and the hysteresis are estimates); shiftTimeS 0.10 s (PDK type default; Porsche gives no shift-time figure).",
+  "spec": {
+    "layout": {
+      "type": "flat",
+      "bankAngleDeg": 180,
+      "crank": "n/a",
+      "displacementL": 3.996
+    },
+    "cycleDeg": 720,
+    "combustion": [
+      {
+        "angleDeg": 0,
+        "bank": 0
+      },
+      {
+        "angleDeg": 120,
+        "bank": 1
+      },
+      {
+        "angleDeg": 240,
+        "bank": 0
+      },
+      {
+        "angleDeg": 360,
+        "bank": 1
+      },
+      {
+        "angleDeg": 480,
+        "bank": 0
+      },
+      {
+        "angleDeg": 600,
+        "bank": 1
+      }
+    ],
+    "rpm": {
+      "idle": 800,
+      "redline": 9000,
+      "limiter": {
+        "type": "fuel-hard",
+        "rpm": 9000,
+        "hysteresisRpm": 150
+      }
+    },
+    "aspiration": {
+      "type": "na",
+      "turbo": null,
+      "supercharger": null
+    },
+    "gearbox": {
+      "type": "pdk",
+      "overallRatios": [
+        17.025,
+        10.8052,
+        7.8088,
+        6.0836,
+        5.0394,
+        4.3584,
+        3.8136
+      ],
+      "drivenTyre": "315/30ZR21",
+      "shiftTimeS": 0.1,
+      "tc": null
+    },
+    "sources": {
+      "layout": [
+        "Dr. Ing. h.c. F. Porsche AG, Technical data '911 GT3 (PDK)', MY S 10/2024, EU model (Six-cylinder naturally aspirated boxer engine; 6 cylinders; 4 valves per cylinder; displacement 3,996 cm3; bore 102.0 mm; stroke 81.5 mm): https://newsroom.porsche.com/dam/jcr:ca1882c7-1588-4a2e-995c-fe19ef1281fc/pag-911-gt3-pdk-en.pdf",
+        "Porsche, 'The new 2025 Porsche 911 GT3' U.S. press kit, January 2025 ('The naturally aspirated 4.0-liter boxer engine with a rated power output of 502 hp'; 'six-cylinder boxer engine'): https://newsroom.porsche.com/dam/jcr:07bedb19-4e20-474e-905c-9cbcb2f9d940/2025%20Porsche_911_GT3%20U.S.%20press%20kit.pdf"
+      ],
+      "combustion": [
+        "Dr. Ing. h.c. F. Porsche AG, Workshop Manual 911 Carrera (996), section 0 'Technical data' (996O_1, Printed in Germany 1997) and 'Power unit (as of model year 02)' (Printed in Germany 2001) ('Firing order 1-6-2-4-3-5'), pages reproduced in Porsche Club GB's '996 Carrera Technical File' (compiled by R. Hamilton and R. Naghar for PCGB members): https://www.porscheclubgb.com/legacy/clientftp/Register/996/tec_996_technical_file.pdf",
+        "Porsche AfterSales, Technical Information 59/15 'Misfiring at High Revs', 911 GT3 (991), MY2014-2016, revision 2 of 23 Apr 2026, filed with NHTSA (per-bank parts: intake and outlet camshafts 'Cylinders 1-3' and 'Cylinders 4-6'; valve cover seals 'Cylinders 1-3' / 'Cylinders 4-6'): https://static.nhtsa.gov/odi/tsbs/2026/MC-11032413-0001.pdf",
+        "Porsche Motorsport, Technical Manual 911 GT3 Cup (991 II) MY2017, V4, 24 Aug 2017 (engine 'based on the 991 GT3 RS standard-production unit'; sensor rated values 'Lambda cyl. 1-3/4-6', i.e. one lambda sensor per bank of cylinders 1-3 and 4-6), hosted by Porsche Carrera Cup Australia: https://www.carreracup.com.au/wp-content/uploads/2018/04/PA10_0289_Technical_Manual_GT3_Cup_991_MY_2017_V4_en.pdf",
+        "Four-stroke flat-six: opposed cylinders reach TDC together and the three crank throw pairs are 120 deg apart, so it fires every 720/6 = 120 deg; with cylinders 1-3 on one bank, the order 1-6-2-4-3-5 alternates banks (first principles)",
+        "Wikipedia, 'Firing order' (last resort; 'Flat-six engines have used firing orders of R1-L2-R3-L1-R2-L3 or R1-L3-R2-L1-R3-L2', both bank-alternating): https://en.wikipedia.org/wiki/Firing_order"
+      ],
+      "rpm": [
+        "Dr. Ing. h.c. F. Porsche AG, Technical data '911 GT3 (PDK)', MY S 10/2024 (maximum power 375 kW (510 PS) at 8,500 rpm; maximum torque 450 Nm at 6,250 rpm; maximum engine speed 9,000 rpm): https://newsroom.porsche.com/dam/jcr:ca1882c7-1588-4a2e-995c-fe19ef1281fc/pag-911-gt3-pdk-en.pdf",
+        "Porsche, 'The new 2025 Porsche 911 GT3' U.S. press kit, January 2025 ('To achieve the impressive 9,000 rpm redline, Porsche uses solid cam finger followers'; tachometer '9,000 rpm redline'): https://newsroom.porsche.com/dam/jcr:07bedb19-4e20-474e-905c-9cbcb2f9d940/2025%20Porsche_911_GT3%20U.S.%20press%20kit.pdf",
+        "Dr. Ing. h.c. F. Porsche AG, Workshop Manual 911 Carrera (996), 'Power unit (as of model year 02)' (M96 flat-six: 'Rpm limitation by fuel cutoff and E-gas at 7300 rpm'; idle speed 670 +/- 40 rpm; context for the estimated GT3 limiter type, not GT3 data), reproduced in Porsche Club GB's '996 Carrera Technical File': https://www.porscheclubgb.com/legacy/clientftp/Register/996/tec_996_technical_file.pdf"
+      ],
+      "aspiration": [
+        "Dr. Ing. h.c. F. Porsche AG, Technical data '911 GT3 (PDK)', MY S 10/2024 ('Six-cylinder naturally aspirated boxer engine with gasoline particulate filter'; 'Variable plastic intake manifold with two switchable tuning flaps and six individual throttle valves'): https://newsroom.porsche.com/dam/jcr:ca1882c7-1588-4a2e-995c-fe19ef1281fc/pag-911-gt3-pdk-en.pdf"
+      ],
+      "gearbox": [
+        "Dr. Ing. h.c. F. Porsche AG, Technical data '911 GT3 (PDK)', MY S 10/2024, EU model (rear-wheel drive; seven-speed Porsche dual-clutch transmission (PDK); gear ratios 3.75/2.38/1.72/1.34/1.11/0.96/0.84, reverse 3.42; rear-axle gear ratio 4.54; tyres 255/35 ZR 20 front, 315/30 ZR 21 rear; top speed 311 km/h): https://newsroom.porsche.com/dam/jcr:ca1882c7-1588-4a2e-995c-fe19ef1281fc/pag-911-gt3-pdk-en.pdf",
+        "Porsche, 'The new 2025 Porsche 911 GT3' U.S. press kit, January 2025 (seven-speed PDK standard; 'both the seven-speed dual clutch transmission (PDK) and the six-speed GT manual transmission feature a final drive ratio that is eight percent shorter than in the predecessor'; 315/30 ZR 21 rear tyres; top track speed 193 mph with PDK): https://newsroom.porsche.com/dam/jcr:07bedb19-4e20-474e-905c-9cbcb2f9d940/2025%20Porsche_911_GT3%20U.S.%20press%20kit.pdf",
+        "Porsche newsroom (Spanish edition), Ficha tecnica '911 GT3 (PDK)' (992.1), 02/2021, EU version (predecessor, for comparison: same gear ratios 3.75/2.38/1.72/1.34/1.11/0.96/0.84, final drive 'Grupo' 4.19, 315/30 ZR 21 rear, 318 km/h): https://newsroom.porsche.com/dam/jcr:c6103be6-b5dd-47bf-a63c-60b90049721c/Ficha%20911%20GT3%20992%20-%20cambio%20PDK.pdf",
+        "US EPA 2024 Test Car List, Porsche 911 GT3 Touring (992.1, ECFE-992GT3-23, 7 gears, axle ratio 4.19, N/V 43.0) and 911 GT3 manual (FE-992GT3-MT-23, 6 gears, axle 3.96, N/V 43.0), predecessor rows, no N/V row used: https://www.epa.gov/system/files/documents/2025-05/24-testcar-2025-05.xlsx"
+      ]
+    }
+  },
+  "voicing": {
+    "pulse": {
+      "widthDeg": 60,
+      "alpha": 9,
+      "beta": 4,
+      "evoOffsetDeg": 140,
+      "cycleAsymmetry": 0.1
+    },
+    "headersM": [
+      0.55,
+      0.55,
+      0.643,
+      0.643,
+      0.585,
+      0.585
+    ],
+    "collectors": [
+      {
+        "banks": [
+          0
+        ],
+        "lengthM": 0.35
+      },
+      {
+        "banks": [
+          1
+        ],
+        "lengthM": 0.35
+      }
+    ],
+    "turbine": null,
+    "exhaust": {
+      "midPipeM": 1.4,
+      "mufflerSectionsM": [
+        0.21,
+        0.34,
+        0.47
+      ],
+      "mufflerAction": 0.6,
+      "tailpipeM": 0.5,
+      "valve": {
+        "fitted": true,
+        "openGainDb": 4
+      }
+    },
+    "intake": {
+      "runnerM": 0.3,
+      "helmholtzHz": 150,
+      "gain": 0.4
+    },
+    "forcedInduction": null,
+    "mechanical": {
+      "blockGain": 0.3,
+      "valvetrainGain": 0.1
+    },
+    "overrun": {
+      "crackleRate": 0.5,
+      "fuelCutResumeRpm": 1300
+    },
+    "cabin": {
+      "lowpassHz": 600
+    },
+    "launchRpm": 4950,
+    "estimated": true
+  }
+}

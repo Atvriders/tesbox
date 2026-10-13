@@ -1,0 +1,187 @@
+{
+  "id": "v10-na-52",
+  "name": "5.2 V10 NA",
+  "inspiredBy": "Lamborghini Huracán",
+  "set": "euro",
+  "notes": "Variant: Lamborghini Huracán LP 610-4 coupé (2014-2019; 5,204 cc 90-degree V10, 449 kW / 610 CV at 8,250 rpm, revs to 8,700 rpm; 7-speed LDF dual-clutch; rear-biased AWD) on the standard rear 305/30 R20 tyre. Driven tyre is the REAR: the LDF's integrated final drive and mechanical diff lock turn the rear axle, while the front axle is fed by a prop shaft from the second output shaft through a multi-plate clutch. Combustion: common-pin crankshaft with alternating 90/54-degree firing intervals and firing order 1-6-5-10-2-7-3-8-4-9 (Audi; Lamborghini: 'fires alternately at 54 and 90 degrees'). The two cylinders on a shared pin fire 90 degrees apart and each five-cylinder bank fires every 144 degrees, so the entries (cylinders 1/6/5/10/2/7/3/8/4/9) sit at 0/90/144/234/288/378/432/522/576/666 degrees and the banks strictly alternate. Banks follow Audi numbering: bank 1 = cylinders 1-5 (fired 1-5-2-3-4) = bank 0; bank 2 = cylinders 6-10 = bank 1. The earlier Audi S6/S8 5.2 FSI used an 18-degree split-pin crank with even 72-degree firing; that is not modelled. Gearbox: no Lamborghini document found lists the LDF gear ratios, so the documented variant is the Audi R8 Coupé V10 GT RWD (2023), which has the same 5.2 FSI V10 and the same 7-speed dual-clutch family. Its Audi eTD lists gear ratios 3.133/2.588/1.958/1.244/0.979/0.976/0.841 with final drives 4.893 / 3.938 on the Huracán's 245/30 | 305/30 R20 tyres. The per-gear final-drive mapping comes from Audi UK (April 2016) and Audi of America (2018) technical data for the R8 V10 plus, which uses the same gear set: drive I for reverse, 1st, 4th and 5th; drive II for 2nd, 3rd, 6th and 7th. Applied to the taller R8 V10 gear set (3.133/2.588/1.880/1.140/0.898/0.884/0.653 x 4.458 / 3.588), the same mapping reproduces the overall ratios in Audi's R8 V10 419 kW eTD (13.969/9.287/6.746/5.080/4.003/3.171/2.343). Overall ratio = gear x 4.893 (1st, 4th, 5th) or gear x 3.938 (2nd, 3rd, 6th, 7th). Source conflict: those Audi UK and Audi of America sheets print the R8 V10 plus final drives as 4.458 / 3.588. With 7th 0.841 that would give N/V about 38.5 rpm/mph, against the EPA's 43.0 (axle 3.94) for the MY2018 610 hp R8. The values are therefore treated as copied from the R8 V10 column; the GT eTD's 4.893 / 3.938 agrees with the EPA axle ratio 3.94 on every Huracán row and every R8 V10 plus / performance quattro row. The taller R8 V10 gear set is not the Huracán's and is not modelled. It appears in Audi's EU eTDs for the R8 V10 quattro 419 kW and V10 performance quattro 456 kW (overall 13.969...2.343) and in the US EPA rows with axle 3.59, N/V about 30. EPA cross-check: every Huracán row MY2015-2024 lists 7 gears, axle 3.94, N/V 42.8 (MY2019 Spyder: 43.0); the model gives 7th 0.841 x 3.938 on 305/30R20 = 42.19 rpm/mph (-1.4 %). Estimated (not published in the sources used): idle 850 rpm; limiter type fuel-soft with 150 rpm hysteresis, at the published 8,700 rpm maximum engine speed (Audi: 26.9 m/s mean piston speed 'at the engine speed limiter' = 8,700 rpm x 2 x 92.8 mm); redline taken as that 8,700 rpm maximum; shift time 0.10 s (DCT default). Audi says R8 launch control engages the clutch at around 4,500 rpm; voicing launchRpm stays the generated default.",
+  "spec": {
+    "layout": {
+      "type": "v",
+      "bankAngleDeg": 90,
+      "crank": "n/a",
+      "displacementL": 5.204
+    },
+    "cycleDeg": 720,
+    "combustion": [
+      {
+        "angleDeg": 0,
+        "bank": 0
+      },
+      {
+        "angleDeg": 90,
+        "bank": 1
+      },
+      {
+        "angleDeg": 144,
+        "bank": 0
+      },
+      {
+        "angleDeg": 234,
+        "bank": 1
+      },
+      {
+        "angleDeg": 288,
+        "bank": 0
+      },
+      {
+        "angleDeg": 378,
+        "bank": 1
+      },
+      {
+        "angleDeg": 432,
+        "bank": 0
+      },
+      {
+        "angleDeg": 522,
+        "bank": 1
+      },
+      {
+        "angleDeg": 576,
+        "bank": 0
+      },
+      {
+        "angleDeg": 666,
+        "bank": 1
+      }
+    ],
+    "rpm": {
+      "idle": 850,
+      "redline": 8700,
+      "limiter": {
+        "type": "fuel-soft",
+        "rpm": 8700,
+        "hysteresisRpm": 150
+      }
+    },
+    "aspiration": {
+      "type": "na",
+      "turbo": null,
+      "supercharger": null
+    },
+    "gearbox": {
+      "type": "dct",
+      "overallRatios": [
+        15.3298,
+        10.1915,
+        7.7106,
+        6.0869,
+        4.7902,
+        3.8435,
+        3.3119
+      ],
+      "drivenTyre": "305/30R20",
+      "shiftTimeS": 0.1,
+      "tc": null
+    },
+    "sources": {
+      "layout": [
+        "Automobili Lamborghini, Huracán LP 610-4 technical specifications on the official lamborghini.com model-history page (type V10, 90 deg, MPI + DSI; displacement 5,204 cm3; bore x stroke 84.5 x 92.8 mm; 610 CV (449 kW) at 8,250 rpm): https://www.lamborghini.com/en-en/history/huracan",
+        "Automobili Lamborghini press release 'Lamborghini Huracán LP 610-4 Spyder: Performance and lifestyle under the open sky', Sant'Agata Bolognese/Frankfurt, 14 Sep 2015, Technical Data (Ten-cylinder V, 90 deg, IDS+MPI dual injection; 5204 cm3; 84.5 x 92.8 mm; engine 'offering the same technical qualities as in the Huracán Coupé'). Copy of the Lamborghini press-office PDF hosted by motorshow.me: https://www.motorshow.me/uploadImages/GalleryDocs/Doc6109.pdf",
+        "Audi AG (Audi MediaCenter, now on audi.com), 'The new Audi R8: updated dynamics for the high-performance sports car' - Engine, 18 June 2019 (5.2 FSI V10 'whose cylinder banks face each other at 90 degree angles'; 5,204 cm3): https://www.audi.com/en/the-audi-r8-until-2024-updated-dynamics-for-the-high-performance-sports-car-11734/engine-11738"
+      ],
+      "combustion": [
+        "Audi AG (Audi MediaCenter, now on audi.com), 'The new Audi R8: updated dynamics for the high-performance sports car' - Engine, 18 June 2019 (crankshaft 'designed as a common pin shaft: The rods of the pistons on the opposite side engage with a shared crank pin, which results in alternating firing intervals of 54 and 90 degrees'; 'cylinder firing sequence of 1 - 6 - 5 - 10 - 2 - 7 - 3 - 8 - 4 - 9'): https://www.audi.com/en/the-audi-r8-until-2024-updated-dynamics-for-the-high-performance-sports-car-11734/engine-11738",
+        "Automobili Lamborghini press release 'Lamborghini Huracán LP 610-4: The New Benchmark Among Luxury Super Sports Cars' (2013 launch release, show premiere Geneva 2014), section 5 Power Unit ('The V10 fires alternately at 54 and 90 degrees, with its forged crankshaft conceived as a common-pin shaft'). Republished verbatim by the authorized dealer Lamborghini Dallas: https://www.lamborghinidallas.com/lamborghini-huracan-lp-610-4--the-new-benchmark-among-luxury-super-sports-cars.htm",
+        "Audi AG, Self-Study Programme 376 '5.2 litre V10 FSI engine', Service Training, 2006 (Audi cylinder numbering: firing order 1-6-5-10-2-7-3-8-4-9, 'bank 1: 1-5-2-3-4 or bank 2: 6-10-7-8-9', 'Each bank of cylinders is fired at a uniform firing interval of 144 deg'; that S6/S8 engine used an 18 deg split-pin crank for even 72 deg firing). Copy of the Audi PDF hosted by datarunners.net: https://content.datarunners.net/content/SSP/994376AG.pdf",
+        "Common-pin 90 deg V10: the two cylinders sharing a crankpin fire 90 deg apart and each five-cylinder bank fires every 144 deg. The published order 1-6-5-10-2-7-3-8-4-9 then lands at 0/90/144/234/288/378/432/522/576/666 deg (intervals 90/54 alternating) with the banks alternating (first principles)"
+      ],
+      "rpm": [
+        "Automobili Lamborghini press release 'Lamborghini Huracán LP 610-4 Spyder', 14 Sep 2015 (Drive: the V10 'revs up to 8,700 rpm' and 'generates 449 kW / 610 hp at 8,250 rpm'). Copy of the Lamborghini press-office PDF hosted by motorshow.me: https://www.motorshow.me/uploadImages/GalleryDocs/Doc6109.pdf",
+        "Audi AG (Audi MediaCenter, now on audi.com), 'The new Audi R8' - Engine, 18 June 2019 (5.2 FSI 'easily revs up to 8,700 rpm; at the engine speed limiter, the pistons cover a distance of 26.9 meters (88.3 ft) per second'): https://www.audi.com/en/the-audi-r8-until-2024-updated-dynamics-for-the-high-performance-sports-car-11734/engine-11738",
+        "Automobili Lamborghini, Huracán LP 610-4 technical specifications, lamborghini.com model-history page (max. power 610 CV (449 kW) at 8,250 rpm; max. torque 560 Nm at 6,500 rpm): https://www.lamborghini.com/en-en/history/huracan"
+      ],
+      "aspiration": [
+        "Automobili Lamborghini press release 'Lamborghini Huracán LP 610-4: The New Benchmark Among Luxury Super Sports Cars' (2013), section 5 Power Unit ('Like every Lamborghini engine, the 5.2-liter V10 is a high-performance, naturally aspirated unit'). Republished verbatim by the authorized dealer Lamborghini Dallas: https://www.lamborghinidallas.com/lamborghini-huracan-lp-610-4--the-new-benchmark-among-luxury-super-sports-cars.htm",
+        "Audi AG (Audi MediaCenter, now on audi.com), 'The new Audi R8' - Engine, 18 June 2019 (the V10 'is a fine specimen of a naturally aspirated engine'): https://www.audi.com/en/the-audi-r8-until-2024-updated-dynamics-for-the-high-performance-sports-car-11734/engine-11738"
+      ],
+      "gearbox": [
+        "Audi AG, Technical data 'Audi R8 Coupé V10 GT RWD 456 kW', Program for Germany, status 11/18/2022 (7-speed S tronic, hydraulically operated wet dual clutch; transmission ratios 3.133 / 2.588 / 1.958 / 1.244 / 0.979 / 0.976 / 0.841; 'Reverse gear ratio / final drive ratio 1-2 / 2-3' 2.647 / 4.893 / 3.938; tires 245/30 | 305/30 R 20; top speed 320 km/h): https://www.audi.com/system/production/car_motorizations/1367/file_en/704822696e703008e281b28366a85fc55e81064a/eTD_Audi_R8_Coupe_V10_GT_RWD_456kW_221118.pdf",
+        "Audi UK, 'Technical Data - Audi R8 V10 plus 5.2 FSI quattro S tronic (610 PS)', status April 2016 (gear ratios 3.133 / 2.588 / 1.958 / 1.244 / 0.979 / 0.976 / 0.841; final drive 'I: 4.458 for reverse, 1st, 4th + 5th, II: 3.588 for 2nd, 3rd, 6th, + 7th'; per-gear mapping used, final-drive values superseded, see notes): https://press.audi.co.uk/assets/documents/original/25799-AudiUK00016121AudiR8V10plus610PS.pdf",
+        "Audi of America, 2018 Audi R8 press kit (July 2018), Technical Specifications, Transmission/Drivetrain (R8 V10 gear ratios 3.133/2.588/1.880/1.140/0.898/0.884/0.653 and R8 V10 plus 3.133/2.588/1.958/1.244/0.979/0.976/0.841; 'Final Drive Ratio I (Reverse, 1st, 4th & 5th)' 4.458, 'Final Drive Ratio II (2nd, 3rd, 6th & 7th)' 3.588 in both columns): https://media.audiusa.com/assets/documents/original/4288-2018R8PressKit.pdf",
+        "Audi AG, Technical Data 'Audi R8 V10 Coupé (419 kW)', Program for Germany, status 10/19/2020 (7-speed S tronic overall ratios 13.969 / 9.287 / 6.746 / 5.080 / 4.003 / 3.171 / 2.343, reverse 11.801. These equal the R8 V10 gear set x 4.458 for 1st, 4th, 5th and reverse and x 3.588 for 2nd, 3rd, 6th, 7th, confirming the mapping; tires 245/35 | 295/35 R 19): https://uploads.audi-mediacenter.com/system/production/car_motorizations/335/file_en/824cd6b831b620f3969a43e61549348b22b8d6e6/eTechnische_Daten_Audi_R8V10_Coupe_419kW.pdf",
+        "Automobili Lamborghini, Huracán LP 610-4 technical specifications, lamborghini.com model-history page (gearbox 'Dual clutch gearbox LDF (Lamborghini Doppia Frizione) with 7 speeds'; Haldex gen. V all-wheel drive with rear mechanical self-locking differential; tires 245/30 R20 front, 305/30 R20 rear): https://www.lamborghini.com/en-en/history/huracan",
+        "Automobili Lamborghini press release 'Lamborghini Huracán LP 610-4: The New Benchmark Among Luxury Super Sports Cars' (2013), section 6 Transmission (LDF 7-speed dual-clutch; 'engine power flows along a twin drive shaft and two output shafts'; prop shaft to the front axle taken from the second output shaft; mechanical differential lock integrated into the LDF at the rear axle). Republished verbatim by the authorized dealer Lamborghini Dallas: https://www.lamborghinidallas.com/lamborghini-huracan-lp-610-4--the-new-benchmark-among-luxury-super-sports-cars.htm",
+        "US EPA 2016 Test Car List, Lamborghini Huracan (610 hp, 7-speed automated manual, all-wheel drive, test group GVGAV05.2NLE): axle ratio 3.94, N/V 42.8. Every Huracán row MY2015-2024 gives 3.94 / 42.8, MY2019 Spyder 43.0: https://www.epa.gov/sites/default/files/2016-07/16tstcar.csv"
+      ]
+    }
+  },
+  "voicing": {
+    "pulse": {
+      "widthDeg": 60,
+      "alpha": 9,
+      "beta": 4,
+      "evoOffsetDeg": 140,
+      "cycleAsymmetry": 0.1
+    },
+    "headersM": [
+      0.55,
+      0.55,
+      0.643,
+      0.643,
+      0.585,
+      0.585,
+      0.678,
+      0.678,
+      0.621,
+      0.621
+    ],
+    "collectors": [
+      {
+        "banks": [
+          0
+        ],
+        "lengthM": 0.35
+      },
+      {
+        "banks": [
+          1
+        ],
+        "lengthM": 0.35
+      }
+    ],
+    "turbine": null,
+    "exhaust": {
+      "midPipeM": 1.4,
+      "mufflerSectionsM": [
+        0.21,
+        0.34,
+        0.47
+      ],
+      "mufflerAction": 0.6,
+      "tailpipeM": 0.5,
+      "valve": {
+        "fitted": true,
+        "openGainDb": 4
+      }
+    },
+    "intake": {
+      "runnerM": 0.3,
+      "helmholtzHz": 170,
+      "gain": 0.4
+    },
+    "forcedInduction": null,
+    "mechanical": {
+      "blockGain": 0.3,
+      "valvetrainGain": 0.1
+    },
+    "overrun": {
+      "crackleRate": 0.5,
+      "fuelCutResumeRpm": 1350
+    },
+    "cabin": {
+      "lowpassHz": 600
+    },
+    "launchRpm": 4785,
+    "estimated": true
+  }
+}

@@ -34,6 +34,7 @@ Alpine Linux packages under their own licences).
 Development and test tools (not shipped to users):
   Vite, Vitest, Rolldown, tsx, ESLint, typescript-eslint, @eslint/js, @types/node — MIT
   TypeScript, Playwright — Apache-2.0
+  Ajv — MIT (JSON Schema validation in tests and tools/build-catalogue.ts only)
   jsQR — Apache-2.0 (used only by tests to decode QR codes: tests/unit/qr.test.ts, tests/e2e/probe-qr.spec.ts)
 
 Not affiliated with or endorsed by Tesla, Inc. or any car manufacturer.

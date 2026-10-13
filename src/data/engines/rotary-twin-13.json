@@ -1,0 +1,157 @@
+{
+  "id": "rotary-twin-13",
+  "name": "1.3 Twin-Rotor Turbo Rotary",
+  "inspiredBy": "Mazda RX-7 (FD, 13B-REW)",
+  "set": "jdm",
+  "notes": "Variant: 1993 US-market Mazda RX-7 (FD, 13B-REW 1,308 cc, 255 hp at 6,500 rpm) with the 5-speed manual (3.48/2.02/1.39/1.00/0.72, final drive 4.10, as printed to two decimals in Mazda's brochure) on P225/50ZR16 tyres (R-1; base P225/50R16 is the same size). cycleDeg 1080 (eccentric-shaft degrees): each rotor face fires once per three e-shaft revolutions; rotor 1 faces at 0/360/720, rotor 2 offset 180 deg at 180/540/900, so firings fall every 180 deg (2 per e-shaft rev). Both rotors' exhaust ports are treated as one exhaust bank (they merge in the turbo manifold); revisit in the Sound Lab. Sequential twin turbochargers (primary from low rpm, secondary in the upper range). Redline 8,000 rpm (manual; 7,000 with the automatic). Estimated (not published in the sources used): idle 750 rpm, fuel-cut limiter at 8,000 rpm with 200 rpm hysteresis, manual shift time 0.30 s. No EPA N/V row is used: the 1993-1995 EPA test car files are PKZIP-imploded archives not read here.",
+  "spec": {
+    "layout": {
+      "type": "rotary",
+      "bankAngleDeg": 0,
+      "crank": "n/a",
+      "displacementL": 1.308
+    },
+    "cycleDeg": 1080,
+    "combustion": [
+      {
+        "angleDeg": 0,
+        "bank": 0
+      },
+      {
+        "angleDeg": 180,
+        "bank": 0
+      },
+      {
+        "angleDeg": 360,
+        "bank": 0
+      },
+      {
+        "angleDeg": 540,
+        "bank": 0
+      },
+      {
+        "angleDeg": 720,
+        "bank": 0
+      },
+      {
+        "angleDeg": 900,
+        "bank": 0
+      }
+    ],
+    "rpm": {
+      "idle": 750,
+      "redline": 8000,
+      "limiter": {
+        "type": "fuel-hard",
+        "rpm": 8000,
+        "hysteresisRpm": 200
+      }
+    },
+    "aspiration": {
+      "type": "turbo",
+      "turbo": {
+        "count": 2,
+        "layout": "sequential"
+      },
+      "supercharger": null
+    },
+    "gearbox": {
+      "type": "manual",
+      "overallRatios": [
+        14.268,
+        8.282,
+        5.699,
+        4.1,
+        2.952
+      ],
+      "drivenTyre": "225/50ZR16",
+      "shiftTimeS": 0.3,
+      "tc": null
+    },
+    "sources": {
+      "layout": [
+        "Mazda Motor of America, 1993 Mazda RX-7 brochure, part no. 9999-92-020R-93, Specifications page (2-rotor inline rotary, 1308 cc): https://archive.org/details/1993-mazda-rx-7-brochure.-usa-9-1992.-part-no.-9999-92-020-r-93-01"
+      ],
+      "combustion": [
+        "Wankel cycle: each rotor face completes one four-stroke cycle per three eccentric-shaft revolutions (1080 deg); two rotors phased 180 deg apart (first principles; Wikipedia, Wankel engine, last resort): https://en.wikipedia.org/wiki/Wankel_engine",
+        "Mazda Motor of America, 1993 Mazda RX-7 brochure (2-rotor): https://archive.org/details/1993-mazda-rx-7-brochure.-usa-9-1992.-part-no.-9999-92-020-r-93-01"
+      ],
+      "rpm": [
+        "Mazda Motor of America, 1993 Mazda RX-7 brochure, Interior Standard Features ('9000-rpm tachometer with 8000-rpm redline', footnote: 7000-rpm redline with automatic transmission): https://archive.org/details/1993-mazda-rx-7-brochure.-usa-9-1992.-part-no.-9999-92-020-r-93-01"
+      ],
+      "aspiration": [
+        "Mazda Motor of America, 1993 Mazda RX-7 brochure ('Sequential twin turbochargers with air-to-air intercooler'): https://archive.org/details/1993-mazda-rx-7-brochure.-usa-9-1992.-part-no.-9999-92-020-r-93-01"
+      ],
+      "gearbox": [
+        "Mazda Motor of America, 1993 Mazda RX-7 brochure, Transmission (manual 3.48/2.02/1.39/1.00/0.72, final drive 4.10) and Chassis (P225/50R16 91V; P225/50ZR16 R-1 Package): https://archive.org/details/1993-mazda-rx-7-brochure.-usa-9-1992.-part-no.-9999-92-020-r-93-01"
+      ]
+    }
+  },
+  "voicing": {
+    "pulse": {
+      "widthDeg": 260,
+      "alpha": 9,
+      "beta": 4,
+      "evoOffsetDeg": 140,
+      "cycleAsymmetry": 0.1
+    },
+    "headersM": [
+      0.55,
+      0.643,
+      0.55,
+      0.643,
+      0.55,
+      0.643
+    ],
+    "collectors": [
+      {
+        "banks": [
+          0
+        ],
+        "lengthM": 0.35
+      }
+    ],
+    "turbine": {
+      "reflection": 0.45,
+      "lpHz": 1500
+    },
+    "exhaust": {
+      "midPipeM": 1.4,
+      "mufflerSectionsM": [
+        0.21,
+        0.34,
+        0.47
+      ],
+      "mufflerAction": 0.6,
+      "tailpipeM": 0.5,
+      "valve": {
+        "fitted": true,
+        "openGainDb": 4
+      }
+    },
+    "intake": {
+      "runnerM": 0.3,
+      "helmholtzHz": 130,
+      "gain": 0.4
+    },
+    "forcedInduction": {
+      "spoolTimeS": 0.6,
+      "maxShaftKrpm": 180,
+      "lift": "bov",
+      "cabinGainDb": -14
+    },
+    "mechanical": {
+      "blockGain": 0.3,
+      "valvetrainGain": 0.1
+    },
+    "overrun": {
+      "crackleRate": 0.5,
+      "fuelCutResumeRpm": 1250
+    },
+    "cabin": {
+      "lowpassHz": 600
+    },
+    "launchRpm": 3600,
+    "estimated": true
+  }
+}
