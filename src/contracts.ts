@@ -229,7 +229,11 @@ export type InputMsg =
   | { type: 'volume'; trimDb: number }
   | { type: 'visibility'; hidden: boolean }
   | { type: 'ignition'; on: boolean } // on → key-on/crank/idle sequence; off → engine stop
-  | { type: 'bench'; k: number }; // headroom benchmark: render DSP k× per quantum (1 = normal)
+  | { type: 'bench'; k: number } // headroom benchmark: render DSP k× per quantum (1 = normal)
+  // Phase 3 (spec §9.3 bass sweep): a sine at `hz` replaces the engine output, passed through an
+  // output stage WITHOUT the bass-management high-pass (still compressor + true-peak limiter);
+  // `hz: null` ends the tone (50 ms fades both ways). levelDb is the sine peak before the stage.
+  | { type: 'testTone'; hz: number | null; levelDb: number };
 
 export type ConfigMsg =
   | { type: 'engine'; def: EngineDef }

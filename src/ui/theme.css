@@ -1,0 +1,810 @@
+/*
+ * Tesbox theme — night instrument cluster: a black gauge face, white dial numerals, backlight
+ * amber for the one action that matters, redline red for limits and errors, shift-light green.
+ * Dark theme forced: the car reports colour-scheme/pointer/hover preferences unreliably (spec §3).
+ * Original identity (spec §10.1): system fonts only, no car-brand fonts, logos or styling.
+ * CSP: this file is the only stylesheet; runtime values go through CSSOM custom properties.
+ */
+:root {
+  color-scheme: dark;
+  --ink: #06080b;
+  --face: #11161d;
+  --face-raised: #1a212b;
+  --bezel: #2b3440;
+  --dial: #eef2f6;
+  --dim: #8d99a7;
+  --amber: #ffb21f;
+  --redline: #ff4a3d;
+  --shift: #3ddc84;
+  /* Overwritten by src/main.ts with minTouchCssPx(devicePixelRatio): ≥ 22 mm on any Tesla panel. */
+  --touch: 108px;
+  --gap: 12px;
+  --radius: 14px;
+  --font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', 'DejaVu Sans', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/*
+ * The page colours as plain literals on <html>, in a rule of their own: old WebKit (MCU1, which
+ * shows only the Unsupported block) has no custom properties, and Lightning CSS — Vite's minifier —
+ * keeps only the last of two same-property declarations in one rule, so a literal-then-var() pair
+ * would ship without its fallback (tests/unit/app-page.test.ts checks the minified output).
+ */
+html {
+  background: #06080b;
+  color: #eef2f6;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--dial);
+  font: 400 clamp(17px, 1.1vw + 10px, 24px) / 1.4 var(--font);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: 1.6em;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 1.25em;
+  font-weight: 650;
+}
+
+h3 {
+  font-size: 1.05em;
+  font-weight: 650;
+}
+
+p {
+  margin: 0;
+  max-width: 70ch;
+}
+
+a {
+  color: var(--amber);
+}
+
+:focus-visible {
+  outline: 3px solid var(--amber);
+  outline-offset: 3px;
+}
+
+/* ─────────────── Unsupported (static markup; must render in old WebKit: literal colours) ─────────────── */
+
+#unsupported {
+  max-width: 40em;
+  margin: 10vh auto;
+  padding: 24px;
+  background: #11161d;
+  color: #eef2f6;
+  border: 2px solid #ff4a3d;
+  border-radius: 14px;
+}
+
+#unsupported p {
+  margin-top: 12px;
+}
+
+#unsupported-reason {
+  font-weight: 700;
+}
+
+#unsupported-reason:empty {
+  display: none;
+}
+
+/* ─────────────── Shell ─────────────── */
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+.screen {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.screen-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap);
+}
+
+.screen-header h1 {
+  flex: 1 1 auto;
+}
+
+.shell-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 24px;
+  padding: 12px 16px 16px;
+  border-top: 1px solid var(--bezel);
+  color: var(--dim);
+  font-size: 0.75em;
+}
+
+.shell-footer p {
+  max-width: none;
+}
+
+.build {
+  font-variant-numeric: tabular-nums;
+}
+
+.muted {
+  color: var(--dim);
+}
+
+/* ─────────────── Controls (every target ≥ --touch, spec §7.1) ─────────────── */
+
+button {
+  min-height: var(--touch);
+  min-width: var(--touch);
+  padding: 8px 20px;
+  font: inherit;
+  font-weight: 650;
+  color: var(--dial);
+  background: var(--face-raised);
+  border: 2px solid var(--bezel);
+  border-radius: var(--radius);
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+button:active {
+  background: var(--bezel);
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.btn-primary {
+  color: var(--ink);
+  background: var(--amber);
+  border-color: var(--amber);
+}
+
+.btn-primary:active {
+  background: #ffc75c;
+}
+
+.btn-danger {
+  color: var(--redline);
+  border-color: var(--redline);
+}
+
+.btn-quiet {
+  background: transparent;
+  border-color: transparent;
+  color: var(--dim);
+}
+
+/* Segmented toggle (Auto|Manual, Comfort|Sport, Valves …): buttons with aria-pressed. */
+.seg {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  background: var(--face);
+  border: 2px solid var(--bezel);
+  border-radius: calc(var(--radius) + 4px);
+}
+
+.seg > button {
+  border-color: transparent;
+  background: transparent;
+  padding: 8px 16px;
+}
+
+/* Selected = inverted dial face: readable at a glance without relying on hue. */
+.seg > button[aria-pressed='true'],
+.choice[aria-pressed='true'],
+.choice[aria-checked='true'] {
+  color: var(--ink);
+  background: var(--dial);
+  border-color: var(--dial);
+}
+
+.seg-label {
+  display: block;
+  color: var(--dim);
+  font-size: 0.8em;
+  margin-bottom: 4px;
+}
+
+/* Big pick-one options (picker steps, settings choices). */
+.choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 12em), 1fr));
+  gap: var(--gap);
+}
+
+.choice {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
+  text-align: left;
+}
+
+.choice small {
+  color: inherit;
+  opacity: 0.75;
+  font-weight: 400;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field > span {
+  color: var(--dim);
+}
+
+select,
+input[type='number'] {
+  min-height: var(--touch);
+  font: inherit;
+  color: var(--dial);
+  background: var(--face-raised);
+  border: 2px solid var(--bezel);
+  border-radius: var(--radius);
+  padding: 0 12px;
+}
+
+input[type='range'] {
+  width: 100%;
+  min-height: var(--touch);
+  margin: 0;
+  accent-color: var(--amber);
+  touch-action: manipulation;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap);
+}
+
+/* ─────────────── Content ─────────────── */
+
+.panel {
+  background: var(--face);
+  border: 1px solid var(--bezel);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.group {
+  display: grid;
+  gap: var(--gap);
+}
+
+.group > h2 {
+  color: var(--dim);
+  font-weight: 600;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15em), 1fr));
+  gap: var(--gap);
+}
+
+.card {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  background: var(--face);
+  border: 2px solid var(--bezel);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.card[aria-current='true'] {
+  border-color: var(--amber);
+}
+
+.card .spec {
+  color: var(--dim);
+  font-size: 0.85em;
+  font-variant-numeric: tabular-nums;
+}
+
+.notice-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+.kv {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 16px;
+  margin: 0;
+}
+
+.kv dt {
+  color: var(--dim);
+}
+
+.kv dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+
+.banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap);
+  padding: 12px 16px;
+  background: #2e2206;
+  border: 2px solid var(--amber);
+  border-radius: var(--radius);
+}
+
+.banner.bad {
+  background: #2f0d0a;
+  border-color: var(--redline);
+}
+
+.banner > p {
+  flex: 1 1 16em;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  max-width: calc(100vw - 32px);
+  padding: 12px 20px;
+  background: var(--face-raised);
+  border: 2px solid var(--bezel);
+  border-radius: var(--radius);
+  z-index: 30;
+}
+
+/* Audio failure (spec §6.5, src/ui/app.tsx AudioAlert): stays up until the next start. On a scrolling
+   screen it heads the page and sticks to the top, so it never hides that screen's header (Back,
+   Drive); Drive fills the viewport, so there it floats above the overlays, whose content starts
+   below it. */
+.audio-alert {
+  position: sticky;
+  top: 12px;
+  order: -1;
+  width: min(100% - 24px, 48em);
+  margin: 12px auto 0;
+  z-index: 35;
+}
+
+.drive ~ .audio-alert {
+  position: fixed;
+  left: 50%;
+  margin: 0;
+  transform: translateX(-50%);
+}
+
+.drive:has(~ .audio-alert) > .overlay {
+  padding-top: calc(var(--touch) + 56px);
+}
+
+/* Full-screen tap target: Start engine, Tap to resume. */
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 24px;
+  background: rgb(6 8 11 / 0.88);
+  z-index: 20;
+  text-align: center;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgb(6 8 11 / 0.8);
+  z-index: 40;
+}
+
+.modal > .panel {
+  display: grid;
+  gap: 16px;
+  max-width: 36em;
+  max-height: calc(100svh - 32px);
+  overflow: auto;
+}
+
+/* ─────────────── Drive primitives (spec §10.2 item 4) ─────────────── */
+
+.drive {
+  position: relative;
+  display: grid;
+  grid-template-columns: max(var(--touch), 10vw) minmax(0, 1fr) max(var(--touch), 10vw);
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.paddle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--touch);
+  height: 100%;
+  border-radius: 0;
+  font-size: 2.4em;
+  font-weight: 700;
+  background: var(--face);
+  border: 0;
+  touch-action: manipulation;
+}
+
+.paddle-down {
+  border-right: 2px solid var(--bezel);
+}
+
+.paddle-up {
+  border-left: 2px solid var(--bezel);
+}
+
+/* src/input/paddles.ts adds .paddle-flash for 150 ms after each press. */
+.paddle.paddle-flash {
+  background: var(--dial);
+  color: var(--ink);
+}
+
+.cockpit {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 8px;
+  min-width: 0;
+  padding: 8px 12px;
+}
+
+.tach {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.readouts {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 24px;
+}
+
+.gear {
+  font-size: clamp(64px, 22vh, 220px);
+  font-weight: 750;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+}
+
+.gear.shifting {
+  animation: gear-flash 150ms ease-out;
+}
+
+.gear.refused {
+  animation: gear-refused 500ms ease-out;
+}
+
+.speed {
+  font-size: clamp(28px, 8vh, 72px);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.speed small {
+  font-size: 0.4em;
+  color: var(--dim);
+  margin-left: 4px;
+}
+
+.load-bar {
+  height: 10px;
+  background: var(--face-raised);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+/* Width set at runtime through CSSOM (`style.setProperty('--load', …)`), never a style attribute. */
+.load-bar > span {
+  display: block;
+  height: 100%;
+  width: calc(var(--load, 0) * 100%);
+  background: var(--shift);
+}
+
+.load-bar.overrun > span {
+  background: var(--dim);
+}
+
+.status-dot {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--dim);
+}
+
+.status-dot.ok {
+  background: var(--shift);
+}
+
+.status-dot.warn {
+  background: var(--amber);
+}
+
+.status-dot.bad {
+  background: var(--redline);
+}
+
+@keyframes gear-flash {
+  from {
+    color: var(--shift);
+  }
+}
+
+@keyframes gear-refused {
+  from {
+    color: var(--redline);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gear.shifting,
+  .gear.refused {
+    animation: none;
+  }
+}
+
+/* ─────────────── Drive layout (src/ui/drive.tsx) ─────────────── */
+
+/* Each edge: the status dot (left) or Settings (right) on top, the paddle filling the rest. */
+.drive-side {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.drive-side > .paddle {
+  flex: 1 1 auto;
+  height: auto;
+  min-height: var(--touch);
+}
+
+.drive-status,
+.drive-settings {
+  flex: none;
+  width: 100%;
+  padding: 8px 4px;
+  border-radius: 0;
+  border-width: 0 0 2px;
+  background: var(--face);
+  font-size: 0.8em;
+}
+
+.drive-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-right-width: 2px;
+}
+
+.drive-settings {
+  border-left-width: 2px;
+}
+
+.drive-status .status-dot {
+  width: 28px;
+  height: 28px;
+}
+
+.drive-status-src {
+  color: var(--dim);
+}
+
+.drive-bar {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* A toggle shows its name small and its current value large; a tap moves to the next value. */
+.drive-toggle {
+  flex: 1 1 0;
+  max-width: 12em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 6px 8px;
+}
+
+.drive-toggle small {
+  color: var(--dim);
+  font-size: 0.7em;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.drive-toggle span {
+  font-size: 1.15em;
+}
+
+/* The tach fills the dial box; gear and speed sit in its centre, above the canvas. */
+.dial {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.dial > .tach {
+  position: absolute;
+  inset: 0;
+}
+
+.dial > .readouts {
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  pointer-events: none;
+}
+
+.drive-start {
+  padding: 16px 40px;
+  font-size: 1.3em;
+}
+
+/* Garage, Settings and Diagnostics under Start engine: centred, also when they wrap. */
+.drive-start-more {
+  justify-content: center;
+}
+
+/* Tap to resume: the whole screen is the button. */
+.overlay.drive-resume {
+  border: 0;
+  border-radius: 0;
+  font-size: 1.3em;
+}
+
+.drive-resume strong {
+  color: var(--amber);
+  font-size: 1.6em;
+}
+
+/* Location blocked, in the Start overlay's flow. */
+.overlay > .banner {
+  width: min(100%, 44em);
+  text-align: left;
+}
+
+/* Location blocked while driving: fixed at the top, below the audio alert. */
+.drive-alert {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(100% - 24px, 44em);
+  z-index: 25;
+}
+
+/* ─────────────── Settings and Diagnostics (src/ui/settings-screen.tsx, diagnostics.tsx) ─────────────── */
+
+.settings-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 22em), 1fr));
+  align-items: start;
+  gap: 16px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.settings-body .field > .seg {
+  justify-self: start;
+}
+
+.settings-slider {
+  flex: 1 1 8em;
+  width: auto;
+  min-width: 6em;
+}
+
+.settings-value {
+  min-width: 4.5em;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.wheel-prompt {
+  font-size: 1.3em;
+  font-weight: 700;
+}
+
+/* Panels in one row share its height; their content stays packed at the top. */
+.diag-panel {
+  align-content: start;
+}
+
+/* Long labels wrap instead of squeezing the values into a sliver. */
+.kv.diag-kv {
+  grid-template-columns: fit-content(60%) minmax(0, 1fr);
+  align-content: start;
+}
+
+.diag-log {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font: 0.8em / 1.5 ui-monospace, Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+  overflow-wrap: anywhere;
+}
+
+.qr {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  image-rendering: pixelated;
+}

@@ -1,4 +1,6 @@
-# Tesbox in-car checklist (Phase 0 probe)
+# Tesbox in-car checklist (Phase 0 probe, Phase 3 app alpha)
+
+Sections 0–7 run the Phase 0 probe; sections 8–10 test the app itself (the Phase 3 exit gate).
 
 The probe page answers the open platform questions in spec §16 before any engine sound is built.
 Results come back as QR codes (statistics only, never coordinates) and are committed as
@@ -112,3 +114,46 @@ high-accuracy flag, Intel `latencyHint`, the median fix age (`ageMedianMs`) as t
 delivery delay, and a provisional `gpsLatencyS` (keep the spec default 1.0 s unless the data show
 otherwise; do not set it to the median age, because `ageS` already adds `Date.now() − timestamp`,
 spec §4.3). Phase 1 refines `gpsLatencyS` against the phone GPX log from step 0.6.
+
+## 8. Parked — app alpha setup (Phase 3)
+
+Phase 3 exit gate (spec §15): the app deployed, then a 10-minute drive with the Diagnostics error
+counters at 0. Deploy the Phase 3 image, note its `sha` (as in step 0.2), then open
+`https://tesbox.example.com/?b=<sha>` — the app this time, not `/probe/`. Every step of this
+section is done parked.
+
+| Step | App action | Record |
+|---|---|---|
+| 8.1 | First run: read the five notices, tap **OK** | — |
+| 8.2 | Pick the car: model → generation → trim; answer the MCU2 question if it is asked | Car, for the results commit |
+| 8.3 | Subwoofer: keep the pre-selected best guess unless you know the car's audio package | QR `settings.subwoofer` |
+| 8.4 | Set the car's volume where you usually listen, then **Play tones**: tap the lowest of the six tones that sounded clean (no rattle, no buzz). **Skip** keeps 40 Hz | QR `settings.hpCornerHz` |
+| 8.5 | Acceleration mode: the one the car is set to | — |
+| 8.6 | Garage: **Preview** two or three engines, then **Drive** on the one to test | QR `settings.engineId` |
+| 8.7 | **Start engine**; allow location when the browser asks. The status dot turns green within a few seconds (amber *Waiting for GPS* first is normal) | If the location banner appears: allow location for the site in the browser settings and reload |
+| 8.8 | **Settings → Controls → Test steering-wheel shifting**: tilt the LEFT scroll wheel to the RIGHT, then to the LEFT, when asked (tilt only — never press) | *Works* or *No wheel tilt reached Tesbox* (QR `settings.wheelShift`) |
+| 8.9 | Settings: speed source **GPS**, quality **Auto**, volume trim to taste; then **Drive** (gearbox **Auto**) | — |
+| 8.10 | Hold the status dot (about 1 s) → **Diagnostics**: read *Tier*, *Headroom k*, *MCU guess* and *Output latency*, then **Back** | Automatic (in the QR) |
+
+## 9. Driving — app alpha, 10-minute drive (Phase 3)
+
+The driver only drives: Auto shifts, and Settings are locked while the car moves. A passenger may
+watch the screen and take notes; nobody taps it while moving.
+
+| Step | App action | Record |
+|---|---|---|
+| 9.1 | Drive at least 10 minutes with the engine running: pull away from a stop, cruise steadily, stop a few times, a brisk merge if it is safe, an underpass or tunnel if there is one | — |
+| 9.2 | Listen: dropouts or clicks; the engine lagging a speed change by more than about 2 s; a gear that does not fit the speed; level against the car's own sounds and sirens | Notes for the results commit |
+| 9.3 | Only if 8.8 passed: the driver may tilt the wheel to shift when it is safe (Auto takes over again 8 s later) | Notes |
+| 9.4 | Keep Tesbox on screen. If it was minimised (e.g. by the reverse camera) and the sound stopped, tap **Tap to resume** once parked | An interruption: note what caused it |
+
+## 10. After the drive — app Diagnostics QR export
+
+| Step | App action | Record |
+|---|---|---|
+| 10.1 | Parked, browser full size: hold the status dot → **Diagnostics** → **Show QR**; scan every page (**Next**) with the phone, in order | Each code starts `TBX i/n` |
+| 10.2 | Strip the first line `TBX i/n` from each scan and concatenate them in order | One JSON document: statistics only, never coordinates |
+| 10.3 | Exit gate: `counters.overloadEvents`, `counters.nonFiniteResets` and `counters.audioErrors` are 0, `counters.interruptions` is 0 apart from those noted in 9.4, and `counters.snapshots` is above 0 | Pass / fail |
+| 10.4 | Commit the export as `docs/research/app-alpha-<date>.json`, with the notes from 9.2–9.4 and the car's software version in the commit message | — |
+
+The Phase 4 gate (spec §1.3 b) repeats sections 9–10 with a 30-minute drive.

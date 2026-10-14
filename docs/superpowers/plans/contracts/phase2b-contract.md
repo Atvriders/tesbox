@@ -224,3 +224,51 @@ Waves: W1 T1, T2, T4, T7 → W2 T3, T5 → W3 T6 → W4 T8.
 As earlier phases: TDD, one test file per module, hot-path rules don't apply to `src/lab` (analysis
 code may allocate), no host paths/IPs in committed files, scratch dirs only, no per-task commits —
 Phase 2b lands as one verified commit.
+
+## Amendments (2026-10-14, authoritative — override anything above)
+
+- **D1 Pitch tracker (replaces the salience/acceptance text of §Pitch):**
+  1. Harmonic terms use **clamped per-bin contrast** `C⁺(f) = max(0, |X(f)| − localMean(f))`
+     (weights `h^−½`, h = 1..8; sub-order term weight 0.5, gated by resolvability) — an absent
+     fundamental contributes 0, never a penalty, so harmonic-2..8-only signals track at 1.000×.
+  2. Emissions are normalised by a **fixed-band level** `L = mean |X|` over 20 Hz – 2 kHz of the
+     frame, independent of `[rpmMin, rpmMax]`, so the voicing floor and SLEW_COST do not depend on
+     the search range (narrow sidecar hints must work).
+  3. **No silent fallback:** frames with no candidate above the voicing floor get `rpm = NaN`,
+     `confidence = 0`; a segment with no voiced frame returns all NaN (callers skip it).
+  4. **Acceptance (tests):** median |error| ≤ 2 % and zero octave errors (ratio outside
+     [0.94, 1.06] counts as octave error) for idle / wotPull / liftoff6k on i4-test, i5-test,
+     v8-crossplane-test, v8-flatplane-test, rotary-test, rendered with subwoofer `'yes'` AND `'no'`
+     (40 Hz HP + virtual bass), searched with the engine's idle..limiter range AND with ±7 % hints
+     around the true rpm; plus synthetic harmonic-2..8-only stacks for I4/I5/V8 at idle. Frames
+     whose true rpm varies by > 3 % within the analysis window (limiter bounce) are excluded and
+     counted; the overrun-segment acceptance scores every voiced frame (no `fromS` carve-out).
+- **D2 Features:**
+  1. Signatures gain the firing order: `frameFeatures(x, fs, rpm, step, firingsPerRev)` and
+     `clipFeatures(x, fs, rpmAt, step, kind, perspective, firingsPerRev)`. `subOrderDb` =
+     10·log10(Σ power at orders j·step ≤ 12 that are **not** multiples of `firingsPerRev` /
+     Σ power at multiples of `firingsPerRev` ≤ 12). No guessing fallback.
+  2. `fiLineHz` ignores peaks within ±3 % of any engine order `k·step·rpm/60`; the
+     forced-induction line must also persist across ≥ 3 consecutive frames to be reported.
+  3. `irregularity` uses an analysis window of `max(0.25 s, 4 cycles)` (cycle = 720° or 1080° at
+     the frame rpm); if still undefined → `null` (never NaN).
+- **D3 Scoring:** `fiLine` is `'n/a'` for engines whose `spec.aspiration.type === 'na'` (both in
+  render-vs-ref and ref-vs-ref); per-bin values that are `null`/NaN are skipped, and a metric with
+  < 2 valid common bins is `null` → gate `'n/a'`.
+- **D4 Pitch-tracking usage and acceptance (2026-10-14; supersedes D1.4's wide-range cells):** the
+  tracker only ever runs on reference clips, which carry sidecar hints. (1) `idle`, `cruise` and
+  `limiter` segments with `rpm: "auto"` MUST carry an `rpmHint` no wider than ±15 % around the
+  expected rpm (the score CLI rejects wider hints for these kinds). (2) `wot`/`liftoff` sweeps use a
+  range hint `[low, high]` plus the Viterbi continuity constraint. (3) **Hard requirement: never
+  confidently wrong** — over every cell actually used (hinted steady segments at ±7 % and ±15 %,
+  sweeps with their range hints, subwoofer yes/no, all 5 fixtures, plus the synthetic
+  harmonic-2..8 stacks for every amplitude law flat … h^−2 inside ±7 %/±15 % hints): every frame
+  with `confidence ≥ 0.5` lies within ±6 % of the true rpm, and median |error| ≤ 2 % over voiced
+  frames. (4) Unvoiced frames (NaN) are allowed and reported, not gated, except a voiced-share
+  floor of 0.4 on non-rotary `wotPull` cells; rotary clips may use explicit `rpm` keyframes
+  (from a visible tach) instead of `"auto"`. (5) Wide idle..limiter searches on idle segments are
+  out of scope (documented limitation: bass-limited idle spectra can lock at 2–3×).
+- **D5 fiLine (supersedes D2.2):** `fiLineHz` = strongest peak in 1–4 kHz with ≥ 10 dB prominence
+  over the local median that persists across ≥ 3 consecutive frames (within ±5 % frequency),
+  **without** engine-order exclusion (a supercharger whine is order-locked and must be detected).
+  Per D3 the metric is only used for forced-induction engines, so NA harmonics never enter scoring.

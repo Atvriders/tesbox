@@ -1,11 +1,13 @@
 Tesbox
 Copyright (c) 2026 Atvriders. Licensed under the MIT License (see LICENSE).
 
-Third-party code shipped in the web app: src/platform/qr.ts adapts the QR Code generator
-library (TypeScript) by Project Nayuki, https://www.nayuki.io/page/qr-code-generator-library,
-under the licence below. Its attribution also stays in the minified probe bundle as a legal
-comment, and the Docker image serves this file as /NOTICES.txt and the Tesbox licence as
-/LICENSE.txt.
+Third-party code shipped in the web app (the Docker image serves this file as /NOTICES.txt and
+the Tesbox licence as /LICENSE.txt):
+
+1. src/platform/qr.ts adapts the QR Code generator library (TypeScript) by Project Nayuki,
+https://www.nayuki.io/page/qr-code-generator-library, under the licence below. Its attribution
+also stays in the minified bundle (the QR chunk shared by the app and the probe) as a legal
+comment.
 
   Copyright (c) Project Nayuki. (MIT License)
   https://www.nayuki.io/page/qr-code-generator-library
@@ -26,6 +28,32 @@ comment, and the Docker image serves this file as /NOTICES.txt and the Tesbox li
     out of or in connection with the Software or the use or other dealings in the
     Software.
 
+2. The app's user interface runs on Preact and Preact Signals, npm runtime dependencies bundled
+unmodified into the app's JavaScript (since Phase 3), under the licence below:
+  preact — https://github.com/preactjs/preact
+  @preact/signals and its dependency @preact/signals-core — https://github.com/preactjs/signals
+
+  preact: Copyright (c) 2015-present Jason Miller. (MIT License)
+  @preact/signals, @preact/signals-core: Copyright (c) 2022-present Preact Team. (MIT License)
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+
 All other application code is original; algorithm sources are logged in docs/CLEAN_ROOM.md.
 
 The Docker image is based on nginxinc/nginx-unprivileged:alpine (nginx: BSD-2-Clause;
@@ -35,6 +63,7 @@ Development and test tools (not shipped to users):
   Vite, Vitest, Rolldown, tsx, ESLint, typescript-eslint, @eslint/js, @types/node — MIT
   TypeScript, Playwright — Apache-2.0
   Ajv — MIT (JSON Schema validation in tests and tools/build-catalogue.ts only)
-  jsQR — Apache-2.0 (used only by tests to decode QR codes: tests/unit/qr.test.ts, tests/e2e/probe-qr.spec.ts)
+  jsQR — Apache-2.0 (used only by tests to decode QR codes: tests/unit/qr.test.ts,
+    tests/e2e/probe-qr.spec.ts, tests/e2e/app-gps.spec.ts)
 
 Not affiliated with or endorsed by Tesla, Inc. or any car manufacturer.

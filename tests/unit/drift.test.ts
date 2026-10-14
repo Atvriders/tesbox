@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { DriftMonitor, type DriftWindow } from '../../src/probe/drift';
+import { DriftMonitor, type DriftWindow } from '../../src/platform/drift';
 
 /** Feeds samples every 100 ms for `seconds`, the audio clock running at `rate` × wall time. */
 function feed(m: DriftMonitor, from: { ctx: number; perf: number }, seconds: number, rate: number): DriftWindow[] {

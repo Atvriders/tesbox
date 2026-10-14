@@ -1,6 +1,6 @@
 import type { OutputRoute } from '../contracts';
 import { PROBE_GAIN_DB, PROBE_PROCESSOR, PROBE_TONE_HZ, type ProbeToWorklet, type WorkletToProbe } from './audio-protocol';
-import { DriftMonitor, type DriftSample } from './drift';
+import { DriftMonitor, type DriftSample } from '../platform/drift';
 import type { EventLog } from './log';
 import { errText, withTimeout } from './log';
 
