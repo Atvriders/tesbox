@@ -12,8 +12,8 @@
  *   one whose baseline render shares no comparable rpm bin with a reference (no voicing can change the bins).
  * - Search space: the TUNABLE voicing vector (VoicingSpace; phase 2b T6 as amended by D9 = phase 5 P0.3: one header
  *   scale per exhaust bank, one length per collector, the B18 whistle / outside levels and the B19 cabin leak), each
- *   parameter normalised to [0, 1] within its contract range; --params restricts the search to a subset. Spec fields (firing angles, ratios, rpm) are never tuned, nor
- *   is any voicing field outside the vector.
+ *   parameter normalised to [0, 1] within its contract range; --params restricts the search to a subset. Spec fields
+ *   (firing angles, ratios, rpm) are never tuned, nor is any voicing field outside the vector.
  * - Objective (minimised, objectiveOf): −composite + DISCRIMINATION_WEIGHT · max(0, best other composite − own
  *   composite + DISCRIMINATION_MARGIN), from src/lab/score.ts scoreEngine over every scored render segment.
  * - Candidates: each is checked with the DSP's own assertEngineFits (at MIN_SAMPLE_RATE, so it fits every supported
@@ -219,7 +219,7 @@ function headerBank(spec: EngineSpec, i: number): number {
   return spec.combustion[i]?.bank ?? 0;
 }
 
-/** One scale (0.7–1.4) for the headers of exhaust bank `bank`, clamped to the contract maxima; applicable when the bank has headers. */
+/** One scale (0.7–1.4) for the headers of exhaust bank `bank`, clamped to the contract maxima; applies when the bank has any. */
 function bankScale(key: ParamKey, bank: number): ParamRule {
   const inBank = (spec: EngineSpec, n: number): number[] => Array.from({ length: n }, (_, i) => i).filter((i) => headerBank(spec, i) === bank);
   return {

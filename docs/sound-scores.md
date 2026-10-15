@@ -10,24 +10,30 @@ listening sign-off is the final word, and until then the garage shows **Beta voi
 Reproduce: `npm run score -- <engine-id> --gate` with the references in `lab-refs/` (see
 [`SOUND_LAB.md`](SOUND_LAB.md)); `npm run tune -- <engine-id> --apply` writes a tuned voicing.
 
+The pilots were re-tuned on 2026-10-15 after the Phase 5 P0 sound-fidelity fixes (phase 2a amendments
+B18/B19, phase 2b D9). In their tables, "default" and "v1.0.0 tuned" were measured with the Phase 2b
+DSP; "P0 baseline" is the v1.0.0 tuned voicing with the P0 defaults added (whistle −36 dB, outside
+forced induction −30 dB, cabin leak −30 dB) rendered by the P0 DSP, and "P0 re-tuned" the result of
+`tune --strategy cmaes --iterations 40` over the D9 vector, scored with `score --gate`.
+
 ## 2.5 Turbo Inline-5 — inspired by Audi RS 3 (8Y) (`i5-turbo-25`)
 
 Tuned voicing: i5-turbo-25
 
-Composite (render vs references): default **0.348** → tuned **0.478**. Gates: 5 pass, 2 fail (tilt, fiPresence); discrimination **pass** → **FAIL**.
+Composite (render vs references): default **0.348** → tuned **0.478** (v1.0.0) → re-tuned **0.597** (Phase 5 P0, 2026-10-15; P0 baseline 0.563). Gates: 7 pass, 0 fail (fiLine n/a); discrimination **PASS**.
 
-| metric | ref vs ref | gate (0.8 ×) | default | tuned | result |
-|---|---|---|---|---|---|
-| Order profile | 0.645 | 0.516 | 0.765 | 0.731 | pass |
-| Spectral tilt | 0.506 | 0.405 | 0.268 | 0.381 | fail |
-| Spectral centroid | 0.277 | 0.221 | 0.192 | 0.343 | pass |
-| Sub-orders | 0.402 | 0.322 | 0.384 | 0.487 | pass |
-| Pulse irregularity | 0.640 | 0.512 | 0.516 | 0.547 | pass |
-| Forced-induction line | — | — | — | — | n/a |
-| Overrun | 0.501 | 0.401 | 0.346 | 0.813 | pass |
-| Forced-induction presence | 1.000 | 0.800 | 0.231 | 0.276 | fail |
+| metric | ref vs ref | gate (0.8 ×) | default | v1.0.0 tuned | P0 baseline | P0 re-tuned | result |
+|---|---|---|---|---|---|---|---|
+| Order profile | 0.645 | 0.516 | 0.765 | 0.731 | 0.735 | 0.740 | pass |
+| Spectral tilt | 0.506 | 0.405 | 0.268 | 0.381 | 0.401 | 0.421 | pass |
+| Spectral centroid | 0.277 | 0.221 | 0.192 | 0.343 | 0.376 | 0.372 | pass |
+| Sub-orders | 0.402 | 0.322 | 0.384 | 0.487 | 0.488 | 0.507 | pass |
+| Pulse irregularity | 0.640 | 0.512 | 0.516 | 0.547 | 0.535 | 0.556 | pass |
+| Forced-induction line | — | — | — | — | — | — | n/a |
+| Overrun | 0.501 | 0.401 | 0.346 | 0.813 | 0.628 | 0.834 | pass |
+| Forced-induction presence | 1.000 | 0.800 | 0.231 | 0.276 | 0.987 | 0.987 | pass |
 
-Discrimination (tuned render vs each tuned engine's references): own 0.478; v8-flatplane-45 0.180; v8-na-50 0.414.
+Discrimination (re-tuned render vs each tuned engine's references): own 0.597; v8-flatplane-45 0.232; v8-na-50 0.462 (v1.0.0: own 0.478; v8-flatplane-45 0.180; v8-na-50 0.414).
 
 References (private, local only — never committed or shipped):
 
@@ -39,10 +45,10 @@ References (private, local only — never committed or shipped):
 | `rs3-onboard-b` | cabin | [2022 AUDI RS3 Sportback 8Y / 0-288 KM/H Acceleration / POV Drive & Sound by AutoTopNL](https://www.youtube.com/watch?v=k4SCpXBSruk) | liftoff: 9.7, wot: 31.1 | used |
 | `rs3-onboard-c` | cabin | [2025 Audi RS3 - POV Night Drive (Binaural Audio)](https://www.youtube.com/watch?v=9eQmBZpeawk) | idle: 3.6 | used |
 
-Gates not passed and their most likely structural causes (Phase 5 items):
+Gates that failed at v1.0.0 and the Phase 5 P0 fixes (2026-10-15; phase 2a amendments B18/B19, phase 2b D9):
 
-- **Forced-induction presence:** the render's turbo whistle is 33–36 dB louder than anything the recordings show. `forcedInduction.cabinGainDb` scales the whistle and the whoosh together (the line is still detected at −70 dB) and the outside mix has no turbo level at all, so no voicing in the current ranges removes it. Fix: a whistle-only level and an outside turbo level (phase 5 contract P0.1); at −40 dB the gate and discrimination pass in a test render.
-- **Spectral tilt:** the cabin render is darker than the recordings. The 4th-order cabin low-pass near 600 Hz leaves 1.5–3 kHz 15–20 dB low, while the recordings' 0.8–2.5 kHz band is 41–83 % engine harmonics. Fix: a gentler cabin transfer with a high-frequency leak and the full schema ranges for `cabin.lowpassHz` and `mechanical.valvetrainGain` (P0.2, P0.3). Outside, most of the gap is dyno-cell fan noise in the references.
+- **Forced-induction presence:** the render's turbo whistle was 33–36 dB louder than anything the recordings show; `forcedInduction.cabinGainDb` scaled the whistle and the whoosh together and the outside mix had no turbo level. Fix: the whistle-only level `whistleDb` and the outside level `outsideGainDb` (P0.1). The P0 defaults alone bring it to 0.987 (gate 0.800); re-tuned 0.987 (whistle −18.3 dB, outside −9 dB).
+- **Spectral tilt:** the 4th-order cabin low-pass near 600 Hz left 1.5–3 kHz 15–20 dB below the recordings. Fix: the 2nd-order cabin low-pass with a high-frequency leak (P0.2) and the full `cabin.lowpassHz` / `mechanical.valvetrainGain` ranges (P0.3): 0.401 at the P0 baseline, 0.421 re-tuned (gate 0.405; low-pass 970 Hz, leak −19.9 dB). Outside, most of the remaining gap is dyno-cell fan noise in the references; the re-tune's loud outside forced-induction level may be fitting that noise with the whoosh — a point for the listening check.
 
 Sign-off: pending — the user's listening check (default vs tuned previews, cabin and outside).
 
@@ -50,20 +56,20 @@ Sign-off: pending — the user's listening check (default vs tuned previews, cab
 
 Tuned voicing: v8-na-50
 
-Composite (render vs references): default **0.442** → tuned **0.546**. Gates: 3 pass, 2 fail (centroid, subOrder); discrimination **pass** → **FAIL**.
+Composite (render vs references): default **0.442** → tuned **0.546** (v1.0.0) → re-tuned **0.666** (Phase 5 P0, 2026-10-15; P0 baseline 0.512). Gates: 5 pass, 0 fail (fiLine, overrun, fiPresence n/a); discrimination **PASS**.
 
-| metric | ref vs ref | gate (0.8 ×) | default | tuned | result |
-|---|---|---|---|---|---|
-| Order profile | 0.830 | 0.664 | 0.642 | 0.694 | pass |
-| Spectral tilt | 0.771 | 0.616 | 0.327 | 0.722 | pass |
-| Spectral centroid | 0.385 | 0.308 | 0.293 | 0.305 | fail |
-| Sub-orders | 0.600 | 0.480 | 0.284 | 0.331 | fail |
-| Pulse irregularity | 0.466 | 0.373 | 0.643 | 0.591 | pass |
-| Forced-induction line | — | — | — | — | n/a |
-| Overrun | — | — | 0.665 | 0.885 | n/a |
-| Forced-induction presence | — | — | — | — | n/a |
+| metric | ref vs ref | gate (0.8 ×) | default | v1.0.0 tuned | P0 baseline | P0 re-tuned | result |
+|---|---|---|---|---|---|---|---|
+| Order profile | 0.830 | 0.664 | 0.642 | 0.694 | 0.697 | 0.821 | pass |
+| Spectral tilt | 0.771 | 0.616 | 0.327 | 0.722 | 0.495 | 0.642 | pass |
+| Spectral centroid | 0.385 | 0.308 | 0.293 | 0.305 | 0.302 | 0.518 | pass |
+| Sub-orders | 0.600 | 0.480 | 0.284 | 0.331 | 0.331 | 0.632 | pass |
+| Pulse irregularity | 0.466 | 0.373 | 0.643 | 0.591 | 0.589 | 0.574 | pass |
+| Forced-induction line | — | — | — | — | — | — | n/a |
+| Overrun | — | — | 0.665 | 0.885 | 0.885 | 0.885 | n/a |
+| Forced-induction presence | — | — | — | — | — | — | n/a |
 
-Discrimination (tuned render vs each tuned engine's references): own 0.546; i5-turbo-25 0.443; v8-flatplane-45 0.474.
+Discrimination (re-tuned render vs each tuned engine's references): own 0.666; i5-turbo-25 0.461; v8-flatplane-45 0.436 (v1.0.0: own 0.546; i5-turbo-25 0.443; v8-flatplane-45 0.474).
 
 References (private, local only — never committed or shipped):
 
@@ -75,10 +81,10 @@ References (private, local only — never committed or shipped):
 | `mustang-onboard-b` | cabin | [2024 Ford Mustang GT Premium 10AT - POV Test Drive (Binaural Audio)](https://www.youtube.com/watch?v=lWJ7lIjBsok) | idle: 8.6, wot: 14.7 | used |
 | `mustang-onboard-c` | cabin | [2024 Mustang GT Morning POV Drive (No Commentary)](https://www.youtube.com/watch?v=QqwdLXkrxRk) | cruise: 28.0 | used |
 
-Gates not passed and their most likely structural causes (Phase 5 items):
+Gates that failed at v1.0.0 and the Phase 5 P0 fixes (2026-10-15; phase 2a amendments B18/B19, phase 2b D9):
 
-- **Sub-orders:** the recordings' orders 1–2.5 (the cross-plane bank-firing rumble) sit at 0 to −5 dB, against −17 to −27 dB in the render, because both banks are voiced identically (same header length per bank position, equal collectors) and the tuner cannot set them apart. Fix: per-bank header scale and per-collector lengths in the tuner (P0.3); the schema already allows them.
-- **Spectral centroid:** the same dark cabin transfer as the 2.5 Turbo Inline-5 (P0.2).
+- **Sub-orders:** the recordings' orders 1–2.5 (the cross-plane bank-firing rumble) sat at 0 to −5 dB against −17 to −27 dB in the render, because both banks were voiced identically and the tuner could not set them apart. Fix: one header scale per bank and one length per collector in the tuner (P0.3). Re-tuned banks ×1.241 / ×0.930, collectors 0.313 / 0.901 m: 0.632 (gate 0.480; P0 baseline 0.331).
+- **Spectral centroid:** the dark 4th-order cabin transfer. Fix: the B19 cabin (P0.2): 0.518 re-tuned (gate 0.308; low-pass 200 Hz, leak −38.7 dB).
 - **Lift-off** (not gated): the render's overrun carries no engine orders, because fuel cut zeroes combustion; deferred (P0, measured as mixed).
 
 Sign-off: pending — the user's listening check (default vs tuned previews, cabin and outside).
@@ -87,20 +93,20 @@ Sign-off: pending — the user's listening check (default vs tuned previews, cab
 
 Tuned voicing: v8-flatplane-45
 
-Composite (render vs references): default **0.424** → tuned **0.483**. Gates: 4 pass, 1 fail (subOrder); discrimination **pass** → **FAIL**.
+Composite (render vs references): default **0.424** → tuned **0.483** (v1.0.0) → re-tuned **0.604** (Phase 5 P0, 2026-10-15; P0 baseline 0.506). Gates: 5 pass, 0 fail (fiLine, overrun, fiPresence n/a); discrimination **PASS**.
 
-| metric | ref vs ref | gate (0.8 ×) | default | tuned | result |
-|---|---|---|---|---|---|
-| Order profile | 0.698 | 0.558 | 0.569 | 0.606 | pass |
-| Spectral tilt | 0.263 | 0.210 | 0.213 | 0.228 | pass |
-| Spectral centroid | 0.286 | 0.229 | 0.400 | 0.419 | pass |
-| Sub-orders | 0.467 | 0.374 | 0.318 | 0.334 | fail |
-| Pulse irregularity | 0.503 | 0.402 | 0.674 | 0.660 | pass |
-| Forced-induction line | — | — | — | — | n/a |
-| Overrun | — | — | 0.557 | 1.000 | n/a |
-| Forced-induction presence | — | — | — | — | n/a |
+| metric | ref vs ref | gate (0.8 ×) | default | v1.0.0 tuned | P0 baseline | P0 re-tuned | result |
+|---|---|---|---|---|---|---|---|
+| Order profile | 0.698 | 0.558 | 0.569 | 0.606 | 0.604 | 0.716 | pass |
+| Spectral tilt | 0.263 | 0.210 | 0.213 | 0.228 | 0.463 | 0.479 | pass |
+| Spectral centroid | 0.286 | 0.229 | 0.400 | 0.419 | 0.354 | 0.460 | pass |
+| Sub-orders | 0.467 | 0.374 | 0.318 | 0.334 | 0.327 | 0.487 | pass |
+| Pulse irregularity | 0.503 | 0.402 | 0.674 | 0.660 | 0.655 | 0.631 | pass |
+| Forced-induction line | — | — | — | — | — | — | n/a |
+| Overrun | — | — | 0.557 | 1.000 | 0.794 | 1.000 | n/a |
+| Forced-induction presence | — | — | — | — | — | — | n/a |
 
-Discrimination (tuned render vs each tuned engine's references): own 0.483; i5-turbo-25 0.364; v8-na-50 0.439.
+Discrimination (re-tuned render vs each tuned engine's references): own 0.604; i5-turbo-25 0.387; v8-na-50 0.480 (v1.0.0: own 0.483; i5-turbo-25 0.364; v8-na-50 0.439).
 
 References (private, local only — never committed or shipped):
 
@@ -111,8 +117,8 @@ References (private, local only — never committed or shipped):
 | `f458-onboard-a` | cabin | [FERRARI 458 0-310 KM/H ACCELERATION & SOUND by AutoTopNL](https://www.youtube.com/watch?v=X0yiRilcKME) | wot: 51.3 | used |
 | `f458-onboard-b` | cabin | [Ferrari 458 Italia Onboard - Fast Lap of Monza Circuit](https://www.youtube.com/watch?v=3Z1szmKp59M) | liftoff: 6.1, wot: 6.0 | used |
 
-Gates not passed and their most likely structural causes (Phase 5 items):
+Gates that failed at v1.0.0 and the Phase 5 P0 fixes (2026-10-15; phase 2a amendments B18/B19, phase 2b D9):
 
-- **Sub-orders:** the recordings are led by order 2 (order 4 at −11 to −15 dB below it), while the render's order 2 sits near −25 dB: identical banks again (P0.3). A test voicing with bank-asymmetric headers (×0.7 / ×1.4) passed every gate at composite 0.539.
+- **Sub-orders:** the recordings are led by order 2 (order 4 at −11 to −15 dB below it), while the render's order 2 sat near −25 dB: identical banks. Fix: one header scale per bank and one length per collector in the tuner (P0.3). Re-tuned banks ×1.043 / ×0.910, collectors 0.499 / 0.227 m: 0.487 (gate 0.374; P0 baseline 0.327).
 
 Sign-off: pending — the user's listening check (default vs tuned previews, cabin and outside).
