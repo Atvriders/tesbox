@@ -38,7 +38,7 @@ describe('isTunedVoicing — is the voicing other than defaultVoicing(spec)? (ph
       { ...d, headersM: d.headersM.slice(1) },
       { ...d, exhaust: { ...d.exhaust, mufflerSectionsM: [...d.exhaust.mufflerSectionsM].reverse() } },
       { ...d, turbine: null },
-      { ...d, cabin: { lowpassHz: d.cabin.lowpassHz + 50 } },
+      { ...d, cabin: { ...d.cabin, lowpassHz: d.cabin.lowpassHz + 50 } },
       { ...d, launchRpm: d.launchRpm + 1 },
     ];
     for (const v of variants) expect(isTunedVoicing(withVoicing(BASE, v)), JSON.stringify(v)).toBe(true);
@@ -59,7 +59,7 @@ describe('isTunedVoicing — is the voicing other than defaultVoicing(spec)? (ph
 describe('voicingStatus — default → tuned → signed off', () => {
   it('estimated and untouched is "default"; estimated and changed is "tuned"; estimated false is "signed-off"', () => {
     const d = DEFAULT();
-    const tuned: EngineVoicing = { ...d, cabin: { lowpassHz: 700 } };
+    const tuned: EngineVoicing = { ...d, cabin: { ...d.cabin, lowpassHz: 700 } };
     expect(voicingStatus(withVoicing(BASE, d))).toBe('default');
     expect(voicingStatus(withVoicing(BASE, tuned))).toBe('tuned');
     expect(voicingStatus(withVoicing(BASE, { ...tuned, estimated: false }))).toBe('signed-off');

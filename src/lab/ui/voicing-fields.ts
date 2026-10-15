@@ -66,24 +66,27 @@ export interface FieldGroup {
 }
 
 /**
- * Phase 2b contract T6 tunable ranges of single voicing fields (`[]` = any element), used only where the
- * schema sets no maximum (today pulse.alpha and pulse.beta). pulse.widthDeg is left out: its T6 range depends
- * on the engine (rotary or not), and the schema bounds it anyway.
+ * Phase 2b contract T6 tunable ranges (as amended by D9) of single voicing fields (`[]` = any element), used
+ * only where the schema sets no maximum (today pulse.alpha and pulse.beta). pulse.widthDeg is left out: its T6
+ * range depends on the engine (rotary or not), and the schema bounds it anyway.
  */
 export const T6_RANGES: Readonly<Record<string, readonly [number, number]>> = {
   'pulse.alpha': [3, 20],
   'pulse.beta': [1, 10],
   'pulse.cycleAsymmetry': [0, 0.5],
-  'collectors[].lengthM': [0.2, 1.0],
+  'collectors[].lengthM': [0.1, 1.0],
   'exhaust.midPipeM': [0.6, 3.0],
   'exhaust.mufflerAction': [0, 1],
   'exhaust.tailpipeM': [0.2, 1.2],
   'intake.helmholtzHz': [60, 300],
   'intake.gain': [0, 1],
   'mechanical.blockGain': [0, 1],
-  'mechanical.valvetrainGain': [0, 0.5],
-  'cabin.lowpassHz': [300, 1200],
+  'mechanical.valvetrainGain': [0, 1],
+  'cabin.lowpassHz': [200, 2000],
+  'cabin.leakDb': [-60, -10],
   'forcedInduction.cabinGainDb': [-24, -6],
+  'forcedInduction.whistleDb': [-60, 0],
+  'forcedInduction.outsideGainDb': [-60, 0],
 };
 
 /** Not editable even though the schema allows it: flipped only by the user's listening sign-off. */

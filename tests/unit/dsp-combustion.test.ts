@@ -68,7 +68,7 @@ function makeEngine(angles: number[], cycleDeg: 720 | 1080 = 720, pulse: PulseOp
     forcedInduction: null,
     mechanical: { blockGain: 0.3, valvetrainGain: 0.1 },
     overrun: { crackleRate: 0.5, fuelCutResumeRpm: 1300 },
-    cabin: { lowpassHz: 600 },
+    cabin: { lowpassHz: 600, leakDb: -30 },
     launchRpm: 3000,
     estimated: true,
   };

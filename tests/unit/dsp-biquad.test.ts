@@ -134,7 +134,50 @@ describe('Biquad', () => {
     expect(y).toBe(0);
   });
 
+  it('lowpassLeak (B19): |H|² = |LP₂|² + g²·|HP₂|² (Butterworth pair, bilinear, prewarped at the corner)', () => {
+    for (const [fc, leakDb] of [
+      [600, -30],
+      [2000, -30],
+      [300, -60],
+      [1200, -10],
+    ] as const) {
+      const g = 10 ** (leakDb / 20);
+      const b = new Biquad();
+      b.lowpassLeak(fc, g, FS);
+      const h = impulse((x) => b.process(x));
+      const k = Math.tan((Math.PI * fc) / FS);
+      for (const f of [0, 100, fc, 1.5 * fc, 3 * fc, 7000, 12000, 20000]) {
+        // Ω = the prewarped analog frequency, normalised to the corner: |H|² = (1 + g²Ω⁴)/(1 + Ω⁴)
+        const om = Math.tan((Math.PI * f) / FS) / k;
+        const want = 10 * Math.log10((1 + g * g * om ** 4) / (1 + om ** 4));
+        expect(dbAt(h, f), `fc ${fc}, leak ${leakDb} dB @ ${f} Hz`).toBeCloseTo(want, 3);
+      }
+      // the leak floor: exactly g at Nyquist, never below it (no notch where LP₂ meets the leak)
+      expect(dbAt(h, FS / 2)).toBeCloseTo(leakDb, 4);
+      let prev = Infinity;
+      for (let f = 0; f <= FS / 2; f += 100) {
+        const db = dbAt(h, f);
+        expect(db, `monotonic @ ${f} Hz`).toBeLessThanOrEqual(prev + 1e-9);
+        expect(db, `floor @ ${f} Hz`).toBeGreaterThanOrEqual(leakDb - 1e-6);
+        prev = db;
+      }
+    }
+  });
+
+  it('lowpassLeak with no leak is the 2nd-order Butterworth low-pass', () => {
+    const a = new Biquad();
+    const b = new Biquad();
+    a.lowpassLeak(750, 0, FS);
+    b.lowpass(750, Math.SQRT1_2, FS);
+    const ha = impulse((x) => a.process(x), 4096);
+    const hb = impulse((x) => b.process(x), 4096);
+    for (let i = 0; i < 4096; i++) expect(ha[i]).toBeCloseTo(hb[i] ?? NaN, 12);
+  });
+
   it('sanitises non-finite or out-of-range parameters into a stable filter', () => {
+    const leak = new Biquad();
+    leak.lowpassLeak(NaN, NaN, FS); // corner 1 Hz, no leak
+    for (let i = 0; i < 1000; i++) expect(Number.isFinite(leak.process(1))).toBe(true);
     const b = new Biquad();
     b.lowpass(NaN, NaN, FS);
     let y = 0;

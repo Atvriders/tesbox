@@ -188,34 +188,40 @@ describe('tesbox-tune arguments', () => {
 // ───────────────────────────── the tunable voicing vector ─────────────────────────────
 
 describe('tunable voicing vector', () => {
-  const NA_KEYS = [
-    'pulse.widthDeg',
-    'pulse.alpha',
-    'pulse.beta',
-    'pulse.cycleAsymmetry',
-    'headersM.scale',
-    'collectors.lengthM',
-    'exhaust.midPipeM',
-    'exhaust.mufflerSectionsM.scale',
-    'exhaust.mufflerAction',
-    'exhaust.tailpipeM',
-    'intake.helmholtzHz',
-    'intake.gain',
-    'mechanical.blockGain',
-    'mechanical.valvetrainGain',
-    'cabin.lowpassHz',
-  ];
+  // phase 5 contract P0.3 (amendment D9): per-bank header scales and per-collector lengths, the full schema
+  // ranges of cabin.lowpassHz and mechanical.valvetrainGain, and the B18/B19 levels
+  const BANK_KEYS = ['headersM.bank0.scale', 'headersM.bank1.scale', 'headersM.bank2.scale', 'headersM.bank3.scale'];
+  const COLLECTOR_KEYS = Array.from({ length: 8 }, (_, c) => `collectors[${c}].lengthM`);
 
-  it('holds the contract parameters and ranges, the forced-induction cabin gain only where fitted', () => {
-    expect(PARAM_KEYS).toEqual([...NA_KEYS, 'forcedInduction.cabinGainDb']);
-    const na = new VoicingSpace(garage('v8-na-50'));
-    expect(na.params.map((p) => [p.key, p.lo, p.hi])).toEqual([
+  it('holds the contract parameters and ranges: one header scale per bank, one length per collector, the levels where they apply', () => {
+    expect(PARAM_KEYS).toEqual([
+      'pulse.widthDeg',
+      'pulse.alpha',
+      'pulse.beta',
+      'pulse.cycleAsymmetry',
+      ...BANK_KEYS,
+      ...COLLECTOR_KEYS,
+      'exhaust.midPipeM',
+      'exhaust.mufflerSectionsM.scale',
+      'exhaust.mufflerAction',
+      'exhaust.tailpipeM',
+      'intake.helmholtzHz',
+      'intake.gain',
+      'mechanical.blockGain',
+      'mechanical.valvetrainGain',
+      'cabin.lowpassHz',
+      'cabin.leakDb',
+      'forcedInduction.cabinGainDb',
+      'forcedInduction.whistleDb',
+      'forcedInduction.outsideGainDb',
+    ]);
+    const common = (headers: [string, number, number][], collectors: [string, number, number][]): [string, number, number][] => [
       ['pulse.widthDeg', 40, 90],
       ['pulse.alpha', 3, 20],
       ['pulse.beta', 1, 10],
       ['pulse.cycleAsymmetry', 0, 0.5],
-      ['headersM.scale', 0.7, 1.4],
-      ['collectors.lengthM', 0.2, 1.0],
+      ...headers,
+      ...collectors,
       ['exhaust.midPipeM', 0.6, 3.0],
       ['exhaust.mufflerSectionsM.scale', 0.6, 1.6],
       ['exhaust.mufflerAction', 0, 1],
@@ -223,13 +229,34 @@ describe('tunable voicing vector', () => {
       ['intake.helmholtzHz', 60, 300],
       ['intake.gain', 0, 1],
       ['mechanical.blockGain', 0, 1],
-      ['mechanical.valvetrainGain', 0, 0.5],
-      ['cabin.lowpassHz', 300, 1200],
-    ]);
-    // contract −24 … −6 dB, limited to what engine.schema.json and contracts.ts allow (−20 … −10 dB)
+      ['mechanical.valvetrainGain', 0, 1],
+      ['cabin.lowpassHz', 200, 2000],
+      ['cabin.leakDb', -60, -10],
+    ];
+    // a V8 with two banks and two collectors: two header scales, two collector lengths, no forced induction
+    const na = new VoicingSpace(garage('v8-na-50'));
+    expect(na.params.map((p) => [p.key, p.lo, p.hi])).toEqual(
+      common(
+        [
+          ['headersM.bank0.scale', 0.7, 1.4],
+          ['headersM.bank1.scale', 0.7, 1.4],
+        ],
+        [
+          ['collectors[0].lengthM', 0.1, 1.0],
+          ['collectors[1].lengthM', 0.1, 1.0],
+        ],
+      ),
+    );
+    // an inline turbo: one bank, one collector, and the three forced-induction levels (cabin gain within the schema)
     const turbo = new VoicingSpace(garage('i5-turbo-25'));
-    expect(turbo.params.map((p) => p.key)).toEqual(PARAM_KEYS);
-    expect(turbo.params.at(-1)).toEqual({ key: 'forcedInduction.cabinGainDb', lo: -20, hi: -10 });
+    expect(turbo.params.map((p) => [p.key, p.lo, p.hi])).toEqual([
+      ...common([['headersM.bank0.scale', 0.7, 1.4]], [['collectors[0].lengthM', 0.1, 1.0]]),
+      ['forcedInduction.cabinGainDb', -20, -10],
+      ['forcedInduction.whistleDb', -60, 0],
+      ['forcedInduction.outsideGainDb', -60, 0],
+    ]);
+    // a supercharger has no turbo whistle to level
+    expect(new VoicingSpace(garage('v8-sc-62')).params.map((p) => p.key).slice(-2)).toEqual(['forcedInduction.cabinGainDb', 'forcedInduction.outsideGainDb']);
     // rotary: pulse width 200–300°
     expect(new VoicingSpace(garage('rotary-twin-13')).params[0]).toEqual({ key: 'pulse.widthDeg', lo: 200, hi: 300 });
   });
@@ -238,6 +265,10 @@ describe('tunable voicing vector', () => {
     const s = new VoicingSpace(garage('i5-turbo-25'), ['cabin.lowpassHz', 'pulse.alpha']);
     expect(s.params.map((p) => p.key)).toEqual(['pulse.alpha', 'cabin.lowpassHz']); // contract order
     expect(() => new VoicingSpace(garage('v8-na-50'), ['forcedInduction.cabinGainDb'])).toThrow(/forced induction/);
+    expect(() => new VoicingSpace(garage('v8-na-50'), ['forcedInduction.outsideGainDb'])).toThrow(/forced induction/);
+    expect(() => new VoicingSpace(garage('v8-sc-62'), ['forcedInduction.whistleDb'])).toThrow(/turbo whistle/);
+    expect(() => new VoicingSpace(garage('i5-turbo-25'), ['headersM.bank1.scale'])).toThrow(/bank 1/);
+    expect(() => new VoicingSpace(garage('i5-turbo-25'), ['collectors[1].lengthM'])).toThrow(/collectors\[1\]/);
     expect(() => new VoicingSpace(garage('v8-na-50'), ['spec.rpm.idle'])).toThrow(/unknown/);
     expect(() => new VoicingSpace(garage('v8-na-50'), [])).toThrow(/at least one/);
   });
@@ -259,43 +290,83 @@ describe('tunable voicing vector', () => {
     expect(def).toEqual(before);
     expect(v.pulse.widthDeg).toBe(90);
     expect(v.exhaust.midPipeM).toBe(0.6);
-    expect(v.cabin.lowpassHz).toBe(1200);
+    expect(v.cabin.lowpassHz).toBe(2000);
     expect(v.estimated).toBe(true);
     const untouched = structuredClone(v);
     untouched.pulse.widthDeg = before.voicing.pulse.widthDeg;
     untouched.exhaust.midPipeM = before.voicing.exhaust.midPipeM;
     untouched.cabin.lowpassHz = before.voicing.cabin.lowpassHz;
     expect(untouched).toEqual(before.voicing);
-    expect(s.values(v)).toEqual([90, 0.6, 1200]);
+    expect(s.values(v)).toEqual([90, 0.6, 2000]);
     expect(s.encode(v)).toEqual([1, 0, 1]);
   });
 
-  it('scales every header / muffler section and the collectors together, clamped to the contract maxima', () => {
-    const def = garage('v8-na-50');
+  it("scales each bank's headers on its own (bank = the combustion entry's exhaust bank, as the network routes it), clamped to the contract maxima", () => {
+    const def = garage('v8-na-50'); // banks by entry: 0 1 0 1 1 0 1 0
     def.voicing.headersM[0] = 1.2; // ×1.4 = 1.68 > 1.5 m
-    def.voicing.exhaust.mufflerSectionsM = [0.1, 0.7]; // ×0.6 = 0.06 (below 4 samples at 28 kHz) and ×1.6 = 1.12 > 0.8 m
+    const s = new VoicingSpace(def, ['headersM.bank0.scale', 'headersM.bank1.scale']);
+    expect(s.values(def.voicing)).toEqual([1, 1]);
+    const v = s.decode([1, 0]); // bank 0 ×1.4, bank 1 ×0.7
+    const banks = def.spec.combustion.map((c) => c.bank);
+    expect(banks).toEqual([0, 1, 0, 1, 1, 0, 1, 0]);
+    v.headersM.forEach((h, i) => {
+      const base = def.voicing.headersM[i] ?? NaN;
+      const want = Math.min(1.5, Math.round(base * (banks[i] === 0 ? 1.4 : 0.7) * 1000) / 1000);
+      expect(h, `header ${i} (bank ${banks[i]})`).toBeCloseTo(want, 9);
+    });
+    expect(v.headersM[0]).toBe(1.5);
+    expect(s.values(v)[1]).toBeCloseTo(0.7, 3);
+    // the bank-1 scale never touches bank 0, and the other voicing fields stay as they were
+    const only1 = new VoicingSpace(def, ['headersM.bank1.scale']).decode([0]);
+    banks.forEach((b, i) => {
+      if (b === 0) expect(only1.headersM[i]).toBe(def.voicing.headersM[i]);
+    });
+    expect({ ...only1, headersM: def.voicing.headersM }).toEqual(def.voicing);
+    expect(() => assertEngineFits({ ...def, voicing: v }, MIN_SAMPLE_RATE)).not.toThrow();
+  });
+
+  it('sets each collector length on its own within 0.1–1.0 m (the capacity floor and maximum)', () => {
+    const def = garage('v8-na-50');
     def.voicing.collectors = [
       { banks: [0], lengthM: 0.3 },
       { banks: [1], lengthM: 0.5 },
     ];
-    const s = new VoicingSpace(def, ['headersM.scale', 'collectors.lengthM', 'exhaust.mufflerSectionsM.scale']);
-    expect(s.values(def.voicing)).toEqual([1, 0.4, 1]); // scale factors 1, mean collector length
-    const hi = s.decode([1, 1, 1]);
-    expect(hi.headersM[0]).toBe(1.5);
-    expect(hi.headersM[1]).toBeCloseTo((def.voicing.headersM[1] ?? 0) * 1.4, 3);
-    expect(hi.collectors.map((c) => c.lengthM)).toEqual([0.75, 1.0]); // ratio kept: 0.3·2.5, min(1.0, 0.5·2.5)
-    expect(hi.exhaust.mufflerSectionsM).toEqual([0.16, 0.8]);
-    const lo = s.decode([0, 0, 0]);
-    expect(lo.exhaust.mufflerSectionsM).toEqual([0.1, 0.42]); // 0.06 → the 0.1 m floor (4 samples at MIN_SAMPLE_RATE)
-    expect(lo.collectors.map((c) => c.lengthM)).toEqual([0.15, 0.25]);
-    for (const v of [hi, lo]) expect(() => assertEngineFits({ ...def, voicing: v }, MIN_SAMPLE_RATE)).not.toThrow();
+    const s = new VoicingSpace(def, ['collectors[0].lengthM', 'collectors[1].lengthM']);
+    expect(s.values(def.voicing)).toEqual([0.3, 0.5]);
+    expect(s.decode([0, 1]).collectors).toEqual([
+      { banks: [0], lengthM: 0.1 },
+      { banks: [1], lengthM: 1.0 },
+    ]);
+    expect(s.decode([1, 0]).collectors.map((c) => c.lengthM)).toEqual([1.0, 0.1]);
+    expect(new VoicingSpace(def, ['collectors[1].lengthM']).decode([0.5]).collectors.map((c) => c.lengthM)).toEqual([0.3, 0.55]);
+    for (const x of [[0, 1], [1, 0]]) expect(() => assertEngineFits({ ...def, voicing: s.decode(x) }, MIN_SAMPLE_RATE)).not.toThrow();
+  });
+
+  it('scales the muffler sections together, clamped to the contract maxima', () => {
+    const def = garage('v8-na-50');
+    def.voicing.exhaust.mufflerSectionsM = [0.1, 0.7]; // ×0.6 = 0.06 (below 4 samples at 28 kHz) and ×1.6 = 1.12 > 0.8 m
+    const s = new VoicingSpace(def, ['exhaust.mufflerSectionsM.scale']);
+    expect(s.values(def.voicing)).toEqual([1]);
+    expect(s.decode([1]).exhaust.mufflerSectionsM).toEqual([0.16, 0.8]);
+    expect(s.decode([0]).exhaust.mufflerSectionsM).toEqual([0.1, 0.42]); // 0.06 → the 0.1 m floor (4 samples at MIN_SAMPLE_RATE)
+    for (const x of [0, 1]) expect(() => assertEngineFits({ ...def, voicing: s.decode([x]) }, MIN_SAMPLE_RATE)).not.toThrow();
+  });
+
+  it('sets the B18 / B19 levels and the widened cabin ranges', () => {
+    const def = garage('i5-turbo-25');
+    const s = new VoicingSpace(def, ['mechanical.valvetrainGain', 'cabin.lowpassHz', 'cabin.leakDb', 'forcedInduction.whistleDb', 'forcedInduction.outsideGainDb']);
+    const hi = s.decode([1, 1, 1, 1, 1]);
+    expect([hi.mechanical.valvetrainGain, hi.cabin.lowpassHz, hi.cabin.leakDb, hi.forcedInduction?.whistleDb, hi.forcedInduction?.outsideGainDb]).toEqual([1, 2000, -10, 0, 0]);
+    const lo = s.decode([0, 0, 0, 0, 0]);
+    expect([lo.mechanical.valvetrainGain, lo.cabin.lowpassHz, lo.cabin.leakDb, lo.forcedInduction?.whistleDb, lo.forcedInduction?.outsideGainDb]).toEqual([0, 200, -60, -60, -60]);
+    expect(s.values(s.decode([0.5, 0.5, 0.5, 0.5, 0.5]))).toEqual([0.5, 1100, -35, -30, -30]);
   });
 
   it('clamps a starting value outside the tunable range into [0, 1]', () => {
     const def = garage('v8-na-50');
-    def.voicing.cabin.lowpassHz = 1500; // schema allows 200–2000, the tuner searches 300–1200
+    def.voicing.intake.helmholtzHz = 400; // schema allows 20–1000, the tuner searches 60–300
     def.voicing.pulse.cycleAsymmetry = 0.8;
-    const s = new VoicingSpace(def, ['pulse.cycleAsymmetry', 'cabin.lowpassHz']);
+    const s = new VoicingSpace(def, ['pulse.cycleAsymmetry', 'intake.helmholtzHz']);
     expect(s.encode(def.voicing)).toEqual([1, 1]);
   });
 

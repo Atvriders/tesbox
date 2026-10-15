@@ -45,7 +45,7 @@ const ENGINE: EngineDef = {
     forcedInduction: null,
     mechanical: { blockGain: 0.3, valvetrainGain: 0.1 },
     overrun: { crackleRate: 0.5, fuelCutResumeRpm: 1200 },
-    cabin: { lowpassHz: 600 },
+    cabin: { lowpassHz: 600, leakDb: -30 },
     launchRpm: 4125,
     estimated: true,
   },
@@ -108,8 +108,23 @@ describe('engine.schema.json', () => {
     ['an unknown engine set', (e) => Object.assign(e, { set: 'british' })],
     ['cabinGainDb above -10', (e) => {
       e.spec.aspiration = { type: 'turbo', turbo: { count: 1, layout: 'single' }, supercharger: null };
-      e.voicing.forcedInduction = { spoolTimeS: 0.6, maxShaftKrpm: 180, lift: 'bov', cabinGainDb: -5 };
+      e.voicing.forcedInduction = { spoolTimeS: 0.6, maxShaftKrpm: 180, lift: 'bov', cabinGainDb: -5, whistleDb: -36, outsideGainDb: -30 };
     }],
+    ['whistleDb above 0', (e) => {
+      e.spec.aspiration = { type: 'turbo', turbo: { count: 1, layout: 'single' }, supercharger: null };
+      e.voicing.forcedInduction = { spoolTimeS: 0.6, maxShaftKrpm: 180, lift: 'bov', cabinGainDb: -14, whistleDb: 1, outsideGainDb: -30 };
+    }],
+    ['outsideGainDb below -60', (e) => {
+      e.spec.aspiration = { type: 'turbo', turbo: { count: 1, layout: 'single' }, supercharger: null };
+      e.voicing.forcedInduction = { spoolTimeS: 0.6, maxShaftKrpm: 180, lift: 'bov', cabinGainDb: -14, whistleDb: -36, outsideGainDb: -61 };
+    }],
+    ['a forced-induction block without the B18 levels', (e) => {
+      e.spec.aspiration = { type: 'turbo', turbo: { count: 1, layout: 'single' }, supercharger: null };
+      Object.assign(e.voicing, { forcedInduction: { spoolTimeS: 0.6, maxShaftKrpm: 180, lift: 'bov', cabinGainDb: -14 } });
+    }],
+    ['cabin leakDb above -10', (e) => (e.voicing.cabin.leakDb = -9)],
+    ['cabin leakDb below -60', (e) => (e.voicing.cabin.leakDb = -61)],
+    ['a cabin without leakDb', (e) => Object.assign(e.voicing, { cabin: { lowpassHz: 600 } })],
   ])('rejects %s', (_label, fn) => {
     expect(validateEngine(mutate(ENGINE, fn))).toBe(false);
   });
@@ -119,7 +134,7 @@ describe('engine.schema.json', () => {
       e.spec.aspiration = { type: 'supercharger', turbo: null, supercharger: { kind: 'twin-screw', pulleyRatio: 2.4, gearRatio: 1, lobes: 4 } };
       e.spec.gearbox.type = 'tc-auto';
       e.spec.gearbox.tc = { stallRpmWot: 2800, lockupTurbineRpm: 1400, couplingSR: 0.9 };
-      e.voicing.forcedInduction = { spoolTimeS: 0.05, maxShaftKrpm: 180, lift: 'bov', cabinGainDb: -14 };
+      e.voicing.forcedInduction = { spoolTimeS: 0.05, maxShaftKrpm: 180, lift: 'bov', cabinGainDb: -14, whistleDb: -36, outsideGainDb: -30 };
     });
     expect(validateEngine(sc)).toBe(true);
   });

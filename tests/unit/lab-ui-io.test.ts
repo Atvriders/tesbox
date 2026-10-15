@@ -61,7 +61,7 @@ describe('importVoicing', () => {
   });
 
   it('round-trips an edited voicing', () => {
-    const edited = { ...V8.voicing, cabin: { lowpassHz: 750 }, headersM: V8.voicing.headersM.map((h) => h + 0.01) };
+    const edited = { ...V8.voicing, cabin: { ...V8.voicing.cabin, lowpassHz: 750 }, headersM: V8.voicing.headersM.map((h) => h + 0.01) };
     const r = importVoicing(exported(V8.id, edited), ENGINES, FS);
     expect(r.ok && r.voicing).toEqual({ ...edited, estimated: true });
   });

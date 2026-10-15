@@ -51,6 +51,7 @@ const SCALAR_RANGES: Record<string, [number, number]> = {
   'overrun.crackleRate': [0, 10],
   'overrun.fuelCutResumeRpm': [500, 6000],
   'cabin.lowpassHz': [200, 2000],
+  'cabin.leakDb': [-60, -10],
   launchRpm: [1000, 10000],
 };
 
@@ -134,11 +135,18 @@ describe('voicingFields: all 15 engines', () => {
             ['forcedInduction.maxShaftKrpm', 'number'],
             ['forcedInduction.lift', 'enum'],
             ['forcedInduction.cabinGainDb', 'number'],
+            ['forcedInduction.whistleDb', 'number'],
+            ['forcedInduction.outsideGainDb', 'number'],
           ]);
           const lift = byKey(groups, 'forcedInduction.lift');
           expect(lift.kind === 'enum' ? lift.options : null).toEqual(['bov', 'flutter']);
           const gain = num(groups, 'forcedInduction.cabinGainDb');
           expect([gain.min, gain.max]).toEqual([-20, -10]);
+          // B18 levels: the schema ranges, dB units
+          for (const key of ['forcedInduction.whistleDb', 'forcedInduction.outsideGainDb']) {
+            const f = num(groups, key);
+            expect([f.min, f.max, f.unit], key).toEqual([-60, 0, 'dB']);
+          }
         }
       });
 

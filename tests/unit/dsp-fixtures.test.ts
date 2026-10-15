@@ -27,7 +27,7 @@ const KEYS: Record<string, string[]> = {
   'voicing.intake': ['runnerM', 'helmholtzHz', 'gain'],
   'voicing.mechanical': ['blockGain', 'valvetrainGain'],
   'voicing.overrun': ['crackleRate', 'fuelCutResumeRpm'],
-  'voicing.cabin': ['lowpassHz'],
+  'voicing.cabin': ['lowpassHz', 'leakDb'],
 };
 
 function at(root: unknown, path: string): unknown {
@@ -281,7 +281,7 @@ describe('fixture engines (tests/fixtures/engines)', () => {
     expect(def('v8-crossplane-test').spec.gearbox.tc).toEqual({ stallRpmWot: 2400, lockupTurbineRpm: 1300, couplingSR: 0.88 });
     expect(def('v8-sc-test').spec.gearbox.tc).toEqual({ stallRpmWot: 2600, lockupTurbineRpm: 1400, couplingSR: 0.86 });
     expect(def('v8-sc-test').voicing.forcedInduction).toEqual({
-      spoolTimeS: 0.05, maxShaftKrpm: 15, lift: 'bov', cabinGainDb: -12,
+      spoolTimeS: 0.05, maxShaftKrpm: 15, lift: 'bov', cabinGainDb: -12, whistleDb: 0, outsideGainDb: 0,
     });
     // cycleAsymmetry 0.05 for the even-fire fixtures
     for (const id of ['i4-test', 'i6-test', 'v8-flatplane-test'] as const) {

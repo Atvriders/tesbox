@@ -47,10 +47,10 @@
       "valve": {"fitted": true, "openGainDb": 4}
     },
     "intake": {"runnerM": 0.3, "helmholtzHz": 140, "gain": 0.4},
-    "forcedInduction": {"spoolTimeS": 0.6, "maxShaftKrpm": 180, "lift": "bov", "cabinGainDb": -14},
+    "forcedInduction": {"spoolTimeS": 0.6, "maxShaftKrpm": 180, "lift": "bov", "cabinGainDb": -10, "whistleDb": 0, "outsideGainDb": 0},
     "mechanical": {"blockGain": 0.3, "valvetrainGain": 0.1},
     "overrun": {"crackleRate": 0.6, "fuelCutResumeRpm": 1250},
-    "cabin": {"lowpassHz": 600},
+    "cabin": {"lowpassHz": 710, "leakDb": -60},
     "launchRpm": 2900,
     "estimated": true
   }

@@ -7,12 +7,19 @@ import { loadFixture } from './helpers/fixtures';
 const FS = 48000;
 const DELAY_N = Math.round(0.0007 * FS); // 34 samples
 
-function voicing(cabinGainDb: number | null = -14, lowpassHz = 600): EngineVoicing {
+function voicing(cabinGainDb: number | null = -14, lowpassHz = 600, leakDb = -30, outsideGainDb = -30): EngineVoicing {
   const v = loadFixture('i4-test').voicing;
-  v.cabin = { lowpassHz };
+  v.cabin = { lowpassHz, leakDb };
   v.forcedInduction =
-    cabinGainDb === null ? null : { spoolTimeS: 0.6, maxShaftKrpm: 180, lift: 'bov', cabinGainDb };
+    cabinGainDb === null ? null : { spoolTimeS: 0.6, maxShaftKrpm: 180, lift: 'bov', cabinGainDb, whistleDb: -36, outsideGainDb };
   return v;
+}
+
+/** |H| of the B19 cabin transfer (2nd-order Butterworth LP + leak g, bilinear prewarped at fc) at f. */
+function cabinGain(f: number, fc: number, leakDb: number): number {
+  const g = dbToGain(leakDb);
+  const om = Math.tan((Math.PI * f) / FS) / Math.tan((Math.PI * fc) / FS);
+  return Math.sqrt((1 + g * g * om ** 4) / (1 + om ** 4));
 }
 
 function mixer(p: Perspective, v: EngineVoicing = voicing()): PerspectiveMixer {
@@ -62,10 +69,15 @@ function toneAmp(x: Float64Array, f: number, from: number): number {
 }
 
 describe('PerspectiveMixer', () => {
-  it('outside: exhaust + airflow + 0.7·intake + 0.3·block + fi, full band', () => {
+  it('outside: exhaust + airflow + 0.7·intake + 0.3·block + fi × dbToGain(outsideGainDb), full band', () => {
     const { l, r } = render(mixer('outside'), 1000, dc);
-    const m = 0.1 + 0.02 + 0.7 * 0.2 + 0.3 * 0.3 + 0.05;
+    const m = 0.1 + 0.02 + 0.7 * 0.2 + 0.3 * 0.3 + dbToGain(-30) * 0.05;
     expect(((l[999] ?? 0) + (r[999] ?? 0)) / 2).toBeCloseTo(m, 12);
+    // B18: the outside forced-induction level follows the voicing (0 dB = the Phase 2a full-level mix)
+    for (const db of [0, -12, -60]) {
+      const fi = render(mixer('outside', voicing(-14, 600, -30, db)), 1000, () => [0, 0, 0, 1, 0]);
+      expect(((fi.l[999] ?? 0) + (fi.r[999] ?? 0)) / 2, `${db} dB`).toBeCloseTo(dbToGain(db), 12);
+    }
     const e = sine(4000, 0.5);
     const hf = render(mixer('outside'), FS / 2, (i) => [e(i), 0, 0, 0, 0]);
     expect(toneAmp(hf.l, 4000, 0) + toneAmp(hf.r, 4000, 0)).toBeCloseTo(2 * 0.5, 2);
@@ -77,19 +89,28 @@ describe('PerspectiveMixer', () => {
     expect(((l[FS / 2 - 1] ?? 0) + (r[FS / 2 - 1] ?? 0)) / 2).toBeCloseTo(m, 9);
   });
 
-  it('cabin: 4th-order LP at cabin.lowpassHz on exhaust/intake/airflow', () => {
+  it('cabin (B19): 2nd-order Butterworth LP at cabin.lowpassHz plus a cabin.leakDb high-frequency leak on exhaust/intake/airflow', () => {
     const e = sine(4000, 0.5);
     const hf = render(mixer('cabin'), FS / 2, (i) => [e(i), e(i), 0, 0, e(i)]);
-    expect(toneAmp(hf.l, 4000, FS / 10)).toBeLessThan(1.5 * 0.0005 * 3 * 0.5); // (600/4000)^4 ≈ 5e-4
+    // 12 dB/octave above the corner (a 4th-order LP would leave 4 kHz at ≈ −66 dB, 34 dB lower)
+    expect(toneAmp(mono(hf), 4000, FS / 10) / (3 * 0.5)).toBeCloseTo(cabinGain(4000, 600, -30), 3);
+    // the leak keeps the upper harmonics at cabin.leakDb (20 kHz: LP₂ alone would be at −79 dB)
+    for (const leakDb of [-10, -30, -60]) {
+      const x = sine(20000, 0.5);
+      const top = render(mixer('cabin', voicing(-14, 600, leakDb)), FS / 2, (i) => [x(i), 0, 0, 0, 0]);
+      const g = toneAmp(mono(top), 20000, FS / 10) / 0.5;
+      expect(g / cabinGain(20000, 600, leakDb), `leak ${leakDb} dB`).toBeCloseTo(1, 2);
+      expect(20 * Math.log10(g), `leak ${leakDb} dB`).toBeCloseTo(leakDb, 0);
+    }
     const lo = sine(100, 0.5);
     const lf = render(mixer('cabin'), FS, (i) => [lo(i), 0, 0, 0, 0]);
     expect((toneAmp(lf.l, 100, FS / 4) + toneAmp(lf.r, 100, FS / 4)) / 2).toBeCloseTo(0.5, 2);
-    // The corner follows the voicing: the two prewarped RBJ sections (Q = BUTTER4_Q) are exactly
-    // −3 dB there, since Q₁·Q₂ = 1/√2.
-    for (const fc of [400, 800]) {
+    // The corner follows the voicing: the prewarped Butterworth section is −3 dB there (+ the leak's g²/2 in power).
+    for (const fc of [400, 800, 2000]) {
       const x = sine(fc, 0.5);
       const at = render(mixer('cabin', voicing(-14, fc)), FS, (i) => [x(i), 0, 0, 0, 0]);
-      expect(toneAmp(mono(at), fc, FS / 4) / 0.5).toBeCloseTo(Math.SQRT1_2, 3);
+      expect(toneAmp(mono(at), fc, FS / 4) / 0.5).toBeCloseTo(cabinGain(fc, fc, -30), 3);
+      expect(cabinGain(fc, fc, -30)).toBeCloseTo(Math.SQRT1_2, 3);
     }
   });
 
@@ -108,9 +129,11 @@ describe('PerspectiveMixer', () => {
     expect(toneAmp(mono(corner), 2800, FS / 10) / dbToGain(-12)).toBeCloseTo(Math.SQRT1_2, 3);
   });
 
-  it('uses −14 dB for the cabin forced-induction gain when the voicing has none', () => {
+  it('uses −14 dB (cabin) and −30 dB (outside) for the forced-induction gains when the voicing has none', () => {
     const { l, r } = render(mixer('cabin', voicing(null)), FS / 2, () => [0, 0, 0, 1, 0]);
     expect(((l[FS / 2 - 1] ?? 0) + (r[FS / 2 - 1] ?? 0)) / 2).toBeCloseTo(dbToGain(-14), 9);
+    const out = render(mixer('outside', voicing(null)), 1000, () => [0, 0, 0, 1, 0]);
+    expect(((out.l[999] ?? 0) + (out.r[999] ?? 0)) / 2).toBeCloseTo(dbToGain(-30), 12);
   });
 
   it('stereo: l = m + 0.08·d, r = m − 0.08·d with d = m delayed 0.7 ms (mono-compatible)', () => {
@@ -131,7 +154,7 @@ describe('PerspectiveMixer', () => {
     const quarter = render(m, 0.075 * FS, dc);
     const mid = render(m, 0.075 * FS, dc);
     const cab = ((before.l[FS / 2 - 1] ?? 0) + (before.r[FS / 2 - 1] ?? 0)) / 2;
-    const out = 0.1 + 0.02 + 0.7 * 0.2 + 0.3 * 0.3 + 0.05;
+    const out = 0.1 + 0.02 + 0.7 * 0.2 + 0.3 * 0.3 + dbToGain(-30) * 0.05;
     // DC inputs, so m = cab + smoothstep(w)·(out − cab); (l + r)/2 = m whatever the delayed copy holds.
     // w = 3600/14400 = 0.25 → smoothstep 0.15625 (a linear fade would be at 0.25).
     const quarterM = ((quarter.l[0.075 * FS - 1] ?? 0) + (quarter.r[0.075 * FS - 1] ?? 0)) / 2;

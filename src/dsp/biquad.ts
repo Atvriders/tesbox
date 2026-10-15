@@ -102,6 +102,23 @@ export class Biquad {
     this.set(1 + al * A, -2 * cs, 1 - al * A, 1 + al / A, -2 * cs, 1 - al / A);
   }
 
+  /**
+   * 2nd-order Butterworth low-pass at f with a high-frequency leak `leak` (linear gain, 0 … 1; phase 2a amendment
+   * B19). Analog prototype, s normalised to the corner: H(s) = (1 + √(2g)·s + g·s²) / (1 + √2·s + s²), whose
+   * |H|² = (1 + g²Ω⁴) / (1 + Ω⁴) = |LP₂|² + g²·|HP₂|² for the Butterworth low-/high-pass pair at f: the power sum of
+   * the low-passed path and a leak path, without the notch a coherent sum of the two would cut where they cross.
+   * Minimum phase (its zeros are a Butterworth pair at f/√g); unity at DC, falls 12 dB/octave above f and levels off
+   * at g, which it reaches exactly at Nyquist. Bilinear transform prewarped at f; leak 0 is lowpass(f, 1/√2).
+   */
+  lowpassLeak(f: number, leak: number, fs: number): void {
+    const k = Math.tan((Math.PI * corner(f, fs)) / fs);
+    const kk = k * k;
+    const g = leak > 0 ? (leak < 1 ? leak : 1) : 0;
+    const sg = Math.sqrt(2 * g) * k;
+    const sa = Math.SQRT2 * k;
+    this.set(kk + sg + g, 2 * (kk - g), kk - sg + g, kk + sa + 1, 2 * (kk - 1), kk - sa + 1);
+  }
+
   process(x: number): number {
     const y = flush(
       this.b0 * x + this.b1 * this.x1 + this.b2 * this.x2 - this.a1 * this.y1 - this.a2 * this.y2,

@@ -137,7 +137,9 @@
       "spoolTimeS": 0.6,
       "maxShaftKrpm": 180,
       "lift": "bov",
-      "cabinGainDb": -19.9
+      "cabinGainDb": -19.9,
+      "whistleDb": -36,
+      "outsideGainDb": -30
     },
     "mechanical": {
       "blockGain": 0.106,
@@ -148,7 +150,8 @@
       "fuelCutResumeRpm": 1350
     },
     "cabin": {
-      "lowpassHz": 1200
+      "lowpassHz": 1200,
+      "leakDb": -30
     },
     "launchRpm": 3150,
     "estimated": true

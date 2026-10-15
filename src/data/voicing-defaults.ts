@@ -10,6 +10,14 @@ const FLAT4_LONG_M = 0.75;
 const GOLDEN_FRACTION = 0.6180339887498949;
 const COLLECTOR_M = 0.35;
 const ROTARY_FACES_PER_ROTOR = 3;
+/**
+ * Turbo whistle level re the Phase 2a whistle and the outside forced-induction level (phase 2a amendment B18): the
+ * Phase 2a whistle measured 33–36 dB above anything the pilots' recordings show.
+ */
+export const DEFAULT_WHISTLE_DB = -36;
+export const DEFAULT_OUTSIDE_FI_DB = -30;
+/** Cabin high-frequency leak (phase 2a amendment B19). */
+export const DEFAULT_CABIN_LEAK_DB = -30;
 
 function round3(x: number): number {
   return Math.round(x * 1000) / 1000;
@@ -90,11 +98,18 @@ export function defaultVoicing(spec: EngineSpec): EngineVoicing {
       gain: 0.4,
     },
     forcedInduction: forced
-      ? { spoolTimeS: turbo ? 0.6 : 0.05, maxShaftKrpm: 180, lift: 'bov', cabinGainDb: -14 }
+      ? {
+          spoolTimeS: turbo ? 0.6 : 0.05,
+          maxShaftKrpm: 180,
+          lift: 'bov',
+          cabinGainDb: -14,
+          whistleDb: DEFAULT_WHISTLE_DB,
+          outsideGainDb: DEFAULT_OUTSIDE_FI_DB,
+        }
       : null,
     mechanical: { blockGain: 0.3, valvetrainGain: 0.1 },
     overrun: { crackleRate: 0.5, fuelCutResumeRpm: spec.rpm.idle + 500 },
-    cabin: { lowpassHz: 600 },
+    cabin: { lowpassHz: 600, leakDb: DEFAULT_CABIN_LEAK_DB },
     launchRpm: Math.round((forced ? 0.45 : 0.55) * spec.rpm.redline),
     estimated: true,
   };

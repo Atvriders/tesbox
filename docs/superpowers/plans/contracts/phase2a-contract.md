@@ -442,3 +442,52 @@ ITU-R BS.1770 (true peak), Kaiser window design.
   Reason: on Node 22 (CI's version) the Full tier measured 10.1–11.1× best-of-3 on the dev host, so a
   10× gate flaked. In-car headroom is measured by the Phase 0 probe; raising DSP speed (boxing-free
   block paths, B2-revised remedy) is a Phase 4 hardening item.
+- **B18 Forced-induction levels (2026-10-15, phase 5 contract P0.1):** `voicing.forcedInduction` gains
+  `whistleDb` (−60 … 0 dB, default −36) and `outsideGainDb` (−60 … 0 dB, default −30), both required
+  by the schema and set by `defaultVoicing`. `whistleDb` scales the turbo whistle voices alone, relative
+  to the whistle above (`whistle × dbToGain(whistleDb)` inside `ForcedInduction`, so in both
+  perspectives); the whoosh, the BOV / flutter events and a supercharger's whine ignore it.
+  `cabinGainDb` keeps scaling the whole forced-induction bus (whistle, whoosh, lift events, whine) in
+  the cabin; the outside mix becomes `… + fi × dbToGain(outsideGainDb)` (−30 dB when the voicing has
+  no forcedInduction block). Evidence (2026-10-15 gap analysis of the tuned pilots, every number with
+  the repo's own scoring): the `fiLine` detector found the render's whistle at ≈ 31 dB median
+  prominence in 87 % of WOT frames above 4 500 rpm — 33–36 dB louder than anything the recordings
+  show; `cabinGainDb` scaled whistle and whoosh together, so even −70 dB left it detected (61 %); the
+  outside mix added the turbo at full level. Whistle-only −30 dB removed the line from the WOT frames,
+  −40 dB gave fiPresence 0.966; the outside turbo needed about −36 to −42 dB.
+  **Invariant 5 restated** (the old text required the whistle the recordings do not have): at
+  `whistleDb = 0` the whistle line is detectable in the cabin render at load 1, rpm 0.7·redline
+  (1–4 kHz energy ≥ −45 dB re total; muting the forced-induction bus, or the whistle alone, removes
+  > 3 dB from the band) and the band's spectral peak lies within 1 % of the shaft's
+  f1 = 1000 + 3000·shaft (or of the sequential voice at 0.88·f1); at the default levels (whistleDb
+  −36, outsideGainDb −30) removing the whistle changes the 1–4 kHz band by < 1 dB in the cabin and in
+  the outside render — the whistle sits below the engine (measured on the turbo fixtures: ≤ 0.06 dB).
+  The DSP test fixtures (`tests/fixtures/engines/`) keep the Phase 2a levels (whistleDb 0,
+  outsideGainDb 0), so the detector, tracker and scoring tests measure the signals they were written
+  against; invariant 5 applies the defaults explicitly.
+- **B19 Cabin transfer (2026-10-15, phase 5 contract P0.2; replaces "4th-order Butterworth LP at
+  cabin.lowpassHz"):** the cabin's (exhaust + airflow + intake) path is one biquad, a 2nd-order
+  Butterworth low-pass at `cabin.lowpassHz` (200–2000) plus a high-frequency leak `cabin.leakDb`
+  (−60 … −10 dB, default −30; required by the schema, set by `defaultVoicing`):
+  H(s) = (1 + √(2g)·s + g·s²) / (1 + √2·s + s²), s normalised to the corner, g = dbToGain(leakDb),
+  bilinear transform prewarped at the corner (`Biquad.lowpassLeak(f, g, fs)`). Its squared magnitude
+  (1 + g²Ω⁴) / (1 + Ω⁴) is the power sum of the Butterworth low-pass and the leak through the
+  matching Butterworth high-pass, so the response falls 12 dB/octave above the corner and levels off
+  at g (exactly g at Nyquist) without the notch a coherent `LP₂ + g·HP₂` cuts at fc/√g; minimum phase,
+  unity at DC; g = 0 is `lowpass(fc, 1/√2)`. The cabin mix line of §APIs reads: cabin: (exhaust +
+  airflow + intake) → this transfer; + block (LP 250) × 1.0; + fi → 2nd-order LP 2.8 kHz ×
+  dbToGain(cabinGainDb); outside: exhaust + airflow full band + intake × 0.7 + block × 0.3 + fi ×
+  dbToGain(outsideGainDb) (B18). Evidence: the 4th-order LP near 600 Hz left 1.5–3 kHz 15–20 dB below
+  the recordings, whose 0.8–2.5 kHz band is 41–83 % engine harmonics; test renders with a 2nd-order LP
+  at 2 kHz (+ valvetrain 1.0 and whistle −40 dB) passed every i5-turbo-25 gate (composite 0.511), and a
+  −30 dB leak on v8-flatplane-45 gave 0.584. DSP invariants, allocation and true-peak gates unchanged.
+  **Fixtures:** the DSP test fixtures keep their Phase 2a cabin passband — each `cabin.lowpassHz` moves
+  to where this transfer's −1 dB point lies at the old 4th-order's (× (10^0.1 − 1)^(−1/8) ≈ 1.184:
+  600 → 710 Hz …), with no leak (`leakDb` −60, the floor) — and the turbo fixtures' `cabinGainDb` goes
+  to −10 dB (the schema maximum), so their whistle stays the strongest 1–4 kHz line over the brighter
+  cabin engine. With the old corners and −30 dB the brighter cabin broke the Phase 2b acceptance cells
+  written against the Phase 2a renders: a confidently-wrong half-rpm frame (confidence 0.56) in
+  i4-test's 2nd upshift over idle..limiter (D4(3)), v8-flatplane-test's wotPull voiced share 0.39 < 0.4
+  (D4(4)), and the same-engine fiPresence of i4-test's cruise4k (0.87 < 0.9; engine harmonics near
+  the D5 detector's threshold); a fit at the −12 dB point (× 1/√2) kept the whistle tests but left
+  v8-flatplane-test's cabin voiced share at 0.32.

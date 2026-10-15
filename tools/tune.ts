@@ -10,8 +10,9 @@
  *   inside the sidecar hints, one ClipFeatures per clip and kind); other engines' references feed discrimination.
  *   An engine with fewer than MIN_REF_CLIPS usable clips is unscored (spec §11.3) and is not tuned (exit 1); nor is
  *   one whose baseline render shares no comparable rpm bin with a reference (no voicing can change the bins).
- * - Search space: the TUNABLE voicing vector (VoicingSpace), each parameter normalised to [0, 1] within its contract
- *   range; --params restricts the search to a subset. Spec fields (firing angles, ratios, rpm) are never tuned, nor
+ * - Search space: the TUNABLE voicing vector (VoicingSpace; phase 2b T6 as amended by D9 = phase 5 P0.3: one header
+ *   scale per exhaust bank, one length per collector, the B18 whistle / outside levels and the B19 cabin leak), each
+ *   parameter normalised to [0, 1] within its contract range; --params restricts the search to a subset. Spec fields (firing angles, ratios, rpm) are never tuned, nor
  *   is any voicing field outside the vector.
  * - Objective (minimised, objectiveOf): −composite + DISCRIMINATION_WEIGHT · max(0, best other composite − own
  *   composite + DISCRIMINATION_MARGIN), from src/lab/score.ts scoreEngine over every scored render segment.
@@ -92,14 +93,29 @@ const FIXTURE_DIR = join(REPO_ROOT, 'tests', 'fixtures');
 
 // ───────────────────────────── the tunable voicing vector ─────────────────────────────
 
-/** The contract's TUNABLE vector, in contract order. `.scale` parameters multiply every entry of a list. */
+/**
+ * The contract's TUNABLE vector, in contract order (phase 2b T6 as amended by D9, phase 5 contract P0.3). `.scale`
+ * parameters multiply every entry of a list: `headersM.bank<b>.scale` the headers of exhaust bank b (one parameter per
+ * bank the engine has), `exhaust.mufflerSectionsM.scale` every muffler section; `collectors[<c>].lengthM` is one
+ * collector's length (one parameter per collector).
+ */
 export const PARAM_KEYS = [
   'pulse.widthDeg',
   'pulse.alpha',
   'pulse.beta',
   'pulse.cycleAsymmetry',
-  'headersM.scale',
-  'collectors.lengthM',
+  'headersM.bank0.scale',
+  'headersM.bank1.scale',
+  'headersM.bank2.scale',
+  'headersM.bank3.scale',
+  'collectors[0].lengthM',
+  'collectors[1].lengthM',
+  'collectors[2].lengthM',
+  'collectors[3].lengthM',
+  'collectors[4].lengthM',
+  'collectors[5].lengthM',
+  'collectors[6].lengthM',
+  'collectors[7].lengthM',
   'exhaust.midPipeM',
   'exhaust.mufflerSectionsM.scale',
   'exhaust.mufflerAction',
@@ -109,7 +125,10 @@ export const PARAM_KEYS = [
   'mechanical.blockGain',
   'mechanical.valvetrainGain',
   'cabin.lowpassHz',
+  'cabin.leakDb',
   'forcedInduction.cabinGainDb',
+  'forcedInduction.whistleDb',
+  'forcedInduction.outsideGainDb',
 ] as const;
 export type ParamKey = (typeof PARAM_KEYS)[number];
 
@@ -129,6 +148,10 @@ const MAX_HEADER_M = 1.5;
 const MAX_COLLECTOR_M = 1.0;
 const MAX_MUFFLER_SECTION_M = 0.8;
 const MIN_SECTION_M = 0.1;
+/** Exhaust banks a header scale can address (engine.schema.json: combustion[].bank 0–3). */
+const HEADER_BANKS = [0, 1, 2, 3] as const;
+/** Collectors a length can address (the exhaust network's MAX_COLLECTORS). */
+const COLLECTOR_SLOTS = [0, 1, 2, 3, 4, 5, 6, 7] as const;
 
 function clamp01(x: number): number {
   return x < 0 ? 0 : x > 1 ? 1 : x !== x ? 0 : x;
@@ -159,9 +182,9 @@ interface ParamRule {
   /** Inapplicable to this engine: the reason (e.g. no forced induction), else null. */
   inapplicable(def: EngineDef): string | null;
   /** Physical value in `v`: the field, or for `.scale` parameters the mean ratio of v's list to the base's. */
-  get(v: EngineVoicing, base: EngineVoicing): number;
+  get(v: EngineVoicing, base: EngineVoicing, spec: EngineSpec): number;
   /** Writes `value` (inside the range) into `v`, rounded to the parameter's grid and clamped to capacity. */
-  set(v: EngineVoicing, base: EngineVoicing, value: number): void;
+  set(v: EngineVoicing, base: EngineVoicing, value: number, spec: EngineSpec): void;
 }
 
 const always = (): null => null;
@@ -187,6 +210,53 @@ function field(
 /** Lengths in metres are rounded to the millimetre. */
 const MM = 3;
 
+/**
+ * Exhaust bank of header i: its combustion entry's bank, the key the exhaust network routes header i by (a bank joins
+ * the first collector listing it, or collector 0; phase 2a amendment B11) — so one scale moves exactly the headers the
+ * network groups as that bank.
+ */
+function headerBank(spec: EngineSpec, i: number): number {
+  return spec.combustion[i]?.bank ?? 0;
+}
+
+/** One scale (0.7–1.4) for the headers of exhaust bank `bank`, clamped to the contract maxima; applicable when the bank has headers. */
+function bankScale(key: ParamKey, bank: number): ParamRule {
+  const inBank = (spec: EngineSpec, n: number): number[] => Array.from({ length: n }, (_, i) => i).filter((i) => headerBank(spec, i) === bank);
+  return {
+    key,
+    range: () => [0.7, 1.4],
+    inapplicable: (def) => (inBank(def.spec, def.voicing.headersM.length).length > 0 ? null : `the engine has no bank ${bank}`),
+    get: (v, base, spec) => {
+      const idx = inBank(spec, v.headersM.length);
+      return meanRatio(
+        idx.map((i) => v.headersM[i] ?? Number.NaN),
+        idx.map((i) => base.headersM[i] ?? Number.NaN),
+      );
+    },
+    set: (v, base, s, spec) => {
+      for (const i of inBank(spec, v.headersM.length)) {
+        v.headersM[i] = clamp(round((base.headersM[i] ?? Number.NaN) * s, MM), MIN_SECTION_M, MAX_HEADER_M);
+      }
+    },
+  };
+}
+
+/** The length of collector `c` within the pipe-section capacity (0.1–1.0 m); applicable when the voicing has it. */
+function collectorLength(key: ParamKey, c: number): ParamRule {
+  return {
+    key,
+    range: () => [MIN_SECTION_M, MAX_COLLECTOR_M],
+    inapplicable: (def) => (c < def.voicing.collectors.length ? null : `the voicing has no collectors[${c}]`),
+    get: (v) => v.collectors[c]?.lengthM ?? Number.NaN,
+    set: (v, _base, length) => {
+      const col = v.collectors[c];
+      if (col !== undefined) col.lengthM = clamp(round(length, MM), MIN_SECTION_M, MAX_COLLECTOR_M);
+    },
+  };
+}
+
+const noForcedInduction = (def: EngineDef): string | null => (def.voicing.forcedInduction === null ? 'the engine has no forced induction' : null);
+
 const RULES: readonly ParamRule[] = [
   {
     key: 'pulse.widthDeg',
@@ -201,28 +271,10 @@ const RULES: readonly ParamRule[] = [
   field('pulse.alpha', 3, 20, 2, (v) => v.pulse.alpha, (v, x) => (v.pulse.alpha = x)),
   field('pulse.beta', 1, 10, 2, (v) => v.pulse.beta, (v, x) => (v.pulse.beta = x)),
   field('pulse.cycleAsymmetry', 0, 0.5, 3, (v) => v.pulse.cycleAsymmetry, (v, x) => (v.pulse.cycleAsymmetry = x)),
-  {
-    key: 'headersM.scale',
-    range: () => [0.7, 1.4],
-    inapplicable: always,
-    get: (v, base) => meanRatio(v.headersM, base.headersM),
-    set: (v, base, s) => {
-      v.headersM = base.headersM.map((h) => clamp(round(h * s, MM), MIN_SECTION_M, MAX_HEADER_M));
-    },
-  },
-  {
-    // One length for the collectors (their mean); the base's ratios between collectors are kept.
-    key: 'collectors.lengthM',
-    range: () => [0.2, 1.0],
-    inapplicable: always,
-    get: (v) => mean(v.collectors.map((c) => c.lengthM)),
-    set: (v, base, length) => {
-      const ratio = length / mean(base.collectors.map((c) => c.lengthM));
-      v.collectors.forEach((c, i) => {
-        c.lengthM = clamp(round((base.collectors[i]?.lengthM ?? Number.NaN) * ratio, MM), MIN_SECTION_M, MAX_COLLECTOR_M);
-      });
-    },
-  },
+  // Per-bank header scales and per-collector lengths (D9): bank-asymmetric exhausts keep the half-orders that
+  // identical banks cancel.
+  ...HEADER_BANKS.map((b) => bankScale(`headersM.bank${b}.scale`, b)),
+  ...COLLECTOR_SLOTS.map((c) => collectorLength(`collectors[${c}].lengthM`, c)),
   field('exhaust.midPipeM', 0.6, 3.0, MM, (v) => v.exhaust.midPipeM, (v, x) => (v.exhaust.midPipeM = x)),
   {
     key: 'exhaust.mufflerSectionsM.scale',
@@ -238,17 +290,40 @@ const RULES: readonly ParamRule[] = [
   field('intake.helmholtzHz', 60, 300, 1, (v) => v.intake.helmholtzHz, (v, x) => (v.intake.helmholtzHz = x)),
   field('intake.gain', 0, 1, 3, (v) => v.intake.gain, (v, x) => (v.intake.gain = x)),
   field('mechanical.blockGain', 0, 1, 3, (v) => v.mechanical.blockGain, (v, x) => (v.mechanical.blockGain = x)),
-  field('mechanical.valvetrainGain', 0, 0.5, 3, (v) => v.mechanical.valvetrainGain, (v, x) => (v.mechanical.valvetrainGain = x)),
-  field('cabin.lowpassHz', 300, 1200, 0, (v) => v.cabin.lowpassHz, (v, x) => (v.cabin.lowpassHz = x)),
+  // The full schema ranges (D9): the recordings' 0.8–2.5 kHz band is mostly engine harmonics.
+  field('mechanical.valvetrainGain', 0, 1, 3, (v) => v.mechanical.valvetrainGain, (v, x) => (v.mechanical.valvetrainGain = x)),
+  field('cabin.lowpassHz', 200, 2000, 0, (v) => v.cabin.lowpassHz, (v, x) => (v.cabin.lowpassHz = x)),
+  field('cabin.leakDb', -60, -10, 1, (v) => v.cabin.leakDb, (v, x) => (v.cabin.leakDb = x)),
   {
     // Contract range −24 … −6 dB, limited to the −20 … −10 dB that engine.schema.json and contracts.ts allow, so a
     // tuned voicing always validates.
     key: 'forcedInduction.cabinGainDb',
     range: () => [-20, -10],
-    inapplicable: (def) => (def.voicing.forcedInduction === null ? 'the engine has no forced induction' : null),
+    inapplicable: noForcedInduction,
     get: (v) => v.forcedInduction?.cabinGainDb ?? Number.NaN,
     set: (v, _base, value) => {
       if (v.forcedInduction !== null) v.forcedInduction.cabinGainDb = clamp(round(value, 1), -20, -10);
+    },
+  },
+  {
+    // Phase 2a amendment B18: the turbo whistle alone (a supercharger's whine ignores it).
+    key: 'forcedInduction.whistleDb',
+    range: () => [-60, 0],
+    inapplicable: (def) =>
+      def.voicing.forcedInduction === null || def.spec.aspiration.type !== 'turbo' ? 'the engine has no turbo whistle' : null,
+    get: (v) => v.forcedInduction?.whistleDb ?? Number.NaN,
+    set: (v, _base, value) => {
+      if (v.forcedInduction !== null) v.forcedInduction.whistleDb = clamp(round(value, 1), -60, 0);
+    },
+  },
+  {
+    // B18: the forced-induction bus in the outside mix.
+    key: 'forcedInduction.outsideGainDb',
+    range: () => [-60, 0],
+    inapplicable: noForcedInduction,
+    get: (v) => v.forcedInduction?.outsideGainDb ?? Number.NaN,
+    set: (v, _base, value) => {
+      if (v.forcedInduction !== null) v.forcedInduction.outsideGainDb = clamp(round(value, 1), -60, 0);
     },
   },
 ];
@@ -287,7 +362,7 @@ export class VoicingSpace {
 
   /** Physical value of every parameter in `v` (`.scale` parameters: the scale against the base voicing). */
   values(v: EngineVoicing): number[] {
-    return this.rules.map((r) => r.get(v, this.base.voicing));
+    return this.rules.map((r) => r.get(v, this.base.voicing, this.base.spec));
   }
 
   /** Normalised coordinates of `v`, each clamped into [0, 1]. */
@@ -305,7 +380,7 @@ export class VoicingSpace {
     const v = structuredClone(base);
     this.rules.forEach((r, i) => {
       const p = this.params[i];
-      if (p !== undefined) r.set(v, base, p.lo + clamp01(x[i] ?? 0) * (p.hi - p.lo));
+      if (p !== undefined) r.set(v, base, p.lo + clamp01(x[i] ?? 0) * (p.hi - p.lo), this.base.spec);
     });
     return v;
   }

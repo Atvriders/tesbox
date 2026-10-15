@@ -269,12 +269,14 @@
             {
               "type": "object",
               "additionalProperties": false,
-              "required": ["spoolTimeS", "maxShaftKrpm", "lift", "cabinGainDb"],
+              "required": ["spoolTimeS", "maxShaftKrpm", "lift", "cabinGainDb", "whistleDb", "outsideGainDb"],
               "properties": {
                 "spoolTimeS": { "type": "number", "minimum": 0, "maximum": 5 },
                 "maxShaftKrpm": { "type": "number", "minimum": 10, "maximum": 400 },
                 "lift": { "enum": ["bov", "flutter"] },
-                "cabinGainDb": { "type": "number", "minimum": -20, "maximum": -10 }
+                "cabinGainDb": { "type": "number", "minimum": -20, "maximum": -10 },
+                "whistleDb": { "type": "number", "minimum": -60, "maximum": 0 },
+                "outsideGainDb": { "type": "number", "minimum": -60, "maximum": 0 }
               }
             }
           ]
@@ -300,9 +302,10 @@
         "cabin": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["lowpassHz"],
+          "required": ["lowpassHz", "leakDb"],
           "properties": {
-            "lowpassHz": { "type": "number", "minimum": 200, "maximum": 2000 }
+            "lowpassHz": { "type": "number", "minimum": 200, "maximum": 2000 },
+            "leakDb": { "type": "number", "minimum": -60, "maximum": -10 }
           }
         },
         "launchRpm": { "type": "number", "minimum": 1000, "maximum": 10000 },

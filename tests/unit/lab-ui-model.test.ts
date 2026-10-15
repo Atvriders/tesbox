@@ -399,7 +399,7 @@ describe('LabModel: export and import', () => {
   it('Import applies a valid file at once, switching to its engine', async () => {
     const { model, audio } = await started();
     const v8 = getEngine('v8-na-50');
-    const voicing = { ...v8.voicing, cabin: { lowpassHz: 750 } };
+    const voicing = { ...v8.voicing, cabin: { ...v8.voicing.cabin, lowpassHz: 750 } };
     await model.importFile({ name: 'v8.voicing.json', text: () => Promise.resolve(exportedFile(v8.id, voicing)) });
     expect(model.engineId.value).toBe(v8.id);
     expect(model.draft.value.cabin.lowpassHz).toBe(750);

@@ -6,6 +6,7 @@
 import { describe, expect, it } from 'vitest';
 import { MAX_COMBUSTION, QUANTUM, type DspControl, type EngineDef, type OutputConfig, type Tier } from '../../src/contracts';
 import { bandEnergyDb, dominantOrders, fft, hann, orderSpectrum, truePeakDbtp } from '../../src/dsp/analysis';
+import { DEFAULT_OUTSIDE_FI_DB, DEFAULT_WHISTLE_DB } from '../../src/data/voicing-defaults';
 import { TesboxDspCore } from '../../src/dsp/dsp-core';
 import { ExhaustNetwork } from '../../src/dsp/exhaust';
 import { ForcedInduction } from '../../src/dsp/forced';
@@ -155,20 +156,46 @@ describe('DSP invariants', () => {
     }
   });
 
-  it('5. turbo whistle detectable in cabin renders at load 1, 0.7·redline', { timeout: 120_000 }, () => {
+  it('5. turbo whistle (B18): detectable and on the shaft frequency at whistleDb 0; below the engine at the default levels', { timeout: 120_000 }, () => {
     const turbo = FIXTURE_IDS.filter((id) => def(id).spec.aspiration.type === 'turbo');
     expect(turbo.length).toBeGreaterThan(0);
+    type Fi = NonNullable<EngineDef['voicing']['forcedInduction']>;
+    const withFi = (d: EngineDef, patch: Partial<Fi>): EngineDef => {
+      const c = structuredClone(d);
+      if (c.voicing.forcedInduction !== null) Object.assign(c.voicing.forcedInduction, patch);
+      return c;
+    };
+    const band = (sig: Float32Array): number => bandEnergyDb(sig, FS, 1000, 4000);
     for (const id of turbo) {
       const d = def(id);
-      const ctl = makeCtl(0.7 * d.spec.rpm.redline, 1, { perspective: 'cabin' });
-      const sig = slice(new CoreHarness(d).run(4, ctl).left, 3, 4); // 3 s spool-up, analyse the last 1 s
-      const inBand = bandEnergyDb(sig, FS, 1000, 4000);
-      expect(inBand - bandEnergyDb(sig, FS, 0, FS / 2), `${id}: 1–4 kHz re total`).toBeGreaterThanOrEqual(-45);
-      // Discrimination: muting the forced-induction bus in the cabin must remove energy from the band.
-      const muted = structuredClone(d);
-      if (muted.voicing.forcedInduction) muted.voicing.forcedInduction.cabinGainDb = -200;
-      const ref = slice(new CoreHarness(muted).run(4, ctl).left, 3, 4);
-      expect(inBand - bandEnergyDb(ref, FS, 1000, 4000), `${id}: whistle contribution`).toBeGreaterThan(3);
+      const rpm = 0.7 * d.spec.rpm.redline;
+      // (a) at the Phase 2a level (whistleDb 0) the line is detectable in the cabin and sits on the shaft's f1
+      const cabin = makeCtl(rpm, 1, { perspective: 'cabin' });
+      const h = new CoreHarness(withFi(d, { whistleDb: 0 }));
+      const sig = slice(h.run(5, cabin).left, 4, 5); // 4 s spool-up, analyse the last 1 s
+      expect(band(sig) - bandEnergyDb(sig, FS, 0, FS / 2), `${id}: 1–4 kHz re total`).toBeGreaterThanOrEqual(-45);
+      // Discrimination: muting the forced-induction bus in the cabin, or the whistle alone, removes energy from the band.
+      const muted = slice(new CoreHarness(withFi(d, { whistleDb: 0, cabinGainDb: -200 })).run(5, cabin).left, 4, 5);
+      expect(band(sig) - band(muted), `${id}: forced-induction contribution`).toBeGreaterThan(3);
+      const noWhistle = slice(new CoreHarness(withFi(d, { whistleDb: -400 })).run(5, cabin).left, 4, 5);
+      expect(band(sig) - band(noWhistle), `${id}: whistle contribution`).toBeGreaterThan(3);
+      const f1 = 1000 + 3000 * Math.sqrt(h.core.stats.boost);
+      const { df, p } = powerSpectrum(sig);
+      let best = Math.ceil(1000 / df);
+      for (let k = best; k <= Math.floor(4000 / df); k++) if ((p[k] ?? 0) > (p[best] ?? 0)) best = k;
+      const off = Math.min(Math.abs(best * df - f1), Math.abs(best * df - 0.88 * f1)) / f1; // 0.88·f1: sequential voice 2
+      expect(off, `${id}: band peak ${(best * df).toFixed(0)} Hz vs f1 ${f1.toFixed(0)} Hz`).toBeLessThan(0.01);
+      // (b) at the default levels (whistleDb −36, outsideGainDb −30; the fixtures keep the Phase 2a levels, 0 dB)
+      // the whistle sits below the engine in both perspectives: removing it changes the 1–4 kHz band by < 1 dB (the
+      // recordings show no whistle line; at whistleDb 0 it adds > 3 dB in the cabin, as (a) asserts).
+      expect([DEFAULT_WHISTLE_DB, DEFAULT_OUTSIDE_FI_DB]).toEqual([-36, -30]);
+      const defaults = withFi(d, { whistleDb: DEFAULT_WHISTLE_DB, outsideGainDb: DEFAULT_OUTSIDE_FI_DB });
+      for (const perspective of ['cabin', 'outside'] as const) {
+        const ctl = makeCtl(rpm, 1, { perspective });
+        const at = slice(new CoreHarness(defaults).run(5, ctl).left, 4, 5);
+        const without = slice(new CoreHarness(withFi(defaults, { whistleDb: -400 })).run(5, ctl).left, 4, 5);
+        expect(band(at) - band(without), `${id} ${perspective}: whistle contribution at the defaults`).toBeLessThan(1);
+      }
     }
   });
 

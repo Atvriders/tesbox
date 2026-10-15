@@ -111,9 +111,13 @@ describe('defaultVoicing', () => {
     expect(defaultVoicing(V8SC).turbine).toBeNull();
   });
 
-  it('sets forced induction for turbo and supercharger only', () => {
-    expect(defaultVoicing(I5).forcedInduction).toEqual({ spoolTimeS: 0.6, maxShaftKrpm: 180, lift: 'bov', cabinGainDb: -14 });
-    expect(defaultVoicing(V8SC).forcedInduction).toEqual({ spoolTimeS: 0.05, maxShaftKrpm: 180, lift: 'bov', cabinGainDb: -14 });
+  it('sets forced induction for turbo and supercharger only, whistle −36 dB and outside −30 dB (B18)', () => {
+    expect(defaultVoicing(I5).forcedInduction).toEqual({
+      spoolTimeS: 0.6, maxShaftKrpm: 180, lift: 'bov', cabinGainDb: -14, whistleDb: -36, outsideGainDb: -30,
+    });
+    expect(defaultVoicing(V8SC).forcedInduction).toEqual({
+      spoolTimeS: 0.05, maxShaftKrpm: 180, lift: 'bov', cabinGainDb: -14, whistleDb: -36, outsideGainDb: -30,
+    });
     expect(defaultVoicing(V8).forcedInduction).toBeNull();
   });
 
@@ -131,7 +135,7 @@ describe('defaultVoicing', () => {
     expect(defaultVoicing(ROTARY).intake.helmholtzHz).toBe(130);
     expect(v.mechanical).toEqual({ blockGain: 0.3, valvetrainGain: 0.1 });
     expect(v.overrun).toEqual({ crackleRate: 0.5, fuelCutResumeRpm: 1350 });
-    expect(v.cabin).toEqual({ lowpassHz: 600 });
+    expect(v.cabin).toEqual({ lowpassHz: 600, leakDb: -30 }); // B19 high-frequency leak
     expect(v.pulse).toEqual({ widthDeg: 60, alpha: 9, beta: 4, evoOffsetDeg: 140, cycleAsymmetry: 0.1 });
     expect(defaultVoicing(ROTARY).pulse.widthDeg).toBe(260);
     expect(v.estimated).toBe(true);

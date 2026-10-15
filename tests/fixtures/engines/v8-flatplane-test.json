@@ -54,7 +54,7 @@
     "forcedInduction": null,
     "mechanical": {"blockGain": 0.3, "valvetrainGain": 0.1},
     "overrun": {"crackleRate": 0.9, "fuelCutResumeRpm": 1400},
-    "cabin": {"lowpassHz": 680},
+    "cabin": {"lowpassHz": 805, "leakDb": -60},
     "launchRpm": 4950,
     "estimated": true
   }

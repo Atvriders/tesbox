@@ -317,7 +317,7 @@ describe('picker: garage', () => {
     const base = getEngine('v8-na-50');
     const d = defaultVoicing(base.spec);
     const def = (voicing: EngineVoicing): EngineDef => ({ ...base, voicing });
-    const tuned: EngineVoicing = { ...d, cabin: { lowpassHz: d.cabin.lowpassHz + 100 } };
+    const tuned: EngineVoicing = { ...d, cabin: { ...d.cabin, lowpassHz: d.cabin.lowpassHz + 100 } };
     // Default voicing, estimated: the badge, the plain spec line.
     expect(voicingBadge(def(d))).toBe(STR.garage.betaVoicing);
     expect(garageSpecLine(def(d))).toBe(engineSpecLine(base));

@@ -12,19 +12,23 @@ function configured(def: EngineDef, seed = 1): ForcedInduction {
   return fi;
 }
 
-/** Turbo test engine: i4-test with redline 6000 and the given turbo layout / lift / spool. */
-function turboDef(lift: LiftEvent = 'bov', layout: TurboLayout = 'single', spoolTimeS = 0.5): EngineDef {
+/**
+ * Turbo test engine: i4-test with redline 6000 and the given turbo layout / lift / spool. whistleDb defaults to 0 dB
+ * (the Phase 2a whistle level, amendment B18), so the whistle tests below measure WHISTLE_AMP × boost.
+ */
+function turboDef(lift: LiftEvent = 'bov', layout: TurboLayout = 'single', spoolTimeS = 0.5, whistleDb = 0): EngineDef {
   const def = loadFixture('i4-test');
   def.spec.rpm.redline = 6000;
   def.spec.aspiration = { type: 'turbo', turbo: { count: layout === 'single' ? 1 : 2, layout }, supercharger: null };
-  def.voicing.forcedInduction = { spoolTimeS, maxShaftKrpm: 180, lift, cabinGainDb: -14 };
+  def.voicing.forcedInduction = { spoolTimeS, maxShaftKrpm: 180, lift, cabinGainDb: -14, whistleDb, outsideGainDb: -30 };
   return def;
 }
 
 /** v8-sc-test (roots, pulleyRatio 2.4, gearRatio 1, 4 lobes) with redline 6000. */
-function scDef(): EngineDef {
+function scDef(whistleDb?: number): EngineDef {
   const def = loadFixture('v8-sc-test');
   def.spec.rpm.redline = 6000;
+  if (whistleDb !== undefined && def.voicing.forcedInduction !== null) def.voicing.forcedInduction.whistleDb = whistleDb;
   return def;
 }
 
@@ -207,6 +211,16 @@ describe('ForcedInduction — supercharger', () => {
     expect(y.every((v) => v === 0)).toBe(true);
   });
 
+  it('ignores whistleDb (B18: the whistle level is the turbo whistle only)', () => {
+    const run = (db: number): Float64Array => {
+      const fi = configured(scDef(db));
+      return Float64Array.from([...render(fi, FS / 4, 3000, 1), ...render(fi, FS / 4, 5000, 0.6)]);
+    };
+    const loud = run(0);
+    expect(maxAbs(loud)).toBeGreaterThan(0.05);
+    expect(Array.from(run(-60))).toEqual(Array.from(loud));
+  });
+
   it('mutes whine tones above 0.45·fs instead of aliasing them', () => {
     // whineHz is linear in rpm (order 19.2), so these rpms put the tones above 0.45·fs = 21.6 kHz.
     const y = render(configured(scDef()), FS / 2, 40000, 1); // f = 12.8 kHz plays; 2·f = 25.6 kHz is muted
@@ -252,6 +266,39 @@ describe('ForcedInduction — turbo', () => {
     const a1 = toneAmp(y, f1);
     expect(a1).toBeCloseTo(WHISTLE_AMP * fi.boost, 2);
     expect(20 * Math.log10(toneAmp(y, 2 * f1) / a1)).toBeCloseTo(-12, 0);
+  });
+
+  it('whistleDb (B18) scales the whistle alone: y(g) = y(−∞) + g·W, W = the f1 / 2·f1 whistle, whoosh and lift events untouched', () => {
+    // spool at 3750 rpm (shaft → 0.75), then lift: whistle, whoosh and the BOV burst all sound
+    const run = (db: number): Float64Array => {
+      const fi = configured(turboDef('bov', 'single', 0.2, db));
+      return Float64Array.from([...render(fi, 4 * FS, 3750, 1), ...render(fi, FS / 2, 3750, 0)]);
+    };
+    const full = run(0);
+    const half = run(-20);
+    const none = run(-400); // dbToGain(−400) = 1e-20: the whistle term is below double rounding of the rest
+    const g = 10 ** (-20 / 20);
+    let worst = 0;
+    for (let i = 0; i < full.length; i++) {
+      const want = (none[i] ?? 0) + g * ((full[i] ?? 0) - (none[i] ?? 0));
+      worst = Math.max(worst, Math.abs((half[i] ?? 0) - want));
+    }
+    expect(worst).toBeLessThan(1e-12);
+    // W is the whistle: at the steady shaft its lines carry WHISTLE_AMP × boost (and −12 dB at 2·f1) …
+    const steady = (x: Float64Array): Float64Array => x.subarray(3 * FS, 4 * FS); // the shaft has settled
+    const w = steady(full).map((v, i) => v - (steady(none)[i] ?? 0));
+    const ref = configured(turboDef('bov', 'single', 0.2, 0));
+    render(ref, 4 * FS, 3750, 1);
+    const f1 = 1000 + 3000 * Math.sqrt(ref.boost);
+    expect(toneAmp(w, f1)).toBeCloseTo(WHISTLE_AMP * ref.boost, 2);
+    expect(20 * Math.log10(toneAmp(w, 2 * f1) / toneAmp(w, f1))).toBeCloseTo(-12, 0);
+    // … and nothing else: the whoosh stays at full level without the whistle, and W holds no noise
+    expect(bandRms(none, 8000, 12000, 3 * FS, 4 * FS)).toBeGreaterThan(1e-3);
+    expect(noiseDensity(w, 10000) / noiseDensity(steady(none), 10000)).toBeLessThan(1e-10);
+    // the default level (−36 dB) puts the line 36 dB down
+    const quiet = run(-36);
+    const wq = steady(quiet).map((v, i) => v - (steady(none)[i] ?? 0));
+    expect(20 * Math.log10(toneAmp(wq, f1) / toneAmp(w, f1))).toBeCloseTo(-36, 3);
   });
 
   it('adds 4–12 kHz whoosh ∝ boost²', () => {

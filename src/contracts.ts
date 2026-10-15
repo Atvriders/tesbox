@@ -115,11 +115,20 @@ export interface EngineVoicing {
     spoolTimeS: number;
     maxShaftKrpm: number;
     lift: LiftEvent;
+    /** Cabin level of the whole forced-induction bus (whistle, whoosh, lift events, supercharger whine). */
     cabinGainDb: number; // −20 … −10
+    /** Turbo whistle only, relative to the Phase 2a whistle (phase 2a amendment B18); default −36. */
+    whistleDb: number; // −60 … 0
+    /** Outside level of the whole forced-induction bus (B18; Phase 2a mixed it at 0 dB); default −30. */
+    outsideGainDb: number; // −60 … 0
   } | null;
   mechanical: { blockGain: number; valvetrainGain: number };
   overrun: { crackleRate: number; fuelCutResumeRpm: number };
-  cabin: { lowpassHz: number };
+  /**
+   * Cabin transfer (phase 2a amendment B19): a 2nd-order Butterworth low-pass at lowpassHz (200–2000) plus a
+   * high-frequency leak at leakDb (−60 … −10, default −30) that keeps the engine's upper harmonics.
+   */
+  cabin: { lowpassHz: number; leakDb: number };
   /** Clutch/DCT launch target rpm (voicing, not manufacturer data). */
   launchRpm: number;
   /** true until tuned and signed off in the Sound Lab. */

@@ -160,7 +160,8 @@
       "fuelCutResumeRpm": 1200
     },
     "cabin": {
-      "lowpassHz": 1127
+      "lowpassHz": 1127,
+      "leakDb": -30
     },
     "launchRpm": 4125,
     "estimated": true

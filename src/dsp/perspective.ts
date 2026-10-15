@@ -1,5 +1,5 @@
 import type { EngineVoicing, Perspective } from '../contracts';
-import { BUTTER4_Q, Biquad, Cascade } from './biquad';
+import { Biquad } from './biquad';
 import { clamp, dbToGain, smoothstep } from './util';
 
 /** Contract: perspective changes crossfade over 300 ms. */
@@ -10,6 +10,8 @@ export const CABIN_BLOCK_LP_HZ = 250;
 export const CABIN_FI_LP_HZ = 2800;
 /** cabinGainDb used when the voicing has no forcedInduction block. */
 export const DEFAULT_CABIN_FI_GAIN_DB = -14;
+/** Outside: forced-induction bus × dbToGain(outsideGainDb) (amendment B18); the level used without a forcedInduction block. */
+export const DEFAULT_OUTSIDE_FI_GAIN_DB = -30;
 /** Outside weights (contract). */
 export const OUTSIDE_INTAKE = 0.7;
 export const OUTSIDE_BLOCK = 0.3;
@@ -18,13 +20,16 @@ export const STEREO_WIDTH = 0.08;
 export const STEREO_DELAY_S = 0.0007;
 
 /**
- * Listening-point mix (spec §5.3.11). Both perspectives are computed every sample (filters stay
+ * Listening-point mix (spec §5.3.11; phase 2a amendments B18, B19). Cabin: (exhaust + airflow + intake) through
+ * a 2nd-order Butterworth low-pass at cabin.lowpassHz with a high-frequency leak at cabin.leakDb, + block (LP 250 Hz)
+ * + forced-induction bus (LP 2.8 kHz) × cabinGainDb. Outside: exhaust + airflow + 0.7·intake + 0.3·block +
+ * forced-induction bus × outsideGainDb. Both perspectives are computed every sample (filters stay
  * warm) and crossfaded with a 300 ms linear ramp shaped by smoothstep; a new target reverses the
  * ramp from where it is, so rapid toggling never steps. Mono-compatible stereo: l + r = 2m.
  */
 export class PerspectiveMixer {
   private readonly fs: number;
-  private readonly cabinLp = new Cascade(2);
+  private readonly cabinLp = new Biquad();
   private readonly blockLp = new Biquad();
   private readonly fiLp = new Biquad();
   private readonly delay: Float64Array;
@@ -32,6 +37,7 @@ export class PerspectiveMixer {
   private readonly xfadeStep: number;
   private dPos = 0;
   private fiGain = 1;
+  private fiOutGain = 1;
   /** Crossfade position: 0 = cabin, 1 = outside. */
   private w = 0;
   private target = 0;
@@ -52,13 +58,14 @@ export class PerspectiveMixer {
 
   /** Sets parameters, snaps the crossfade to the current target and clears state (no allocation). */
   configure(voicing: EngineVoicing): void {
+    // Cabin transfer (phase 2a amendment B19): 2nd-order Butterworth low-pass + high-frequency leak at leakDb.
     const fc = clamp(voicing.cabin.lowpassHz, 20, 0.45 * this.fs);
-    this.cabinLp.stage(0).lowpass(fc, BUTTER4_Q[0], this.fs);
-    this.cabinLp.stage(1).lowpass(fc, BUTTER4_Q[1], this.fs);
+    this.cabinLp.lowpassLeak(fc, dbToGain(voicing.cabin.leakDb), this.fs);
     this.blockLp.lowpass(CABIN_BLOCK_LP_HZ, Math.SQRT1_2, this.fs);
     this.fiLp.lowpass(Math.min(CABIN_FI_LP_HZ, 0.45 * this.fs), Math.SQRT1_2, this.fs);
     const fi = voicing.forcedInduction;
     this.fiGain = dbToGain(fi === null ? DEFAULT_CABIN_FI_GAIN_DB : fi.cabinGainDb);
+    this.fiOutGain = dbToGain(fi === null ? DEFAULT_OUTSIDE_FI_GAIN_DB : fi.outsideGainDb);
     this.reset();
   }
 
@@ -103,7 +110,7 @@ export class PerspectiveMixer {
     const i = this.inI;
     const cabin =
       this.cabinLp.process(e + a + i) + this.blockLp.process(this.inB) + this.fiGain * this.fiLp.process(this.inF);
-    const outside = e + a + OUTSIDE_INTAKE * i + OUTSIDE_BLOCK * this.inB + this.inF;
+    const outside = e + a + OUTSIDE_INTAKE * i + OUTSIDE_BLOCK * this.inB + this.fiOutGain * this.inF;
 
     const t = this.target;
     let w = this.w;

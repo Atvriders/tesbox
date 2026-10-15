@@ -1,8 +1,8 @@
 import type { EngineSpec, EngineVoicing } from '../contracts';
 import { Biquad } from './biquad';
-import { clamp, flush, Rng, smoothstep } from './util';
+import { clamp, dbToGain, flush, Rng, smoothstep } from './util';
 
-/** Whistle sine amplitude at boost 1 (single voice). */
+/** Whistle sine amplitude at boost 1 (single voice) at whistleDb = 0 (phase 2a amendment B18 scales it). */
 export const WHISTLE_AMP = 0.25;
 /** Second whistle harmonic (2·f1) relative to f1: −12 dB. */
 export const WHISTLE_H2 = 0.2512;
@@ -50,7 +50,8 @@ const SEED_SALT = 0x3c4d5e6;
 
 /**
  * Forced-induction bus (spec §5.3.8). Turbo: lagging shaft state → whistle (f1 = 1000 + 3000·shaft Hz
- * and 2·f1 at −12 dB, × boost) + whoosh (4–12 kHz noise × boost²) + BOV / flutter on lift.
+ * and 2·f1 at −12 dB, × boost × dbToGain(whistleDb), amendment B18) + whoosh (4–12 kHz noise × boost²) +
+ * BOV / flutter on lift.
  * Supercharger: whine at rpm/60 × pulleyRatio·gearRatio·(roots ? 2·lobes : lobes), level ∝ boost, no lag.
  * Every turbo tick draws exactly two random numbers, so the noise sequence never depends on events.
  */
@@ -74,6 +75,8 @@ export class ForcedInduction {
   private kFall = 1;
   private lift: 0 | 1 = 0; // 0 = bov, 1 = flutter
   private v1Amp = 1;
+  /** WHISTLE_AMP × dbToGain(voicing.forcedInduction.whistleDb) (B18: the whistle alone). */
+  private whistleAmp = WHISTLE_AMP;
   private v2Ratio = 1;
   private v2Seq = false;
   private v2Parallel = false;
@@ -125,6 +128,7 @@ export class ForcedInduction {
     this.v2Parallel = false;
     this.v1Amp = 1;
     this.v2Ratio = 1;
+    this.whistleAmp = WHISTLE_AMP;
     if (asp.type === 'supercharger' && asp.supercharger !== null) {
       const sc = asp.supercharger;
       this.mode = MODE_SC;
@@ -135,6 +139,7 @@ export class ForcedInduction {
       this.kRise = 1 - Math.exp(-1 / (spool * this.fs));
       this.kFall = 1 - Math.exp(-1 / (0.6 * spool * this.fs));
       this.lift = fi.lift === 'flutter' ? 1 : 0;
+      this.whistleAmp = WHISTLE_AMP * dbToGain(fi.whistleDb);
       const layout = asp.turbo === null ? 'single' : asp.turbo.layout;
       if (layout === 'sequential') {
         this.v2Seq = true;
@@ -251,7 +256,7 @@ export class ForcedInduction {
         const w2 = this.v2Seq ? smoothstep(SEQ_ENTRY * red, SEQ_FULL * red, rpm) : 0.5;
         if (w2 > 0) whistle += w2 * (Math.sin(TWO_PI * this.ph2) + WHISTLE_H2 * Math.sin(2 * TWO_PI * this.ph2));
       }
-      whistle *= WHISTLE_AMP * boost;
+      whistle *= this.whistleAmp * boost;
     }
 
     // Noise sources: always exactly two draws per tick.

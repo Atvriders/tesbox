@@ -179,6 +179,9 @@ bounded **Nelder–Mead** over the TUNABLE voicing vector (each normalised to [0
 | cabin.lowpassHz | 300–1200 |
 | forcedInduction.cabinGainDb (if present) | −24 – −6 |
 
+(Superseded by amendment D9: one header scale per bank, one length per collector, the full schema ranges of
+`cabin.lowpassHz` and `mechanical.valvetrainGain`, and the phase 2a B18/B19 levels.)
+
 Objective = −(composite renderVsRef over all scored segments) + 0.5·max(0, bestOtherComposite −
 ownComposite + 0.02). Spec fields (firing angles, ratios, rpm) are never tuned. Every candidate must
 pass `assertEngineFits`. Output: `renders/tune/<engineId>/best.json` (voicing + score + iteration
@@ -289,3 +292,36 @@ Phase 2b lands as one verified commit.
   the gate (0.8 × ref-vs-ref) and the composite work as for every other metric; null / gate `n/a`
   for NA engines (like fiLine, D3). (The clip-wide reading scored pairs with no common rpm and failed
   the honest end-to-end test: 0.774 vs a 1.000 ceiling, against 0.967 per bin.)
+- **D9 Tunable vector v2 (2026-10-15, phase 5 contract P0.3; supersedes the §T6 table):**
+
+  | parameter | range |
+  |---|---|
+  | pulse.widthDeg | 40–90 (rotary 200–300) |
+  | pulse.alpha / beta | 3–20 / 1–10 |
+  | pulse.cycleAsymmetry | 0–0.5 |
+  | `headersM.bank<b>.scale` — one per exhaust bank the engine has (two where the layout has two banks) | 0.7–1.4 (result clamped to the contract maxima) |
+  | `collectors[<c>].lengthM` — one per collector | 0.1–1.0 |
+  | exhaust.midPipeM | 0.6–3.0 |
+  | mufflerSectionsM scale | 0.6–1.6 |
+  | exhaust.mufflerAction | 0–1 |
+  | exhaust.tailpipeM | 0.2–1.2 |
+  | intake.helmholtzHz / gain | 60–300 / 0–1 |
+  | mechanical.blockGain / valvetrainGain | 0–1 / 0–1 |
+  | cabin.lowpassHz / leakDb (phase 2a B19) | 200–2000 / −60 – −10 |
+  | forcedInduction.cabinGainDb (if present) | −20 – −10 (the schema range) |
+  | forcedInduction.whistleDb (turbo only, phase 2a B18) | −60 – 0 |
+  | forcedInduction.outsideGainDb (if present, B18) | −60 – 0 |
+
+  Header i belongs to bank `spec.combustion[i].bank` — the key the exhaust network routes it by (a
+  bank joins the first collector listing it, else collector 0; phase 2a B11) — so one scale moves exactly
+  the headers the network groups as that bank. Keys: `headersM.bank0.scale` … `headersM.bank3.scale`
+  (schema banks 0–3) and `collectors[0].lengthM` … `collectors[7].lengthM` (the network's 8 collectors);
+  parameters an engine lacks are left out of its vector, and `--params` naming one is refused. The
+  collector floor is the 0.1 m pipe-section capacity (4 samples at 700 m/s and 28 kHz) instead of 0.2 m.
+  Every range lies inside engine.schema.json, so every candidate validates. Evidence (2026-10-15 gap
+  analysis): default voicings give both banks of a V the same header lengths per bank position and equal
+  collectors, so the banks are identical and cancel the half-orders — render orders 1–2.5 at −17 … −27 dB
+  against 0 … −5 dB in the Mustang recordings, the 458's order 2 at −25 dB where the recordings lead with
+  it; bank-asymmetric headers (×0.7 / ×1.4) on v8-flatplane-45 passed every gate (composite 0.539), and
+  Mustang collectors of 0.1 m / 1.0 m lifted subOrder to 0.463. The cabin ranges follow the B19 evidence
+  (the recordings' 0.8–2.5 kHz band is 41–83 % engine harmonics).
