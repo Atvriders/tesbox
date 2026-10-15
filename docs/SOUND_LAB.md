@@ -350,9 +350,10 @@ Format = YouTube audio format downloaded (251 Opus 48 kHz, or 140 AAC 44.1 kHz r
 
 ### Library update (2026-10-15, phase 5)
 
-Nine more engines, built by the same procedure (screening numbers, keyframes and frame checks in each
+The other twelve engines, built by the same procedure (screening numbers, keyframes and frame checks in each
 sidecar's notes). Gaps: no cruise for most engines, idle in few clips, no limiter anywhere, and no stock
-outside full-throttle recording of the 812 Superfast (every dyno video found was modified).
+outside full-throttle recording of the 812 Superfast, WRX STI or RX-7 (every dyno video found was
+modified or unusable).
 
 | engine | clip | perspective | car | source | segments |
 |---|---|---|---|---|---|
@@ -397,6 +398,21 @@ outside full-throttle recording of the 812 Superfast (every dyno video found was
 | `i4-turbo-20` | `gti-dyno-a` | outside | Volkswagen Golf GTI (Mk8, MY2021, EA888 evo4 2.0 TSI 245 PS, 7-speed D | <https://www.youtube.com/watch?v=1UGYTrtpYlE> | 5 wot |
 | `i4-turbo-20` | `gti-exhaust-a` | outside | Volkswagen Golf GTI (Mk8, MY2021, EA888 evo4 2.0 TSI 245 PS, 7-speed D | <https://www.youtube.com/watch?v=RfMebPPZD8I> | 1 liftoff, 1 wot |
 | `i4-turbo-20` | `gti-exhaust-b` | outside | Volkswagen Golf GTI (Mk8, MY2022, EA888 evo4 2.0 TSI 241 hp / 245 PS,  | <https://www.youtube.com/watch?v=PtJ0gcujMt4> | 1 idle |
+| `flat4-turbo-25` | `sti-cabin-a` | cabin | Subaru WRX STI (VA, European market, EJ257 2.5 turbo 300 PS, 6-speed m | <https://www.youtube.com/watch?v=Q_vmioWUSxI> | 3 wot |
+| `flat4-turbo-25` | `sti-cabin-b` | cabin | Subaru WRX STI (VA, MY2016 per the title, European market, EJ257 2.5 t | <https://www.youtube.com/watch?v=Mc6p0IdK-5A> | 1 idle, 1 wot |
+| `flat4-turbo-25` | `sti-cabin-c` | cabin | Subaru WRX STI (VA, MY2021, US market, EJ257 2.5 turbo 310 hp, 6-speed | <https://www.youtube.com/watch?v=_KW6LF3HqYc> | 2 wot |
+| `flat4-turbo-25` | `sti-exhaust-a` | outside | Subaru WRX STI (VA, MY2015, EJ257 2.5 turbo), stock exhaust per the ti | <https://www.youtube.com/watch?v=IOHPu8NV38Q> | 1 idle |
+| `flat4-turbo-25` | `sti-exhaust-b` | outside | Subaru WRX STI (VA, MY2020, EJ257 2.5 turbo), stock exhaust per the ti | <https://www.youtube.com/watch?v=neTRnfr_iaQ> | 1 idle |
+| `rotary-twin-13` | `rx7-cabin-a` | cabin | Mazda RX-7 (FD3S, JDM, 13B-REW sequential twin-turbo, 5-speed manual), | <https://www.youtube.com/watch?v=THvULkLt_Sk> | 3 cruise, 6 wot |
+| `rotary-twin-13` | `rx7-cabin-b` | cabin | Mazda RX-7 (FD3S, JDM, 13B-REW sequential twin-turbo, 5-speed manual), | <https://www.youtube.com/watch?v=7rzPQ29hyPA> | 4 wot |
+| `rotary-twin-13` | `rx7-cabin-c` | cabin | Mazda RX-7 (FD3S, 13B-REW sequential twin-turbo, 5-speed manual), full | <https://www.youtube.com/watch?v=6O4D8sj5NDk> | 3 wot |
+| `rotary-twin-13` | `rx7-exhaust-a` | outside | Mazda RX-7 (FD3S 6型 / series 6, JDM, 13B-REW sequential twin-turbo), f | <https://www.youtube.com/watch?v=e5bv_8Ksmt4> | 1 idle |
+| `rotary-twin-13` | `rx7-exhaust-b` | outside | Mazda RX-7 (FD3S 5型 / series 5 Type R, JDM, 13B-REW sequential twin-tu | <https://www.youtube.com/watch?v=ucxQPj7NAYk> | 1 idle |
+| `v10-na-48` | `lfa-cabin-a` | cabin | Lexus LFA (right-hand-drive, 1LR-GUE 4.8 V10, 6-speed ASG), track day  | <https://www.youtube.com/watch?v=5685xkTpgHw> | 2 liftoff, 4 wot |
+| `v10-na-48` | `lfa-cabin-b` | cabin | Lexus LFA (standard car, not the Nürburgring package per the descripti | <https://www.youtube.com/watch?v=H_fcVWkvK2Q> | 9 wot |
+| `v10-na-48` | `lfa-dyno-a` | outside | Lexus LFA with the Nürburgring Package (orange, fixed rear wing and pa | <https://www.youtube.com/watch?v=7KD3cRKhK7A> | 5 liftoff, 4 wot |
+| `v10-na-48` | `lfa-dyno-b` | outside | Lexus LFA (MY2012, Whitest White, 1LR-GUE 4.8 V10, 6-speed ASG) | <https://www.youtube.com/watch?v=IuDn3vE93cA> | 1 wot |
+| `v10-na-48` | `lfa-dyno-c` | outside | Lexus LFA (black, 1LR-GUE 4.8 V10, 6-speed ASG), factory triple centre | <https://www.youtube.com/watch?v=er_OWJ4E83I> | 1 wot |
 
 ### Segments
 

@@ -119,12 +119,12 @@
     },
     "headersM": [
       0.452,
-      0.477,
+      0.527,
       0.529,
-      0.557,
-      0.507,
+      0.615,
+      0.56,
       0.481,
-      0.588,
+      0.65,
       0.557
     ],
     "collectors": [
@@ -138,12 +138,12 @@
         "banks": [
           1
         ],
-        "lengthM": 0.431
+        "lengthM": 0.476
       }
     ],
     "turbine": null,
     "exhaust": {
-      "midPipeM": 1.425,
+      "midPipeM": 1.545,
       "mufflerSectionsM": [
         0.231,
         0.374,
@@ -158,12 +158,12 @@
     },
     "intake": {
       "runnerM": 0.3,
-      "helmholtzHz": 191.9,
-      "gain": 0.806
+      "helmholtzHz": 203.9,
+      "gain": 0.756
     },
     "forcedInduction": null,
     "mechanical": {
-      "blockGain": 0.05,
+      "blockGain": 0,
       "valvetrainGain": 0.577
     },
     "overrun": {

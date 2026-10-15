@@ -94,30 +94,30 @@
   },
   "voicing": {
     "pulse": {
-      "widthDeg": 60,
-      "alpha": 9,
-      "beta": 4,
+      "widthDeg": 49.8,
+      "alpha": 14.93,
+      "beta": 3.22,
       "evoOffsetDeg": 140,
-      "cycleAsymmetry": 0.1
+      "cycleAsymmetry": 0.139
     },
     "headersM": [
-      0.45,
-      0.75,
-      0.45,
-      0.75
+      0.383,
+      0.639,
+      0.352,
+      0.587
     ],
     "collectors": [
       {
         "banks": [
           0
         ],
-        "lengthM": 0.35
+        "lengthM": 0.411
       },
       {
         "banks": [
           1
         ],
-        "lengthM": 0.35
+        "lengthM": 0.215
       }
     ],
     "turbine": {
@@ -125,14 +125,14 @@
       "lpHz": 1500
     },
     "exhaust": {
-      "midPipeM": 1.4,
+      "midPipeM": 0.886,
       "mufflerSectionsM": [
-        0.21,
-        0.34,
-        0.47
+        0.247,
+        0.401,
+        0.554
       ],
-      "mufflerAction": 0.6,
-      "tailpipeM": 0.5,
+      "mufflerAction": 0.47,
+      "tailpipeM": 0.907,
       "valve": {
         "fitted": true,
         "openGainDb": 4
@@ -140,28 +140,28 @@
     },
     "intake": {
       "runnerM": 0.3,
-      "helmholtzHz": 140,
-      "gain": 0.4
+      "helmholtzHz": 100.3,
+      "gain": 0.806
     },
     "forcedInduction": {
       "spoolTimeS": 0.6,
       "maxShaftKrpm": 180,
       "lift": "bov",
-      "cabinGainDb": -14,
-      "whistleDb": -36,
-      "outsideGainDb": -30
+      "cabinGainDb": -12.3,
+      "whistleDb": -36.9,
+      "outsideGainDb": -25.5
     },
     "mechanical": {
-      "blockGain": 0.3,
-      "valvetrainGain": 0.1
+      "blockGain": 0.199,
+      "valvetrainGain": 0.611
     },
     "overrun": {
       "crackleRate": 0.5,
       "fuelCutResumeRpm": 1250
     },
     "cabin": {
-      "lowpassHz": 600,
-      "leakDb": -30
+      "lowpassHz": 369,
+      "leakDb": -20.4
     },
     "launchRpm": 3015,
     "estimated": true
