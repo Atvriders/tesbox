@@ -348,6 +348,56 @@ Format = YouTube audio format downloaded (251 Opus 48 kHz, or 140 AAC 44.1 kHz r
 | `v8-flatplane-45` | `f458-dyno-a` | outside | 458 Spider (2014), stock baseline | dyno cell | <https://www.youtube.com/watch?v=XwzmCrkcNOY> | 140 | 20.50-77.00 | 2 wot |
 | `v8-flatplane-45` | `f458-dyno-b` | outside | 458 Italia (2012) | dyno cell, exhaust height | <https://www.youtube.com/watch?v=cLihUpXzods> | 251 | 2.00-15.00 | 1 wot, 1 liftoff |
 
+### Library update (2026-10-15, phase 5)
+
+Nine more engines, built by the same procedure (screening numbers, keyframes and frame checks in each
+sidecar's notes). Gaps: no cruise for most engines, idle in few clips, no limiter anywhere, and no stock
+outside full-throttle recording of the 812 Superfast (every dyno video found was modified).
+
+| engine | clip | perspective | car | source | segments |
+|---|---|---|---|---|---|
+| `v8-na-62` | `c8-cabin-a` | cabin | Chevrolet Corvette Stingray coupe 3LT (C8, 2025, LT2 6.2 V8 495 hp, 8- | <https://www.youtube.com/watch?v=C8R8LmbTsx4> | 1 idle, 2 wot |
+| `v8-na-62` | `c8-cabin-b` | cabin | Chevrolet Corvette Stingray Z51 coupe (C8, 2021, LT2 6.2 V8 495 hp, 8- | <https://www.youtube.com/watch?v=IWEh0oG-YvU> | 1 liftoff, 3 wot |
+| `v8-na-62` | `c8-dyno-a` | outside | Chevrolet Corvette Stingray coupe (C8, LT2 6.2 V8, 8-speed DCT), stock | <https://www.youtube.com/watch?v=x3Lg_ykPUyk> | 3 wot |
+| `v8-na-62` | `c8-dyno-b` | outside | Chevrolet Corvette Stingray Z51 (C8, 2020, LT2 6.2 V8, 8-speed DCT), s | <https://www.youtube.com/watch?v=WMob_LcxrHE> | 1 liftoff, 1 wot |
+| `v8-sc-62` | `hellcat-cabin-a` | cabin | Dodge Challenger SRT Hellcat (2015, 6.2 supercharged HEMI Hellcat V8 7 | <https://www.youtube.com/watch?v=XShvhKViP5k> | 1 idle, 2 wot |
+| `v8-sc-62` | `hellcat-cabin-b` | cabin | Dodge Challenger SRT Hellcat (2015, 6.2 supercharged HEMI Hellcat V8 7 | <https://www.youtube.com/watch?v=0Ij8r0KuaxI> | 2 liftoff, 6 wot |
+| `v8-sc-62` | `hellcat-dyno-a` | outside | Dodge Challenger SRT Hellcat (2016, 6.2 supercharged HEMI Hellcat V8), | <https://www.youtube.com/watch?v=Y-8RsNRQPsg> | 1 liftoff, 1 wot |
+| `v8-sc-62` | `hellcat-dyno-b` | outside | Dodge Challenger SRT Hellcat (2017, 6.2 supercharged HEMI Hellcat V8), | <https://www.youtube.com/watch?v=1uyBK0VvlAs> | 1 liftoff, 1 wot |
+| `i6-twinturbo-30` | `supra-cabin-a` | cabin | Toyota Supra Turbo (A80, 1994, 2JZ-GTE twin turbo, 4-speed automatic), | <https://www.youtube.com/watch?v=fb1wzYpkduI> | 4 wot |
+| `i6-twinturbo-30` | `supra-cabin-b` | cabin | Toyota Supra Turbo (A80, 1994, 2JZ-GTE twin turbo, 4-speed automatic), | <https://www.youtube.com/watch?v=VrbdDW0QSWI> | 6 wot |
+| `i6-twinturbo-30` | `supra-cabin-c` | cabin | Toyota Supra RZ (JZA80, 1996, Japanese-spec RHD, 2JZ-GTE twin turbo, G | <https://www.youtube.com/watch?v=FAEDeRbfBlE> | 4 wot |
+| `i6-twinturbo-30` | `supra-dyno-a` | outside | Toyota Supra Turbo (A80, Canada spec, 2JZ-GTE 320 hp, A340E 4-speed au | <https://www.youtube.com/watch?v=1cDzUuGLT8s> | 1 wot |
+| `i6-twinturbo-30` | `supra-dyno-b` | outside | Toyota Supra Turbo (A80, 2JZ-GTE twin turbo, 4-speed automatic), stock | <https://www.youtube.com/watch?v=XjDvvDWDArA> | 2 wot |
+| `i6-twinturbo-30` | `supra-exhaust-a` | outside | Toyota Supra Turbo (A80, 1998, 2JZ-GTE twin turbo, 6-speed manual), bo | <https://www.youtube.com/watch?v=8Dh5FpxOXEg> | 1 idle |
+| `flat6-na-40` | `gt3-dyno-a` | outside | Porsche 911 GT3 (992.1, 2021, 4.0 flat-six), stock baseline after 1,10 | <https://www.youtube.com/watch?v=LJMZjXKifc4> | 1 liftoff, 1 wot |
+| `flat6-na-40` | `gt3-dyno-b` | outside | Porsche 911 GT3 (992.1, 2021, 4.0 flat-six, PDK), brand new, stock exh | <https://www.youtube.com/watch?v=NawUsCKVqtE> | 1 wot |
+| `flat6-na-40` | `gt3-onboard-a` | cabin | Porsche 911 GT3 (992.2, 2026, 4.0 flat-six, 7-speed PDK) | <https://www.youtube.com/watch?v=H3C7FMVCqFY> | 4 cruise, 6 liftoff, 8 wot |
+| `flat6-na-40` | `gt3-onboard-b` | cabin | Porsche 911 GT3 (992.1, 2022, 4.0 flat-six, 6-speed manual) | <https://www.youtube.com/watch?v=t6N5GmiSIaY> | 1 cruise, 4 liftoff, 2 wot |
+| `v10-na-52` | `huracan-dyno-a` | outside | Lamborghini Huracán LP 610-4 (2015, new car on dealer temporary plates | <https://www.youtube.com/watch?v=S9NTE6Kdc4M> | 1 wot |
+| `v10-na-52` | `huracan-dyno-b` | outside | Lamborghini Huracán LP 610-4 (2014, green), completely stock (descript | <https://www.youtube.com/watch?v=NPhUhTWQKcg> | 1 liftoff, 1 wot |
+| `v10-na-52` | `huracan-onboard-a` | cabin | Lamborghini Huracán LP 610-4 (2016, 5.2 V10, 7-speed LDF dual-clutch) | <https://www.youtube.com/watch?v=c4a5OpilS5w> | 5 liftoff, 6 wot |
+| `v10-na-52` | `huracan-onboard-b` | cabin | Lamborghini Huracán LP 610-4 (2015 press car, 5.2 V10, 7-speed LDF dua | <https://www.youtube.com/watch?v=ACQYLbpbNkQ> | 1 cruise, 4 liftoff |
+| `v12-na-65` | `f812-exhaust-a` | outside | Ferrari 812 Superfast (2018, yellow), dealer stock car, cold start | <https://www.youtube.com/watch?v=20OXxBsFE6c> | 1 idle |
+| `v12-na-65` | `f812-exhaust-b` | outside | Ferrari 812 Superfast (dark blue), Ferrari dealer (HR Owen London) car | <https://www.youtube.com/watch?v=JyZns5KEN30> | 1 idle |
+| `v12-na-65` | `f812-onboard-a` | cabin | Ferrari 812 Superfast (6.5 V12, 7-speed F1 DCT) | <https://www.youtube.com/watch?v=3tAE-TRiT-8> | 3 wot |
+| `v12-na-65` | `f812-onboard-b` | cabin | Ferrari 812 Superfast (red press test car, 6.5 V12, 7-speed F1 DCT) | <https://www.youtube.com/watch?v=MswIflgRyTA> | 8 liftoff, 8 wot |
+| `v6-twinturbo-38` | `gtr-cabin-a` | cabin | Nissan GT-R NISMO (R35, MY2015 per the on-screen caption, VR38DETT 600 | <https://www.youtube.com/watch?v=ETUNtvkXhRk> | 5 liftoff, 1 wot |
+| `v6-twinturbo-38` | `gtr-cabin-b` | cabin | Nissan GT-R Premium (R35, MY2023, VR38DETT 565 hp, 6-speed dual-clutch | <https://www.youtube.com/watch?v=bsDz2I-OqNg> | 1 cruise, 5 liftoff, 4 wot |
+| `v6-twinturbo-38` | `gtr-dyno-a` | outside | Nissan GT-R NISMO (R35, MY2017, VR38DETT 600 hp, 6-speed dual-clutch t | <https://www.youtube.com/watch?v=HMTrqA4vP1c> | 1 liftoff, 1 wot |
+| `v6-twinturbo-38` | `gtr-dyno-b` | outside | Nissan GT-R (R35, MY2015, VR38DETT 545 hp, 6-speed dual-clutch transax | <https://www.youtube.com/watch?v=cUN1Vc7fHF0> | 1 wot |
+| `v6-twinturbo-38` | `gtr-dyno-c` | outside | Nissan GT-R (R35, MY2017, VR38DETT 565 hp, 6-speed dual-clutch transax | <https://www.youtube.com/watch?v=OHCH9fEBsLE> | 1 wot |
+| `v8-twinturbo-40` | `rs6-cabin-a` | cabin | Audi RS 6 Avant (C8, MY2020, 4.0 TFSI 600 PS, 8-speed tiptronic), no m | <https://www.youtube.com/watch?v=Exq6pB3IGyU> | 4 wot |
+| `v8-twinturbo-40` | `rs6-cabin-b` | cabin | Audi RS 6 Avant (C8, MY2023, 4.0 TFSI 600 PS / 441 kW, 8-speed tiptron | <https://www.youtube.com/watch?v=m-jCN0xkk7M> | 2 wot |
+| `v8-twinturbo-40` | `rs6-cabin-c` | cabin | Audi RS 6 Avant (C8, MY2021, 4.0 TFSI 591 hp, 8-speed tiptronic), pres | <https://www.youtube.com/watch?v=KzhgIrHkX-4> | 7 wot |
+| `v8-twinturbo-40` | `rs6-dyno-a` | outside | Audi RS 6 Avant performance (C8, MY2024, 4.0 TFSI 621 hp, 8-speed tipt | <https://www.youtube.com/watch?v=eAyP6IShD4k> | 1 liftoff, 1 wot |
+| `v8-twinturbo-40` | `rs6-dyno-b` | outside | Audi RS 6 Avant (C8, 4.0 TFSI 591 hp, 8-speed tiptronic), stock baseli | <https://www.youtube.com/watch?v=Mg1d_CSeaq8> | 1 wot |
+| `i4-turbo-20` | `gti-cabin-a` | cabin | Volkswagen Golf GTI (Mk8, MY2022, EA888 evo4 2.0 TSI 241 hp / 245 PS,  | <https://www.youtube.com/watch?v=ZZkKkwZbh_A> | 1 liftoff, 8 wot |
+| `i4-turbo-20` | `gti-cabin-b` | cabin | Volkswagen Golf GTI (Mk8, EA888 evo4 2.0 TSI 245 PS, 7-speed DSG), ren | <https://www.youtube.com/watch?v=T2b6Y3VVWF4> | 2 wot |
+| `i4-turbo-20` | `gti-dyno-a` | outside | Volkswagen Golf GTI (Mk8, MY2021, EA888 evo4 2.0 TSI 245 PS, 7-speed D | <https://www.youtube.com/watch?v=1UGYTrtpYlE> | 5 wot |
+| `i4-turbo-20` | `gti-exhaust-a` | outside | Volkswagen Golf GTI (Mk8, MY2021, EA888 evo4 2.0 TSI 245 PS, 7-speed D | <https://www.youtube.com/watch?v=RfMebPPZD8I> | 1 liftoff, 1 wot |
+| `i4-turbo-20` | `gti-exhaust-b` | outside | Volkswagen Golf GTI (Mk8, MY2022, EA888 evo4 2.0 TSI 241 hp / 245 PS,  | <https://www.youtube.com/watch?v=PtJ0gcujMt4> | 1 idle |
+
 ### Segments
 
 Seconds in the trimmed WAV (source time = trim start + WAV time), the rpm range of the keyframes,

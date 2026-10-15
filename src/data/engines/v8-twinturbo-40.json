@@ -115,34 +115,34 @@
   },
   "voicing": {
     "pulse": {
-      "widthDeg": 60,
-      "alpha": 9,
-      "beta": 4,
+      "widthDeg": 51.3,
+      "alpha": 17.1,
+      "beta": 7.66,
       "evoOffsetDeg": 140,
-      "cycleAsymmetry": 0.1
+      "cycleAsymmetry": 0.208
     },
     "headersM": [
-      0.55,
-      0.643,
-      0.55,
-      0.585,
-      0.643,
-      0.585,
-      0.678,
-      0.678
+      0.538,
+      0.629,
+      0.746,
+      0.572,
+      0.872,
+      0.794,
+      0.663,
+      0.92
     ],
     "collectors": [
       {
         "banks": [
           0
         ],
-        "lengthM": 0.35
+        "lengthM": 0.789
       },
       {
         "banks": [
           1
         ],
-        "lengthM": 0.35
+        "lengthM": 0.241
       }
     ],
     "turbine": {
@@ -150,14 +150,14 @@
       "lpHz": 1500
     },
     "exhaust": {
-      "midPipeM": 1.4,
+      "midPipeM": 1.473,
       "mufflerSectionsM": [
-        0.21,
-        0.34,
-        0.47
+        0.23,
+        0.373,
+        0.516
       ],
-      "mufflerAction": 0.6,
-      "tailpipeM": 0.5,
+      "mufflerAction": 0.632,
+      "tailpipeM": 0.271,
       "valve": {
         "fitted": true,
         "openGainDb": 4
@@ -165,28 +165,28 @@
     },
     "intake": {
       "runnerM": 0.3,
-      "helmholtzHz": 160,
-      "gain": 0.4
+      "helmholtzHz": 220.5,
+      "gain": 0.968
     },
     "forcedInduction": {
       "spoolTimeS": 0.6,
       "maxShaftKrpm": 180,
       "lift": "bov",
-      "cabinGainDb": -14,
-      "whistleDb": -36,
-      "outsideGainDb": -30
+      "cabinGainDb": -20,
+      "whistleDb": -54.5,
+      "outsideGainDb": -15
     },
     "mechanical": {
-      "blockGain": 0.3,
-      "valvetrainGain": 0.1
+      "blockGain": 0.133,
+      "valvetrainGain": 0
     },
     "overrun": {
       "crackleRate": 0.5,
       "fuelCutResumeRpm": 1150
     },
     "cabin": {
-      "lowpassHz": 600,
-      "leakDb": -30
+      "lowpassHz": 200,
+      "leakDb": -42.4
     },
     "launchRpm": 3060,
     "estimated": true

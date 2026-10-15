@@ -3,6 +3,43 @@
 All notable changes to Tesbox. Versions follow Semantic Versioning; each release is also published as
 the Docker image `ghcr.io/atvriders/tesbox:<version>` (for example `:v1.0.0`).
 
+## 1.2.0 — 2026-10-15
+
+Nine more engines tuned against recordings of the real cars (phase 5), so twelve of the fifteen now
+are.
+
+- New reference libraries (private, local only) for the 6.2 Small-Block V8, 6.2 Supercharged V8,
+  3.0 Twin-Turbo Inline-6, 4.0 Flat-Six, 5.2 V10, 6.5 V12, 3.8 Twin-Turbo V6, 4.0 Twin-Turbo V8 and
+  2.0 Turbo Inline-4: at least two cabin and two outside recordings each, stock exhausts only.
+- Each tuned with the CMA-ES tuner; discrimination is now checked against all twelve engines with
+  references. Nine pass every gate; three miss one gate narrowly (6.2 Small-Block V8 and 2.0 Turbo
+  Inline-4: sub-orders; 6.2 Supercharged V8: order profile), with the likely causes recorded in
+  [`docs/sound-scores.md`](docs/sound-scores.md).
+- The 2.5 Turbo Inline-5 is re-tuned against all twelve libraries (0.597 → 0.609): the 5.2 V10's
+  recordings, which fire like two inline-fives, no longer match it better than its own.
+- Still estimated: the 1.3 Twin-Rotor Rotary, 2.5 Turbo Flat-Four and 4.8 V10 (references being
+  gathered).
+
+### Engines
+
+| Engine | Inspired by | Set | Voicing |
+|---|---|---|---|
+| 2.5 Turbo Inline-5 | Audi RS 3 (8Y) | Euro | Tuned against recordings, 0.609; every gate passes; awaiting sign-off (beta) |
+| 4.0 Flat-Six NA | Porsche 911 GT3 (992) | Euro | Tuned against recordings, 0.640; every gate passes; awaiting sign-off (beta) |
+| 5.2 V10 NA | Lamborghini Huracán | Euro | Tuned against recordings, 0.683; every gate passes; awaiting sign-off (beta) |
+| 2.0 Turbo Inline-4 | VW Golf GTI (Mk8) | Euro | Tuned against recordings, 0.684; 1 gate below; awaiting sign-off (beta) |
+| 3.0 Twin-Turbo Inline-6 | Toyota Supra (A80, 2JZ-GTE) | JDM | Tuned against recordings, 0.663; every gate passes; awaiting sign-off (beta) |
+| 1.3 Twin-Rotor Turbo Rotary | Mazda RX-7 (FD, 13B-REW) | JDM | Beta voicing (estimated); references being gathered |
+| 2.5 Turbo Flat-Four | Subaru WRX STI (EJ257) | JDM | Beta voicing (estimated); references being gathered |
+| 3.8 Twin-Turbo V6 | Nissan GT-R (R35, VR38DETT) | JDM | Tuned against recordings, 0.719; every gate passes; awaiting sign-off (beta) |
+| 5.0 V8 NA | Ford Mustang GT (Coyote) | American | Tuned against recordings, 0.666; every gate passes; awaiting sign-off (beta) |
+| 6.2 Small-Block V8 NA | Chevrolet Corvette (C8, LT2) | American | Tuned against recordings, 0.592; 1 gate below; awaiting sign-off (beta) |
+| 6.2 Supercharged V8 | Dodge Challenger SRT Hellcat | American | Tuned against recordings, 0.613; 1 gate below; awaiting sign-off (beta) |
+| 6.5 V12 NA | Ferrari 812 Superfast | Exotic | Tuned against recordings, 0.753; every gate passes; awaiting sign-off (beta) |
+| 4.5 Flat-Plane V8 | Ferrari 458 Italia | Exotic | Tuned against recordings, 0.604; every gate passes; awaiting sign-off (beta) |
+| 4.8 V10 NA | Lexus LFA | Exotic | Beta voicing (estimated); references being gathered |
+| 4.0 Twin-Turbo V8 | Audi RS 6 Avant (C8) | Exotic | Tuned against recordings, 0.674; every gate passes; awaiting sign-off (beta) |
+
 ## 1.1.0 — 2026-10-15
 
 Sound fidelity. Measuring the tuned pilot engines against recordings of the real cars found three

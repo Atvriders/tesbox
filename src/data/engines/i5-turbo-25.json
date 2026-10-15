@@ -93,14 +93,14 @@
       "alpha": 16.55,
       "beta": 7.97,
       "evoOffsetDeg": 140,
-      "cycleAsymmetry": 0.388
+      "cycleAsymmetry": 0.5
     },
     "headersM": [
-      0.541,
-      0.633,
-      0.575,
-      0.667,
-      0.611
+      0.56,
+      0.655,
+      0.595,
+      0.69,
+      0.632
     ],
     "collectors": [
       {
@@ -139,7 +139,7 @@
       "lift": "bov",
       "cabinGainDb": -17.3,
       "whistleDb": -18.3,
-      "outsideGainDb": -9
+      "outsideGainDb": -6
     },
     "mechanical": {
       "blockGain": 0,
@@ -150,7 +150,7 @@
       "fuelCutResumeRpm": 1350
     },
     "cabin": {
-      "lowpassHz": 970,
+      "lowpassHz": 1060,
       "leakDb": -19.9
     },
     "launchRpm": 3150,
