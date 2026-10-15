@@ -3,6 +3,27 @@
 All notable changes to Tesbox. Versions follow Semantic Versioning; each release is also published as
 the Docker image `ghcr.io/atvriders/tesbox:<version>` (for example `:v1.0.0`).
 
+## 1.1.0 — 2026-10-15
+
+Sound fidelity. Measuring the tuned pilot engines against recordings of the real cars found three
+faults in the synthesizer; they are fixed, and the pilots are re-tuned.
+
+- **Turbo whistle at its real level.** The whistle has its own level (`forcedInduction.whistleDb`,
+  default −36 dB), apart from the turbo whoosh, and the outside sound has its own forced-induction
+  level (`outsideGainDb`, default −30 dB). In 1.0.0 the whistle was 33–36 dB louder than anything
+  the recordings show.
+- **A brighter cabin.** The cabin filter is 2nd order with a high-frequency leak (`cabin.leakDb`,
+  default −30 dB), so the engine's upper harmonics come through as they do in the recordings; in
+  1.0.0 the cabin was 15–20 dB too dark at 1.5–3 kHz.
+- **V8 bank rumble.** The tuner sets each cylinder bank's headers and each collector separately, so
+  the half orders that lead real cross-plane and flat-plane V8 recordings no longer cancel.
+- These defaults apply to every engine, so all 15 sound different from 1.0.0.
+- The pilots, re-tuned over the new parameters: 2.5 Turbo Inline-5 0.478 → 0.597, 5.0 V8 NA
+  0.546 → 0.666, 4.5 Flat-Plane V8 0.483 → 0.604 (similarity to the recordings); every gate and the
+  discrimination check now pass ([`docs/sound-scores.md`](docs/sound-scores.md)). They stay
+  "Beta voicing" until the listening sign-off.
+- CI: the tuner's heavy tests size their worker threads to the runner.
+
 ## 1.0.0 — 2026-10-15
 
 The first release: a self-hosted web app for the Tesla touchscreen browser that synthesizes a
