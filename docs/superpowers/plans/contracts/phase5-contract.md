@@ -62,6 +62,27 @@ the half-orders that lead real cross-plane and flat-plane recordings by 15–20 
   scoring the gate's ceiling and the render over the same slots with ≥ 3 recordings per gated slot;
   harmonic-only tilt/centroid (a re-scoping that would need a separate broadband check).
 
+## P0b — Near-miss gates (from the 1.3.0 scores)
+
+Three tuned engines miss one gate each (docs/sound-scores.md): 6.2 Supercharged V8 order profile
+(cabin recordings led by orders 1–2, the render by order 4 with orders 5.5–12 ~10 dB strong),
+2.5 Turbo Flat-Four order profile (render orders 2.5–3.5 6–15 dB above the recordings, 6.5–8
+5–10 dB weak), 2.0 Turbo Inline-4 sub-orders (half orders short outside / in other rpm bins).
+
+- **P0b.1 (DSP, phase 2a amendment B20):** a fixed per-cylinder combustion-level spread
+  `pulse.cylinderSpreadDb` (0…6 dB, default 0): cylinder k's pulse level is multiplied by a fixed,
+  deterministic pattern (zero mean in dB across the cylinders, defined once in the code, documented)
+  scaled by the spread — real engines' cylinder-to-cylinder variation, which creates half orders
+  directly. At 0 the output is bit-identical to 1.3.0.
+- **P0b.2 (DSP, B21):** a cabin low-frequency resonance `cabin.boomHz` (40…200 Hz, default 100) /
+  `cabin.boomDb` (0…12 dB, default 0): a peaking filter in the cabin transfer only (body boom). At
+  0 dB the output is bit-identical to 1.3.0.
+- **P0b.3:** the tuner vector gains `cylinderSpreadDb`, `boomHz`, `boomDb`; schema, contracts,
+  `defaultVoicing` (defaults neutral), lab sliders, engine JSONs (new fields at the neutral
+  defaults, every existing value unchanged). DSP invariants, allocation and true-peak tests green.
+- Re-tune only the three near-miss engines (CMA-ES, all fifteen libraries); every other engine's
+  render must be bit-identical (proved by a test or a render hash over all 15 engines × segments).
+
 ## P2 — Engine unit (×12)
 
 Per engine, in this order: references per `docs/SOUND_LAB.md` (≥ 2 independent cabin and ≥ 2
