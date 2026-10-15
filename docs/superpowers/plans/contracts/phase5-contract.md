@@ -83,6 +83,22 @@ Three tuned engines miss one gate each (docs/sound-scores.md): 6.2 Supercharged 
 - Re-tune only the three near-miss engines (CMA-ES, all fifteen libraries); every other engine's
   render must be bit-identical (proved by a test or a render hash over all 15 engines × segments).
 
+## P0c — The last two gates (from the 1.4.0 scores)
+
+- **P0c.1 (B22):** the cabin resonance may also cut: `cabin.boomDb` −12…+12 dB (default 0) and
+  `cabin.boomHz` 40…400 Hz (default 100). The 2.5 Turbo Flat-Four's order profile needs a cut of its
+  orders 2.5–3.5 (≈ 250–350 Hz at 6,000 rpm). Existing voicings keep their values, so every other
+  engine renders exactly as in 1.4.0.
+- **P0c.2 (B23):** engine pulses during overrun: `overrun.cutPulseDb` −60…0 dB (default −∞ encoded as
+  a neutral −60 that is *skipped*, i.e. the 1.4.0 behaviour of zero combustion on fuel cut): when
+  above −60, closed-throttle (fuel-cut) cycles keep combustion pulses at that level relative to the
+  engine's idle-load pulse, so lift-off carries engine orders the way the recordings do. The
+  2.0 Turbo Inline-4's sub-order shortfall is in its lift-off pairs (0.13–0.15).
+- Schema, contracts, `defaultVoicing` (neutral), tuner vector, lab sliders, engine JSONs (new field
+  at the neutral default), fixtures as needed; the render-identity test (exact on its runtime, RMS
+  elsewhere) must stay green for every engine not re-tuned. Re-tune only flat4-turbo-25 and
+  i4-turbo-20; score all fifteen once to confirm the others' verdicts are unchanged.
+
 ## P2 — Engine unit (×12)
 
 Per engine, in this order: references per `docs/SOUND_LAB.md` (≥ 2 independent cabin and ≥ 2
