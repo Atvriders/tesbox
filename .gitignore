@@ -27,3 +27,5 @@ lab-refs/
 
 # tesbox-render output (local listening only)
 renders/
+# local agent worktrees
+.claude/worktrees/

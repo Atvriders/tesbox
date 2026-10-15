@@ -10,9 +10,12 @@ const ALLOCATING =
   'NewExpression, ArrayExpression, ObjectExpression, ArrowFunctionExpression, FunctionExpression, SpreadElement, TemplateLiteral, TryStatement, ThrowStatement';
 
 export default defineConfig(
-  globalIgnores(['dist/', 'node_modules/', 'test-results/', 'playwright-report/', 'public/']),
+  // .claude/: local agent worktrees (full copies of this repo) are never linted as part of it.
+  globalIgnores(['dist/', 'node_modules/', 'test-results/', 'playwright-report/', 'public/', '.claude/']),
   js.configs.recommended,
   tseslint.configs.recommended,
+  // One tsconfig root: this file's directory (another checkout below it must not make the root ambiguous).
+  { languageOptions: { parserOptions: { tsconfigRootDir: import.meta.dirname } } },
   {
     files: ['src/dsp/**/*.ts', 'src/sim/**/*.ts'],
     rules: {

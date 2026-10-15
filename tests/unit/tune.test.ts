@@ -641,9 +641,11 @@ describe('auto-tune recovers a detuned fixture from a render of the original (ps
   /** The parameters with the strongest effect on this sweep's scored features (each alone moves the composite by ≈ 0.15–0.3 over its range). */
   const MAIN = ['intake.gain', 'mechanical.blockGain', 'cabin.lowpassHz'];
 
-  // the two searches evaluate in worker threads of their own: run them side by side
+  // the two searches evaluate in worker threads of their own: run them side by side, each on half the machine (a 4-core
+  // CI runner gets 2 + 2 threads instead of 8 + 8), with a timeout sized for such a runner (≈ 25 s here on 36 cores)
+  const RECOVERY_WORKERS = Math.max(2, Math.min(8, Math.floor(availableParallelism() / 2)));
   for (const strategy of STRATEGIES) {
-    it.concurrent(`${strategy}: improves the composite by ≥ 0.1 and brings the main parameters back within 20 % of their range`, { timeout: 90_000 }, async ({ expect }) => {
+    it.concurrent(`${strategy}: improves the composite by ≥ 0.1 and brings the main parameters back within 20 % of their range`, { timeout: 300_000 }, async ({ expect }) => {
       const original = loadFixture('v8-crossplane-test');
       const pseudoRef = renderClip(original, PLAN, 'cabin', lensOf(original.spec)).features;
       const space = new VoicingSpace(original, MAIN);
@@ -651,7 +653,7 @@ describe('auto-tune recovers a detuned fixture from a render of the original (ps
       const detuned: EngineDef = { ...original, voicing: space.decode(truth.map((u) => (u < 0.5 ? u + 0.45 : u - 0.45))) };
       const r = await tuneEngine(
         { def: detuned, refs: [pseudoRef, pseudoRef], otherRefs: {}, targets: TARGETS },
-        { strategy, iterations: 25, seed: 1, params: MAIN, workers: 8, workerModules: [PULL_URL] },
+        { strategy, iterations: 25, seed: 1, params: MAIN, workers: RECOVERY_WORKERS, workerModules: [PULL_URL] },
       );
       expect(r.strategy).toBe(strategy);
       expect(r.rejected).toBe(0);
@@ -756,8 +758,10 @@ describe('candidate evaluation in worker threads', () => {
     const posted = vi.spyOn(Worker.prototype, 'postMessage');
     try {
       const results = await pool.evaluate(batch);
-      // each task carries one voicing; the problem (references included) went to each worker once, as workerData
-      expect(posted.mock.calls.map(([m]) => Object.keys(m as object).sort())).toEqual(batch.map(() => ['id', 'voicing']));
+      // each task carries one voicing; the problem (references included) went to each worker once, as workerData. The
+      // spy sees every pool in this process, so count only the messages carrying this batch's voicings.
+      const ours = posted.mock.calls.filter(([m]) => batch.includes((m as { voicing?: EngineVoicing }).voicing as EngineVoicing));
+      expect(ours.map(([m]) => Object.keys(m as object).sort())).toEqual(batch.map(() => ['id', 'voicing']));
       expect(results.map((r) => (r.rejected === null ? 'rendered' : /got (\d)/.exec(r.rejected)?.[1]))).toEqual(['rendered', '5', '6', '7', 'rendered']);
       expect(results.map((r) => r.rendered)).toEqual([true, false, false, false, true]);
       expect(pool.threads).toBe(4);
