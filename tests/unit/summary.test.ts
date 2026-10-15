@@ -89,6 +89,7 @@ const storage: StorageReport = {
   swSupported: true,
   swRegistered: true,
   swControlled: false,
+  controllerScript: '/sw.js',
 };
 
 const inputs: InputCounts = {
@@ -223,6 +224,11 @@ describe('buildSummary', () => {
     expect(Object.keys(buildSummary(extra, new EventLog()))).toEqual([
       'v', 'sha', 'at', 'env', 'audio', 'routes', 'gps', 'motion', 'storage', 'inputs', 'notes', 'logTail',
     ]);
+  });
+
+  it('exports the storage report as probed, including which worker controlled the page load', () => {
+    expect(buildSummary(parts(), new EventLog()).storage).toEqual(storage);
+    expect(buildSummary(parts(), new EventLog()).storage?.controllerScript).toBe('/sw.js');
   });
 
   it('accepts null audio, motion and storage', () => {

@@ -34,7 +34,9 @@ test('geolocation denied: the blocking banner offers Use Demo, which drives the 
   await expect(banner).toBeVisible();
   await expect(statusDot(app)).toHaveAttribute('data-level', 'bad');
   await expect(statusDot(app)).toHaveAttribute('aria-label', new RegExp(STR.drive.reasons.gpsDenied));
-  expect((await app.lastState())?.[S.speedMps]).toBe(0);
+  // The first worklet snapshot can follow 'running' by about a second (the audio device starting up).
+  const first = await app.waitForState(() => true, 10_000, 'a first worklet snapshot');
+  expect(first[S.speedMps]).toBe(0);
 
   await banner.getByRole('button', { name: STR.actions.useDemo }).click();
   await expect(banner).toBeHidden();

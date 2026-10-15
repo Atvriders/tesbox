@@ -272,3 +272,20 @@ Phase 2b lands as one verified commit.
   over the local median that persists across ≥ 3 consecutive frames (within ±5 % frequency),
   **without** engine-order exclusion (a supercharger whine is order-locked and must be detected).
   Per D3 the metric is only used for forced-induction engines, so NA harmonics never enter scoring.
+- **D6 Minimum common bins:** steady kinds (`idle`, `cruise`, `limiter`) need ≥ 1 common 500 rpm
+  bin (each side ≥ 2 frames); sweeps (`wot`, `liftoff`) need ≥ 2. (The old "≥ 2 everywhere" rule
+  made steady segments never score.)
+- **D7 Order plot bin:** `orderPlotPng` plots the 500 rpm bin with the most frames common to the
+  render and the refs of that perspective (ties → the lower rpm); the chosen bin is printed in the
+  legend and `report.md`.
+- **D8 Forced-induction presence:** for engines with `aspiration.type !== 'na'`, add metric
+  `fiPresence`: p = fraction of voiced frames (wot + cruise kinds) with a non-null `fiLineHz`;
+  similarity = `1 − |p_render − p_ref|`; gate as other metrics (0.8 × ref-vs-ref, where ref-vs-ref
+  compares p between ref clips). `MetricName` gains `'fiPresence'`; it enters the composite.
+- **D8 (ratified 2026-10-14, supersedes the D8 formula above):** `fiPresence` is scored on
+  comparable `wot` and `cruise` pairs. Per common 500 rpm bin, p = the fraction of that bin's voiced
+  frames with a line (finite `fiLineHz > 0`); per-bin similarity = `1 − |p_A − p_B|`; the metric is
+  the mean over the common bins with D6's minimum common bins (else null). renderVsRef, refVsRef,
+  the gate (0.8 × ref-vs-ref) and the composite work as for every other metric; null / gate `n/a`
+  for NA engines (like fiLine, D3). (The clip-wide reading scored pairs with no common rpm and failed
+  the honest end-to-end test: 0.774 vs a 1.000 ceiling, against 0.967 per bin.)

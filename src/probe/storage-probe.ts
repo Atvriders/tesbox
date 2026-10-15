@@ -23,8 +23,18 @@ export interface StorageReport {
   cacheAgeS: number | null;
   swSupported: boolean;
   swRegistered: boolean;
-  /** This page load was already controlled by a service worker (i.e. it survived from a previous visit). */
+  /**
+   * This page load was already controlled by the probe's own worker (/probe/sw.js), i.e. it survived from
+   * a previous visit. Control by any other worker does not count: the app's /sw.js (scope /) also covers
+   * /probe/ and controls a first probe visit made after using the app.
+   */
   swControlled: boolean;
+  /**
+   * Path of the script of the worker that controlled this page load ('/probe/sw.js', '/sw.js'), null when
+   * none did. Only the path: the self-hosted domain never enters the export. Absent in reports from probe
+   * builds that predate it.
+   */
+  controllerScript?: string | null;
   error?: string;
 }
 
@@ -33,6 +43,8 @@ const FIRST_SEEN_KEY = 'probe.firstSeen';
 const LAST_SEEN_KEY = 'probe.lastSeen';
 const CACHE_NAME = 'tesbox-probe';
 const PERSIST_KEY = '__persist';
+/** The probe's own worker, registered below as ./sw.js relative to the probe page. */
+const PROBE_SW_PATH = '/probe/sw.js';
 const STEP_TIMEOUT_MS = 5000;
 
 function isCount(v: unknown): v is number {
@@ -92,6 +104,15 @@ async function probeCacheStorage(r: StorageReport, nowIso: string, errors: strin
   r.cacheStorage = true;
 }
 
+/** The path of a worker's script URL (a ServiceWorker's scriptURL is absolute). */
+function scriptPath(scriptUrl: string): string {
+  try {
+    return new URL(scriptUrl).pathname;
+  } catch {
+    return scriptUrl;
+  }
+}
+
 async function probeServiceWorker(r: StorageReport, errors: string[]): Promise<void> {
   const nav = (globalThis as { navigator?: Navigator }).navigator;
   const container: ServiceWorkerContainer | undefined = nav?.serviceWorker;
@@ -100,7 +121,9 @@ async function probeServiceWorker(r: StorageReport, errors: string[]): Promise<v
     return;
   }
   r.swSupported = true;
-  r.swControlled = Boolean(container.controller);
+  const controller = container.controller;
+  r.controllerScript = controller ? scriptPath(controller.scriptURL) : null;
+  r.swControlled = r.controllerScript?.endsWith(PROBE_SW_PATH) ?? false;
   // Relative to the probe page (/probe/): script /probe/sw.js, scope /probe/.
   await withTimeout(container.register('./sw.js', { scope: './' }), STEP_TIMEOUT_MS, 'serviceWorker.register');
   r.swRegistered = true;
@@ -118,6 +141,7 @@ export async function runStorageProbe(nowIso: string = new Date().toISOString())
     swSupported: false,
     swRegistered: false,
     swControlled: false,
+    controllerScript: null,
   };
   const errors: string[] = [];
   try {

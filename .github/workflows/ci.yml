@@ -1,8 +1,10 @@
 name: CI
 
 on:
+  # A release tag (v1.0.0, …) runs the whole pipeline again and also publishes that commit's image as :<tag>.
   push:
     branches: [master]
+    tags: ['v*']
   pull_request:
 
 # Least privilege: read-only by default; only the publish job may write packages.
@@ -89,7 +91,7 @@ jobs:
 
   publish:
     needs: [test, e2e]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v'))
     runs-on: ubuntu-latest
     # One publish per ref at a time: a newer push cancels the older run, so :latest never moves back.
     concurrency:
@@ -116,9 +118,12 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           build-args: GITHUB_SHA=${{ github.sha }}
+          # On a version tag push the third line names the tag (e.g. :v1.0.0); on master it is empty, and
+          # build-push-action drops empty lines from its list inputs.
           tags: |
-            ghcr.io/atvriders/tesbox:latest
+            ${{ github.ref == 'refs/heads/master' && 'ghcr.io/atvriders/tesbox:latest' || '' }}
             ghcr.io/atvriders/tesbox:${{ github.sha }}
+            ${{ startsWith(github.ref, 'refs/tags/v') && format('ghcr.io/atvriders/tesbox:{0}', github.ref_name) || '' }}
           # Links the GHCR package to the public repo (it inherits the repo's visibility).
           labels: |
             org.opencontainers.image.source=https://github.com/Atvriders/tesbox

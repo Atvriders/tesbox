@@ -250,7 +250,7 @@ describe('buildDiagSummary', () => {
 
 describe('diagnosticsPanels — the screen as label/value text', () => {
   function view(over: Partial<DiagViewParts> = {}): DiagViewParts {
-    return { ...parts(), parked: true, ...over };
+    return { ...parts(), parked: true, sw: 'registered', ...over };
   }
   const row = (panels: DiagPanel[], label: string): string | undefined =>
     panels.flatMap((p) => p.rows).find(([k]) => k === label)?.[1];
@@ -281,6 +281,14 @@ describe('diagnosticsPanels — the screen as label/value text', () => {
     expect(row(p, STR.diag.f.flags)).toBe('SHIFTING, SPEED_UNUSABLE');
     expect(row(p, STR.diag.f.fixes)).toBe('30\u00a0accepted, 2\u00a0rejected');
     expect(row(p, STR.diag.f.recoveries)).toBe('1\u00a0resumed, 0\u00a0failed, 2\u00a0rebuilt');
+  });
+
+  it('shows the app service worker registration outcome (phase-4 contract T5: "service worker: unsupported")', () => {
+    for (const sw of ['pending', 'registered', 'unsupported', 'failed'] as const) {
+      expect(row(diagnosticsPanels(view({ sw })), STR.diag.f.serviceWorker), sw).toBe(STR.diag.swStates[sw]);
+    }
+    expect(STR.diag.f.serviceWorker).toBe('Service worker');
+    expect(STR.diag.swStates.unsupported).toBe('unsupported');
   });
 
   it('converts the speed to the display units, as Drive does', () => {

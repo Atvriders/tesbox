@@ -1554,6 +1554,74 @@ describe('EngineAudio anchor file', () => {
   });
 });
 
+// ───────────── a running session needs no network (phase-4 contract T2, spec §12) ─────────────
+
+describe('EngineAudio offline session', () => {
+  it('offline after Start, nothing on the audio path fetches or adds the module again; the anchor plays its blob: URL', async () => {
+    await audio.start(init({ route: 'direct-anchor', tierPref: 'auto' }));
+    const ctx = lastCtx();
+    const node = lastNode();
+    expect(playing().map((e) => e.src)).toEqual([ANCHOR_IN_MEMORY]);
+    fetchMode = 'fail'; // connectivity lost (a tunnel): every fetch from here on fails
+    node.port.emit({ type: 'state', buf: stateBuf({ rpm: 2500 }) });
+    audio.post({ type: 'engine', def: OTHER_ENGINE });
+    audio.post({ type: 'shiftUp' });
+    await vi.advanceTimersByTimeAsync(2100); // the tier benchmark runs to its decision
+    audio.setVisibility(true);
+    audio.setVisibility(false);
+    await audio.setRoute('media-element');
+    await audio.setRoute('direct');
+    await audio.setRoute('direct-anchor');
+    ctx.setState('suspended');
+    expect(await audio.recover()).toBe(true); // Tap to resume: resumed in place
+    node.port.emit({ type: 'state', buf: stateBuf({ rpm: 3000 }) });
+    expect(fetchCalls).toEqual([ANCHOR_URL]); // the anchor, once, at Start
+    expect(ctxs()).toHaveLength(1);
+    expect(ctx.modules).toEqual([WORKLET_URL]); // added once at Start and kept
+    expect(playing().map((e) => e.src)).toEqual([ANCHOR_IN_MEMORY]);
+    expect(objectUrlBlobs).toEqual([ANCHOR_BLOB]);
+    expect(revokedUrls).toEqual([]);
+    expect(snapshots).toHaveLength(2);
+    expect(errors).toEqual([]);
+    expect(audio.state).toEqual({ state: 'running', route: 'direct-anchor', tier: 'full' });
+  });
+
+  it('rebuilt contexts re-add the module but share one object URL per session; stop() revokes it', async () => {
+    await audio.start(init({ route: 'direct-anchor' }));
+    fetchMode = 'fail';
+    lastCtx().setState('interrupted');
+    expect(await audio.recover()).toBe(true); // close + recreate inside the tap
+    lastNode().onprocessorerror?.(); // the worklet dies: its graph is closed, the session goes on
+    expect(await audio.recover()).toBe(true);
+    expect(openCtxs()).toHaveLength(1);
+    expect(ctxs().map((c) => c.modules)).toEqual([[WORKLET_URL], [WORKLET_URL], [WORKLET_URL]]); // once per context
+    expect(playing().map((e) => e.src)).toEqual([ANCHOR_IN_MEMORY]);
+    expect(objectUrlBlobs).toEqual([ANCHOR_BLOB]); // no new object URL per recreate
+    expect(revokedUrls).toEqual([]); // still in use by the live anchor element
+    expect(fetchCalls).toEqual([ANCHOR_URL]);
+    await stopAudio();
+    expect(revokedUrls).toEqual([ANCHOR_IN_MEMORY]);
+  });
+
+  it('a start that fails after its anchor element was made revokes the object URL: nothing is left behind', async () => {
+    FakeAudioContext.onCreate = (c) => {
+      c.state = 'suspended';
+      c.resumeMode = 'hang';
+    };
+    const started = audio.start(init({ route: 'direct-anchor' }));
+    const rejected = expect(started).rejects.toThrow('audio worklet failed during start');
+    await vi.advanceTimersByTimeAsync(0); // module added, node and anchor element made; waiting for resume()
+    expect(objectUrlBlobs).toEqual([ANCHOR_BLOB]);
+    lastNode().onprocessorerror?.();
+    await vi.advanceTimersByTimeAsync(RESUME_WAIT_MS);
+    await rejected;
+    expect(revokedUrls).toEqual([ANCHOR_IN_MEMORY]);
+    expect(playing()).toHaveLength(0);
+    expect(openCtxs()).toHaveLength(0);
+    expect(audio.state.state).toBe('error');
+  });
+});
+
 // ───────────── diagnostics ─────────────
 
 describe('EngineAudio.diagnostics', () => {

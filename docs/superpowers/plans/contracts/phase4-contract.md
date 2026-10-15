@@ -74,3 +74,16 @@ then reviewed. Phase 4 lands as one verified commit + the `v1.0.0` tag/release.
 5. All Phase 0 and Phase 3 e2e still pass; CSP violations = 0.
 
 Waves: W1 T1, T2, T4 (docs part) → W2 T3, T5 → release.
+
+## Amendments (2026-10-14, authoritative — override anything above)
+
+- **E1 (T1 fetch strategy):** cache-first applies only to `/assets/*` URLs in `PRECACHE`; any other
+  `/assets/*` request (probe or lab chunks) is left to the browser (no `respondWith`), never cached.
+  Reason: the app worker (scope `/`) also controls `/probe/` and `/lab/` pages; caching their chunks
+  bloated the app cache and served them from it.
+- **E2 (probe Q8 evidence):** the probe's "Page controlled at load" is true only when the controlling
+  worker's script path ends in `/probe/sw.js`; a "Controlling worker at load" row shows the path
+  (never the origin). Reason: on a first `/probe/` visit after using the app, `/sw.js` controls the
+  page and was a false positive for spec §16 Q8.
+- **E3 (T1 navigations, with phase 2c):** navigations to the Sound Lab (`/lab`, `/lab/…`) are left to
+  the browser like the probe's — the lab is its own page and must never get the app shell offline.

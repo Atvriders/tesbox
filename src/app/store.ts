@@ -10,6 +10,7 @@ import { computed, signal, type ReadonlySignal } from '@preact/signals';
 import { S, STATE_LEN, type EngineDef, type OutputRoute, type TeslaParams, type TeslaRecord, type Tier } from '../contracts';
 import { TESLAS } from '../data/catalogue';
 import { getEngine } from '../data/engines';
+import type { SwRegisterResult } from '../platform/sw-register';
 import { loadSettings, needsFirstRun, sanitizeSettings, saveSettings, teslaParamsFor, type Settings } from './settings';
 
 export type Screen = 'first-run' | 'garage' | 'drive' | 'settings' | 'diagnostics';
@@ -52,6 +53,18 @@ export const gps = signal<GpsState>({ status: 'off', parked: false, fixAgeS: nul
 
 /** Transient message for the shell to show, or null. */
 export const toast = signal<string | null>(null);
+
+/** A newer build is available (phase-4 contract): a waiting service worker, or a stale page (`remote` = deployed SHA). */
+export interface UpdateState {
+  kind: 'sw' | 'stale';
+  remote?: string;
+}
+
+/** Set by src/main.ts when a new service-worker version waits (and by the version check, T3); the update banner reads it. */
+export const update = signal<UpdateState | null>(null);
+
+/** Outcome of the app service-worker registration (src/main.ts), for Diagnostics; 'pending' until it has run. */
+export const swStatus = signal<SwRegisterResult | 'pending'>('pending');
 
 export const engine = computed<EngineDef>(() => getEngine(settings.value.engineId));
 

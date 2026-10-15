@@ -1,10 +1,12 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+import { ENGINES } from '../../src/data/engines';
 
 const read = (p: string): string => readFileSync(new URL(`../../${p}`, import.meta.url), 'utf8');
 
 const PUBLIC_TEXT_FILES = [
   'README.md',
+  'CHANGELOG.md',
   'NOTICES',
   'docs/IN_CAR_CHECKLIST.md',
   'docs/CLEAN_ROOM.md',
@@ -93,6 +95,15 @@ describe('docs', () => {
     expect(nextDay).toContain('Show QR and append the export in a follow-up commit');
   });
 
+  it('CHANGELOG has the 1.0.0 section with every garage engine and its voicing status (phase-4 contract T4)', () => {
+    const log = read('CHANGELOG.md');
+    expect(log).toMatch(/^## 1\.0\.0 — \d{4}-\d{2}-\d{2}$/m);
+    const esc = (t: string): string => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    for (const e of ENGINES) {
+      expect(log, e.id).toMatch(new RegExp(`^\\| ${esc(e.name)} \\| ${esc(e.inspiredBy)} \\| [A-Za-z]+ \\| \\S.* \\|$`, 'm'));
+    }
+  });
+
   it('CLEAN_ROOM states the binding policy and records the patent check', () => {
     const cleanRoom = read('docs/CLEAN_ROOM.md');
     expect(cleanRoom).toContain('rupteur.app');
@@ -117,7 +128,7 @@ describe('privacy (spec: no real hostnames or IPs in the repo)', () => {
   });
 
   it('every absolute URL in user-facing docs is the placeholder domain or localhost', () => {
-    for (const file of ['README.md', 'docs/IN_CAR_CHECKLIST.md', 'docker-compose.yml']) {
+    for (const file of ['README.md', 'CHANGELOG.md', 'docs/IN_CAR_CHECKLIST.md', 'docker-compose.yml']) {
       const urls = read(file).match(/https?:\/\/[^\s)`'"]+/g) ?? [];
       for (const url of urls) expect(url, file).toMatch(/^(https:\/\/tesbox\.example\.com|http:\/\/localhost(:\d+)?)(\/|$)/);
     }
@@ -149,8 +160,8 @@ describe('.github/workflows/ci.yml', () => {
     'actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0',
   ]);
 
-  it('runs on master pushes and PRs with read-only workflow permissions (C7)', () => {
-    expect(ci()).toMatch(/push:\n\s+branches: \[master\]\n\s+pull_request:/);
+  it('runs on master pushes, version tag pushes and PRs with read-only workflow permissions (C7, phase-4 T4)', () => {
+    expect(ci()).toMatch(/push:\n\s+branches: \[master\]\n\s+tags: \['v\*'\]\n\s+pull_request:/);
     // Workflow level: exactly `contents: read`, nothing else.
     expect(ci()).toMatch(/^permissions:\n {2}contents: read\n(?! )/m);
   });
@@ -170,9 +181,23 @@ describe('.github/workflows/ci.yml', () => {
     expect(ci()).not.toMatch(/^concurrency:/m); // job-level only: test and e2e runs are never cancelled
   });
 
-  it('chains test → e2e → publish, publishing only on pushes to master', () => {
+  it('chains test → e2e → publish, publishing only on pushes to master and version tags', () => {
     expect(ci()).toMatch(/\n {2}e2e:\n {4}needs: test\n/);
-    expect(ci()).toMatch(/\n {2}publish:\n {4}needs: \[test, e2e\]\n {4}if: github\.event_name == 'push' && github\.ref == 'refs\/heads\/master'\n/);
+    expect(ci()).toMatch(
+      /\n {2}publish:\n {4}needs: \[test, e2e\]\n {4}if: github\.event_name == 'push' && \(github\.ref == 'refs\/heads\/master' \|\| startsWith\(github\.ref, 'refs\/tags\/v'\)\)\n/,
+    );
+  });
+
+  it('tags the image of a version tag push with that tag as well (phase-4 contract T4: v1.0.0)', () => {
+    const publish = job('publish');
+    // :latest only from master (a tag on an older commit, or a tag run finishing after a newer master run, must
+    // never move it back); the version tag only from tag pushes. docker/build-push-action skips empty lines.
+    expect(publish).toMatch(
+      /tags: \|\n {12}\$\{\{ github\.ref == 'refs\/heads\/master' && 'ghcr\.io\/atvriders\/tesbox:latest' \|\| '' \}\}\n {12}ghcr\.io\/atvriders\/tesbox:\$\{\{ github\.sha \}\}\n {12}\$\{\{ startsWith/,
+    );
+    expect(publish).toContain(
+      "            ${{ startsWith(github.ref, 'refs/tags/v') && format('ghcr.io/atvriders/tesbox:{0}', github.ref_name) || '' }}\n",
+    );
   });
 
   it('tests the container with Playwright (browsers cached) and pushes both multi-arch tags', () => {

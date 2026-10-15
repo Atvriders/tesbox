@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_OUTPUT, type TeslaRecord } from '../../src/contracts';
+import { DEFAULT_OUTPUT, type EngineDef, type EngineVoicing, type TeslaRecord } from '../../src/contracts';
 import {
   DEFAULT_SETTINGS,
   HP_CORNER_RANGE_HZ,
@@ -10,6 +10,7 @@ import {
 } from '../../src/app/settings';
 import { TESLAS } from '../../src/data/catalogue';
 import { ENGINES, getEngine } from '../../src/data/engines';
+import { defaultVoicing } from '../../src/data/voicing-defaults';
 import {
   BASS_SWEEP_HZ,
   BASS_SWEEP_LEVEL_DB,
@@ -22,6 +23,7 @@ import {
   engineSpecLine,
   engineSpecParts,
   formatYears,
+  garageSpecLine,
   generationsOf,
   isMcu1Era,
   parseNotListed,
@@ -31,8 +33,10 @@ import {
   teslaById,
   teslaModels,
   trimsOf,
+  voicingBadge,
   yearSpan,
 } from '../../src/ui/picker';
+import { STR } from '../../src/ui/strings';
 
 /** Valid settings: the defaults plus `over`, through the same validation the store applies. */
 function settingsWith(over: Partial<Settings> = {}): Settings {
@@ -305,5 +309,23 @@ describe('picker: garage', () => {
       expect(line, e.id).toContain(`· ${litres} L ·`);
       expect(line, e.id).toMatch(/^\S.* · \d\.\d L · .+ · \d,\d{3} rpm redline$/);
     }
+  });
+
+  it('shows the voicing status (phase-4 contract T4): "Beta voicing" until signed off, "Tuned" while a tuned voicing awaits it', () => {
+    expect(STR.garage.betaVoicing).toBe('Beta voicing');
+    expect(STR.garage.tuned).toBe('Tuned');
+    const base = getEngine('v8-na-50');
+    const d = defaultVoicing(base.spec);
+    const def = (voicing: EngineVoicing): EngineDef => ({ ...base, voicing });
+    const tuned: EngineVoicing = { ...d, cabin: { lowpassHz: d.cabin.lowpassHz + 100 } };
+    // Default voicing, estimated: the badge, the plain spec line.
+    expect(voicingBadge(def(d))).toBe(STR.garage.betaVoicing);
+    expect(garageSpecLine(def(d))).toBe(engineSpecLine(base));
+    // Tuned against references (tools/tune.ts keeps estimated true): the badge and "Tuned", after a no-break "·".
+    expect(voicingBadge(def(tuned))).toBe(STR.garage.betaVoicing);
+    expect(garageSpecLine(def(tuned))).toBe(`${engineSpecLine(base)}\u00a0· ${STR.garage.tuned}`);
+    // Signed off by the user (estimated false): neither.
+    expect(voicingBadge(def({ ...tuned, estimated: false }))).toBeNull();
+    expect(garageSpecLine(def({ ...tuned, estimated: false }))).toBe(engineSpecLine(base));
   });
 });

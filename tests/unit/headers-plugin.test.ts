@@ -70,6 +70,23 @@ describe('headersMiddleware', () => {
     expect(res.statusCode).toBe(301);
     expect(res.getHeader('location')).toBe('/probe/?b=abc1234');
   });
+
+  it('redirects /lab to /lab/ the same way, and serves /lab/ and /lab/index.html no-store', () => {
+    const { req, res } = request('/lab?b=abc1234');
+    const next = vi.fn();
+    headersMiddleware(req, res, next);
+    expect(next).not.toHaveBeenCalled();
+    expect(res.statusCode).toBe(301);
+    expect(res.getHeader('location')).toBe('/lab/?b=abc1234');
+    expect(res.getHeader('content-security-policy')).toBe(CSP);
+    for (const path of ['/lab/', '/lab/index.html']) {
+      const page = request(path);
+      const pass = vi.fn();
+      headersMiddleware(page.req, page.res, pass);
+      expect(pass, path).toHaveBeenCalledTimes(1);
+      expect(page.res.getHeader('cache-control'), path).toBe('no-store');
+    }
+  });
 });
 
 describe('headersPlugin', () => {

@@ -3,7 +3,9 @@ import Ajv2020 from 'ajv/dist/2020';
 import { firingHz, MAX_COMBUSTION, type EngineDef } from '../../src/contracts';
 import { ENGINES, getEngine } from '../../src/data/engines';
 import engineSchema from '../../src/data/schema/engine.schema.json';
+import { defaultVoicing } from '../../src/data/voicing-defaults';
 import { parseTyre, rollingCircumferenceM, wheelRpm } from '../../src/sim/tyre';
+import { schemaErrors, tunedEngines, tunedLine, voicingInvariantFailures } from '../../tools/tune';
 
 const MPH_IN_MPS = 0.44704;
 
@@ -236,6 +238,34 @@ describe.each(ENGINES.map((e) => [e.id, e] as const))('engine %s', (_id, e) => {
     expect(v.overrun.fuelCutResumeRpm).toBeGreaterThan(e.spec.rpm.idle);
     expect(v.launchRpm).toBeLessThan(e.spec.rpm.redline);
   });
+});
+
+/**
+ * Engines whose voicing was tuned against reference recordings (tools/tune.ts --apply), each recorded in
+ * docs/sound-scores.md with a `Tuned voicing: <engine-id>` line (phase 2b contract T6).
+ */
+const TUNED_ENGINES = tunedEngines();
+
+describe('voicing: untuned engines keep defaultVoicing, tuned ones keep the DSP invariants (phase 2b T6)', () => {
+  it('records only garage engines as tuned', () => {
+    const ids = ENGINES.map((e) => e.id);
+    for (const id of TUNED_ENGINES) expect(ids, `docs/sound-scores.md: "${tunedLine(id)}"`).toContain(id);
+  });
+
+  for (const e of ENGINES) {
+    if (TUNED_ENGINES.has(e.id)) {
+      it(`${e.id} is tuned: it passes the schema and the DSP invariants`, { timeout: 120_000 }, () => {
+        expect(schemaErrors(e)).toEqual([]);
+        expect(voicingInvariantFailures(e)).toEqual([]);
+      });
+    } else {
+      it(`${e.id} is untuned: its voicing equals defaultVoicing(spec)`, () => {
+        expect(e.voicing, `a voicing tuned with tools/tune.ts --apply is recorded in docs/sound-scores.md as "${tunedLine(e.id)}"`).toEqual(
+          defaultVoicing(e.spec),
+        );
+      });
+    }
+  }
 });
 
 describe('EPA N/V cross-check (±2.5 %)', () => {

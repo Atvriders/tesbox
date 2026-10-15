@@ -36,16 +36,19 @@ function pinHeaders(res: ServerResponse, headers: Record<string, string>): void 
     owned.has(name.toLowerCase()) ? res : setHeader(name, value)) as ServerResponse['setHeader'];
 }
 
-/** Connect middleware: pins headers; redirects /probe → /probe/ like nginx (relative Location). */
+/** Pages that resolve relative to their directory: the bare path redirects to it, as nginx does. */
+const SLASH_REDIRECTS: readonly string[] = ['/probe', '/lab'];
+
+/** Connect middleware: pins headers; redirects /probe → /probe/ and /lab → /lab/ like nginx (relative Location). */
 export function headersMiddleware(req: IncomingMessage, res: ServerResponse, next: () => void): void {
   const url = req.url ?? '/';
   const q = url.indexOf('?');
   const pathname = q === -1 ? url : url.slice(0, q);
   const search = q === -1 ? '' : url.slice(q);
   pinHeaders(res, headersFor(url));
-  if (pathname === '/probe') {
+  if (SLASH_REDIRECTS.includes(pathname)) {
     res.statusCode = 301;
-    res.setHeader('Location', `/probe/${search}`);
+    res.setHeader('Location', `${pathname}/${search}`);
     res.end();
     return;
   }

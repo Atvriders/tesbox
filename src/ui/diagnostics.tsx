@@ -24,6 +24,7 @@ import { MEDIA_KEY, mediaKeyCode } from '../input/media-shift';
 import { BUILD_SHA } from '../platform/build-info';
 import { viewportInfo, type Mcu, type ViewportInfo } from '../platform/detect';
 import { chunkText, drawQr, encodeQr } from '../platform/qr';
+import type { SwRegisterResult } from '../platform/sw-register';
 import { assertNoCoordinates } from '../probe/summary';
 import type { ScreenProps } from './app';
 import { STR } from './strings';
@@ -370,8 +371,11 @@ export function qrScale(modules: number, availPx: number): number {
 
 // ───────────────────────────── Panels ─────────────────────────────
 
-/** What the panels show: the export's parts without its time and input log, plus the parked state. */
-export type DiagViewParts = Omit<DiagSummaryParts, 'at' | 'inputs'> & { parked: boolean };
+/**
+ * What the panels show: the export's parts without its time and input log, plus the parked state and
+ * the outcome of the app service-worker registration (`store.swStatus`, phase-4 contract T1/T5).
+ */
+export type DiagViewParts = Omit<DiagSummaryParts, 'at' | 'inputs'> & { parked: boolean; sw: SwRegisterResult | 'pending' };
 
 export interface DiagPanel {
   title: string;
@@ -468,6 +472,7 @@ export function diagnosticsPanels(p: DiagViewParts): DiagPanel[] {
         [f.visual, vp.visual === null ? STR.diag.none : STR.diag.size(Math.round(vp.visual[0]), Math.round(vp.visual[1]))],
         [f.screen, STR.diag.size(vp.screen[0], vp.screen[1])],
         [f.touch, String(vp.maxTouchPoints)],
+        [f.serviceWorker, STR.diag.swStates[p.sw]],
         [f.build, p.sha],
       ],
     },
@@ -604,6 +609,7 @@ export function DiagnosticsScreen({ shell }: ScreenProps): VNode {
     audioDiag: shell.diagnostics(),
     gps: store.gps.peek(),
     parked: store.parked.peek(),
+    sw: store.swStatus.peek(),
     snapshot: store.snapshot.peek(),
     counters: sessionStats.counters(),
   };

@@ -59,12 +59,26 @@ function installCaches(opts: FakeCacheOptions = {}) {
   return { store, opened };
 }
 
-function installNavigator(sw: { controller?: object | null; register?: (url: string, o: object) => Promise<unknown> } | null) {
+/** The parts of a ServiceWorker the probe reads off `navigator.serviceWorker.controller`. */
+interface FakeController {
+  scriptURL: string;
+  state: string;
+}
+
+function installNavigator(
+  sw: { controller?: FakeController | null; register?: (url: string, o: object) => Promise<unknown> } | null,
+) {
   const register = vi.fn(sw?.register ?? (async () => ({ scope: '/probe/' })));
   const nav = sw === null ? { userAgent: 'test' } : { userAgent: 'test', serviceWorker: { controller: sw.controller ?? null, register } };
   vi.stubGlobal('navigator', nav);
   return { register };
 }
+
+/** An active worker of the self-hosted origin whose script is at `path`. */
+const activeWorker = (path: string): FakeController => ({
+  scriptURL: `https://tesbox.example.com${path}`,
+  state: 'activated',
+});
 
 const T0 = '2026-10-06T10:00:00.000Z';
 const T1 = '2026-10-06T10:01:30.000Z'; // +90 s
@@ -98,6 +112,7 @@ describe('runStorageProbe', () => {
       swSupported: true,
       swRegistered: true,
       swControlled: false,
+      controllerScript: null,
     });
     expect(opened).toEqual(['tesbox-probe']);
     expect(JSON.parse(store.get('__persist') ?? 'null')).toEqual({ ts: Date.parse(T0) });
@@ -124,11 +139,36 @@ describe('runStorageProbe', () => {
     expect(third.error).toBeUndefined();
   });
 
-  it('reports swControlled when the page load is already controlled', async () => {
-    installCaches();
-    installNavigator({ controller: { state: 'activated' } });
-    const r = await runStorageProbe(T0);
-    expect(r.swControlled).toBe(true);
+  // Q8 evidence: only the probe's own worker surviving from an earlier visit counts. The app's /sw.js
+  // (scope /) also covers /probe/, so it controls a first-ever probe visit made after using the app.
+  describe("swControlled: the page load was controlled by the probe's own /probe/sw.js", () => {
+    it('no controller → false, controllerScript null', async () => {
+      installCaches();
+      installNavigator({ controller: null });
+      const r = await runStorageProbe(T0);
+      expect(r.swControlled).toBe(false);
+      expect(r.controllerScript).toBeNull();
+    });
+
+    it('controlled by /probe/sw.js → true; only the script path is recorded, never the host', async () => {
+      installCaches();
+      installNavigator({ controller: activeWorker('/probe/sw.js') });
+      const r = await runStorageProbe(T0);
+      expect(r.swControlled).toBe(true);
+      expect(r.controllerScript).toBe('/probe/sw.js');
+      expect(JSON.stringify(r)).not.toContain('tesbox.example.com');
+    });
+
+    it("controlled by the app's /sw.js → false (not the probe's worker), and the probe still registers its own", async () => {
+      installCaches();
+      const { register } = installNavigator({ controller: activeWorker('/sw.js') });
+      const r = await runStorageProbe(T0);
+      expect(r.swControlled).toBe(false);
+      expect(r.controllerScript).toBe('/sw.js');
+      expect(r.swRegistered).toBe(true);
+      expect(register).toHaveBeenCalledWith('./sw.js', { scope: './' });
+      expect(r.error).toBeUndefined();
+    });
   });
 
   it('treats corrupt stored values as absent', async () => {
@@ -247,6 +287,8 @@ describe('runStorageProbe', () => {
     const r = await runStorageProbe(T0);
     expect(r.swSupported).toBe(false);
     expect(r.swRegistered).toBe(false);
+    expect(r.swControlled).toBe(false);
+    expect(r.controllerScript).toBeNull();
     expect(r.error).toContain('serviceWorker: unsupported');
   });
 

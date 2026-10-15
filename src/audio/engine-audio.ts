@@ -20,6 +20,10 @@
  * - The anchor file is fetched into memory once (spec §6.1, §12); every anchor element of a session plays
  *   that copy through one object URL (revoked by stop()), so a rebuild in a tunnel needs no network. If it
  *   cannot be loaded, elements load the file URL themselves and the next build fetches again.
+ * - Nothing else on a running session's audio path touches the network (phase-4 contract T2): the worklet
+ *   module is added once per context (a recover() rebuild's new context adds it again, from the HTTP cache or
+ *   the service worker), and the engines and the Tesla catalogue ship in the app's eagerly loaded JS
+ *   (tests/unit/eager-data.test.ts).
  *
  * Tier (spec §5.7): tierPref 'full'/'lite' is forced; 'auto' on an Intel MCU → 'lite'; otherwise the
  * worklet starts on 'full' and, during the 2.5 s crank, renders its DSP k = 1, 2, 4, 8 times per quantum

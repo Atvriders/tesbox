@@ -31,7 +31,17 @@ describe('deploy/csp.ts', () => {
       'Permissions-Policy': 'geolocation=(self), camera=(), microphone=()',
     });
     expect(IMMUTABLE).toBe('public, max-age=31536000, immutable');
-    expect(NO_STORE_PATHS).toEqual(['/', '/index.html', '/sw.js', '/version.json', '/probe/', '/probe/index.html', '/probe/sw.js']);
+    expect(NO_STORE_PATHS).toEqual([
+      '/',
+      '/index.html',
+      '/sw.js',
+      '/version.json',
+      '/probe/',
+      '/probe/index.html',
+      '/probe/sw.js',
+      '/lab/',
+      '/lab/index.html',
+    ]);
   });
 });
 
@@ -85,6 +95,9 @@ describe('nginx.conf', () => {
     expect(c).toMatch(/gzip_types[^;]*application\/javascript/);
     expect(all.find((b) => b.head === '/')?.body).toContain('try_files $uri $uri/ /index.html;');
     expect(all.find((b) => b.head === '= /probe')?.body).toContain('return 301 /probe/$is_args$args;');
+    // The Sound Lab page is served like the probe page (phase-2c contract L1).
+    expect(all.find((b) => b.head === '= /lab')?.body).toContain('return 301 /lab/$is_args$args;');
+    expect(all.find((b) => b.head === '= /lab/')?.body).toContain('try_files /lab/index.html =404;');
   });
 });
 

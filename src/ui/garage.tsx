@@ -1,7 +1,9 @@
 /**
  * Garage (phase-3 contract T7; spec §10.2 item 3): the engines as cards grouped Euro / JDM / American /
  * Exotic — title, "inspired by" subtitle, spec line (layout, displacement, aspiration, redline) — each
- * with Preview and Drive. The disclaimer is the shell footer under the screen (src/ui/app.tsx).
+ * with Preview and Drive. The disclaimer is the shell footer under the screen (src/ui/app.tsx). Each card
+ * also shows its voicing status (phase-4 contract T4): a "Beta voicing" badge until the user's listening
+ * sign-off, and "Tuned" at the end of the spec line while a tuned voicing awaits it (src/ui/picker.ts).
  *
  * - Drive selects the engine and opens Drive (whose Start overlay starts it).
  * - Preview selects the engine and has the shell start it from the tap (a user gesture: shell.startEngine
@@ -28,7 +30,7 @@ import * as store from '../app/store';
 import type { AudioState, Screen } from '../app/store';
 import { ENGINES } from '../data/engines';
 import type { ScreenProps, Shell } from './app';
-import { engineGroups, engineSpecLine } from './picker';
+import { engineGroups, garageSpecLine, voicingBadge } from './picker';
 import { STR } from './strings';
 import { engineReady } from './wait';
 
@@ -195,31 +197,35 @@ export function GarageView({ garage }: { garage: GarageModel }): VNode {
         <section class="group" key={g.set} data-set={g.set}>
           <h2>{STR.engineSets[g.set]}</h2>
           <div class="cards">
-            {g.engines.map((e) => (
-              <article class="card" key={e.id} data-engine={e.id} aria-current={e.id === selected ? 'true' : undefined}>
-                <h3>{e.name}</h3>
-                <p class="muted">{STR.inspiredBy(e.inspiredBy)}</p>
-                <p class="spec">{engineSpecLine(e)}</p>
-                <div class="row">
-                  <button
-                    type="button"
-                    data-action="preview"
-                    disabled={!parked || previewing !== null}
-                    onClick={() => garage.preview(e.id)}
-                  >
-                    {previewing === e.id ? STR.garage.previewing : STR.actions.preview}
-                  </button>
-                  <button
-                    type="button"
-                    class={e.id === selected ? 'btn-primary' : undefined}
-                    data-action="drive"
-                    onClick={() => garage.drive(e.id)}
-                  >
-                    {STR.actions.drive}
-                  </button>
-                </div>
-              </article>
-            ))}
+            {g.engines.map((e) => {
+              const badge = voicingBadge(e);
+              return (
+                <article class="card" key={e.id} data-engine={e.id} aria-current={e.id === selected ? 'true' : undefined}>
+                  <h3>{e.name}</h3>
+                  <p class="muted">{STR.inspiredBy(e.inspiredBy)}</p>
+                  <p class="spec">{garageSpecLine(e)}</p>
+                  {badge === null ? null : <p class="badge">{badge}</p>}
+                  <div class="row">
+                    <button
+                      type="button"
+                      data-action="preview"
+                      disabled={!parked || previewing !== null}
+                      onClick={() => garage.preview(e.id)}
+                    >
+                      {previewing === e.id ? STR.garage.previewing : STR.actions.preview}
+                    </button>
+                    <button
+                      type="button"
+                      class={e.id === selected ? 'btn-primary' : undefined}
+                      data-action="drive"
+                      onClick={() => garage.drive(e.id)}
+                    >
+                      {STR.actions.drive}
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </section>
       ))}

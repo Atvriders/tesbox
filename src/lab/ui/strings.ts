@@ -1,0 +1,117 @@
+/**
+ * Every user-facing English string of the Sound Lab page (src/lab/ui/view.tsx); the e2e spec finds controls
+ * by these names. Naming rule (spec §11.5): generic title + "inspired by <car>"; never claim the sound is the car.
+ */
+export const LAB_STR = {
+  title: 'Sound Lab',
+  product: 'Tesbox',
+  tagline: 'Listen to the engines and hand-tune their voicings. A desktop tool: nothing here ships to the car.',
+
+  start: 'Start audio',
+  resume: 'Resume audio',
+  audioOn: 'Audio running',
+  status: {
+    off: 'Audio is off.',
+    starting: 'Starting audio…',
+    running: (khz: string): string => `Running at ${khz} kHz`,
+    suspended: 'The browser suspended audio. Press Resume audio.',
+    error: (message: string): string => `Audio failed: ${message}`,
+  },
+  workletError: (message: string): string => `Worklet: ${message}`,
+
+  engine: 'Engine',
+  inspiredBy: (car: string): string => `inspired by ${car}`,
+  engineOption: (name: string, car: string): string => `${name} (inspired by ${car})`,
+  sets: { euro: 'Euro', jdm: 'JDM', american: 'American', exotic: 'Exotic' } as Record<string, string>,
+  view: 'View',
+  cabin: 'Cabin',
+  outside: 'Outside',
+  tier: 'Tier',
+  full: 'Full',
+  lite: 'Lite',
+  bass: 'Bass',
+  noSub: 'No sub',
+  sub: 'Sub',
+
+  meter: {
+    title: 'Meter',
+    rpm: 'rpm',
+    gear: 'Gear',
+    limiterLamp: 'Limiter',
+    rms: 'RMS',
+    peak: 'Peak',
+    gr: 'Limiter gain reduction',
+    boost: 'Boost',
+    resets: 'Non-finite resets',
+    monitor: 'Monitor level',
+    monitorHint: 'Applies to A and B alike.',
+    idle: 'Start audio to see levels.',
+  },
+
+  drive: {
+    title: 'Drive',
+    rpm: 'RPM',
+    load: 'Load',
+    loadHint: 'Below 0 is overrun.',
+    gear: 'Gear',
+    valve: 'Valve',
+    valves: { auto: 'Auto', open: 'Open', closed: 'Closed' } as Record<string, string>,
+    driveMode: 'Drive mode',
+    modes: { comfort: 'Comfort', sport: 'Sport' } as Record<string, string>,
+    warm: 'Warm engine',
+    upshift: 'Upshift',
+    downshift: 'Downshift',
+    liftoff: 'Lift-off',
+    limiter: 'Limiter',
+    ignition: 'Ignition',
+    segment: 'Segment',
+    play: 'Play',
+    stop: 'Stop',
+    playing: (name: string, s: number): string => `Looping ${name} (${s} s)`,
+    manual: 'Manual control',
+    needsAudio: 'Start audio to use the events and segments.',
+    keysTitle: 'Keys',
+  },
+  keys: [
+    ['↑ ↓', 'rpm'],
+    ['W S', 'load'],
+    ['E Q', 'shift up, down'],
+    ['Space', 'lift-off'],
+    ['L', 'limiter'],
+    ['B', 'A/B'],
+  ] as const,
+
+  compare: {
+    title: 'A/B against a reference',
+    pick: 'Reference clip',
+    empty: 'Load a local recording. It is decoded in this page and never uploaded.',
+    info: (name: string, s: string, rmsDb: string): string => `${name}: ${s} s, ${rmsDb} dB RMS`,
+    ab: 'A/B',
+    sideA: 'A: lab',
+    sideB: 'B: reference',
+    match: 'Match level',
+    matched: (ref: string, lab: string): string => `Matched: reference ${ref}, lab ${lab}`,
+  },
+
+  files: {
+    title: 'Export and import',
+    download: 'Download JSON',
+    copy: 'Copy JSON',
+    import: 'Import JSON',
+    show: 'Show the JSON',
+    howTo: 'Paste the voicing into src/data/engines/<id>.json. estimated stays true until your listening sign-off.',
+  },
+
+  voicing: {
+    title: 'Voicing',
+    resetEngine: 'Reset to engine',
+    resetDefault: 'Reset to default voicing',
+    state: { applied: 'Playing this voicing', pending: 'Applying…', flagged: 'Not sent' } as Record<string, string>,
+    flagged: 'This voicing is not sent to the engine:',
+    absent: 'none on this engine',
+    estimatedHint: 'stays true until your listening sign-off',
+  },
+
+  footer:
+    'Not affiliated with or endorsed by Tesla, Inc. or any car manufacturer. Engine sounds are synthesized impressions, not recordings of the named cars.',
+} as const;

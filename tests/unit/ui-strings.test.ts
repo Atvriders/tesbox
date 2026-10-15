@@ -35,6 +35,11 @@ describe('src/ui/strings.ts', () => {
     expect(spec).toContain(`"${STR.disclaimer}"`);
   });
 
+  it('carries the update banner verbatim from spec §12 (phase-4 contract T3)', () => {
+    expect(STR.update.banner).toBe('Update available — tap to reload');
+    expect(spec).toContain(`"${STR.update.banner}"`);
+  });
+
   it('names every screen of the router', () => {
     expect(Object.keys(STR.screens).sort()).toEqual(['diagnostics', 'drive', 'first-run', 'garage', 'settings']);
     for (const title of Object.values(STR.screens)) expect(title.length).toBeGreaterThan(0);

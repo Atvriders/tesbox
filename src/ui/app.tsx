@@ -32,7 +32,7 @@ import {
   type TeslaParams,
 } from '../contracts';
 import type { Settings } from '../app/settings';
-import type { AudioState, GpsState, GpsStatus, Screen } from '../app/store';
+import type { AudioState, AudioStatus, GpsState, GpsStatus, Screen, UpdateState } from '../app/store';
 import type {
   EngineAudio,
   EngineAudioCallbacks,
@@ -142,19 +142,67 @@ export function AudioAlert({ audio, shell }: { audio: ReadonlySignal<AudioState>
   );
 }
 
+/** The update banner's wiring (src/main.ts; phase-4 contract T3). */
+export interface UpdateWiring {
+  /** `store.update`: a waiting service worker or a stale build (src/app/update-check.ts). */
+  update: ReadonlySignal<UpdateState | null>;
+  /** `store.parked`: the same parked rule that locks Settings while moving. */
+  parked: ReadonlySignal<boolean>;
+  /** The tap (src/main.ts: applyUpdateState): applies the waiting worker, or reloads with `?b=<remote>`. */
+  onApply(update: UpdateState): void;
+}
+
+/**
+ * Spec §12, phase-4 contract T3: the update banner shows only while an update is known, the engine is
+ * off — not starting, running or interrupted, nor failed (its alert comes first) — and the car is
+ * parked. It never interrupts a running engine and never asks for a tap while moving.
+ */
+export function updateBannerVisible(update: UpdateState | null, audio: AudioStatus, parked: boolean): boolean {
+  return update !== null && audio === 'off' && parked;
+}
+
+/**
+ * "Update available — tap to reload": the whole banner is one button, so it is at least a touch
+ * target (--touch) in both dimensions. The tap applies the update known at that moment.
+ */
+export function UpdateBanner({
+  update,
+  parked,
+  onApply,
+  audio,
+}: UpdateWiring & { audio: ReadonlySignal<AudioState> }): VNode | null {
+  const u = update.value;
+  if (u === null || !updateBannerVisible(u, audio.value.state, parked.value)) return null;
+  return (
+    <button
+      type="button"
+      class="update-banner banner"
+      data-update={u.kind}
+      onClick={() => {
+        const now = update.peek();
+        if (now !== null) onApply(now);
+      }}
+    >
+      {STR.update.banner}
+    </button>
+  );
+}
+
 export interface AppProps {
   /** `store.screen`; the store sets the first screen, src/main.ts applies `initialScreen`. */
   screen: ReadonlySignal<Screen>;
   /** `store.toast`: shown as a status line; the shell clears it after TOAST_MS. */
   toast: ReadonlySignal<string | null>;
-  /** `store.audio`: its 'error' state shows the AudioAlert. */
+  /** `store.audio`: its 'error' state shows the AudioAlert; the update banner waits for 'off'. */
   audio: ReadonlySignal<AudioState>;
   shell: Shell;
   views?: ScreenViews;
+  /** The update banner (phase-4 contract T3); without this wiring none is shown. */
+  updates?: UpdateWiring;
 }
 
 /** Renders the screen named by `screen` (an unknown value falls back to the garage). */
-export function App({ screen, toast, audio, shell, views = SCREEN_VIEWS }: AppProps): VNode {
+export function App({ screen, toast, audio, shell, views = SCREEN_VIEWS, updates }: AppProps): VNode {
   const current = screen.value;
   const View = views[current] ?? views.garage;
   return (
@@ -164,6 +212,7 @@ export function App({ screen, toast, audio, shell, views = SCREEN_VIEWS }: AppPr
       </ScreenBoundary>
       {current === 'drive' ? null : <ShellFooter />}
       <AudioAlert audio={audio} shell={shell} />
+      {updates === undefined ? null : <UpdateBanner {...updates} audio={audio} />}
       <Toast toast={toast} />
     </>
   );

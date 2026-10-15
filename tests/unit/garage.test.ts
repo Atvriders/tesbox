@@ -17,7 +17,8 @@ import {
   PREVIEW_SWAP_MS,
   type GarageDeps,
 } from '../../src/ui/garage';
-import { engineSpecLine } from '../../src/ui/picker';
+import { voicingStatus } from '../../src/data/voicing-status';
+import { garageSpecLine } from '../../src/ui/picker';
 import { STR } from '../../src/ui/strings';
 import { ENGINE_SETTLE_WAIT_MS } from '../../src/ui/wait';
 import { button, buttonTexts, byAttr, byType, click, findAll, isDisabled, only, renderTree, textOf, type HostNode } from './helpers/vnode-tree';
@@ -201,9 +202,22 @@ describe('Garage view (spec §10.2 item 3)', () => {
     expect(textOf(only(c, byType('h3')))).toBe('2.5 Turbo Inline-5');
     expect(textOf(only(c, byAttr('class', 'muted')))).toBe(STR.inspiredBy('Audi RS 3 (8Y)'));
     const spec = textOf(only(c, byAttr('class', 'spec')));
-    expect(spec).toBe(engineSpecLine(getEngine('i5-turbo-25')));
-    expect(spec.replace(/\u00a0/g, ' ').replace(/\u2011/g, '-')).toBe('Inline-5 · 2.5 L · Turbo · 7,000 rpm redline');
+    expect(spec).toBe(garageSpecLine(getEngine('i5-turbo-25')));
+    // A pilot engine: "· Tuned" follows once its tuned voicing is applied (until the user signs it off).
+    expect(spec.replace(/\u00a0/g, ' ').replace(/\u2011/g, '-')).toMatch(/^Inline-5 · 2\.5 L · Turbo · 7,000 rpm redline( · Tuned)?$/);
     expect(buttonTexts(c)).toEqual([STR.actions.preview, STR.actions.drive]);
+  });
+
+  it('shows each voicing status (phase-4 contract T4): "Beta voicing" while estimated, "Tuned" while a tuned voicing awaits sign-off', () => {
+    const v = harness().view();
+    for (const e of ENGINES) {
+      const c = card(v, e.id);
+      const badges = findAll(c, byAttr('class', 'badge')).map((b) => textOf(b.children));
+      expect(badges, e.id).toEqual(e.voicing.estimated ? [STR.garage.betaVoicing] : []);
+      const spec = textOf(only(c, byAttr('class', 'spec')));
+      expect(spec, e.id).toBe(garageSpecLine(e));
+      expect(spec.endsWith(`\u00a0· ${STR.garage.tuned}`), e.id).toBe(voicingStatus(e) === 'tuned');
+    }
   });
 
   it('marks the selected engine, whose Drive is the primary action', () => {

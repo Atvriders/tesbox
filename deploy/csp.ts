@@ -15,6 +15,9 @@ export const NO_STORE_PATHS = [
   '/probe/',
   '/probe/index.html',
   '/probe/sw.js',
+  // The Sound Lab page (phase-2c contract L1), served like the probe page.
+  '/lab/',
+  '/lab/index.html',
 ];
 
 export const SECURITY_HEADERS: Record<string, string> = {

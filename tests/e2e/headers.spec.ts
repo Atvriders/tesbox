@@ -37,3 +37,21 @@ test('/probe redirects to /probe/ with a relative Location', async ({ request })
   expect(res.status()).toBe(301);
   expect(res.headers()['location']).toBe('/probe/?b=test');
 });
+
+// The Sound Lab page is served exactly like the probe page (phase-2c contract L1); NO_STORE_PATHS lists it too.
+test('/lab/ carries the CSP and security headers, no-store, and serves the lab page', async ({ request }) => {
+  const res = await request.get('/lab/');
+  expect(res.status()).toBe(200);
+  const h = res.headers();
+  expect(h['content-security-policy']).toBe(CSP);
+  expect(h['x-content-type-options']).toBe('nosniff');
+  expect(h['referrer-policy']).toBe('no-referrer');
+  expect(h['cache-control']).toBe('no-store');
+  expect(await res.text()).toContain('<title>Tesbox Sound Lab</title>');
+});
+
+test('/lab redirects to /lab/ with a relative Location', async ({ request }) => {
+  const res = await request.get('/lab?b=test', { maxRedirects: 0 });
+  expect(res.status()).toBe(301);
+  expect(res.headers()['location']).toBe('/lab/?b=test');
+});

@@ -68,6 +68,11 @@ export const STR = {
   parkedOnly: 'Available when parked',
   readOnlyWhileMoving: 'Read-only while moving',
 
+  /** A newer build (spec §12, phase-4 contract T3): shown only with the engine off and the car parked. */
+  update: {
+    banner: 'Update available — tap to reload',
+  },
+
   engineSets: { euro: 'Euro', jdm: 'JDM', american: 'American', exotic: 'Exotic' },
   inspiredBy: (car: string): string => `inspired by ${car}`,
 
@@ -141,6 +146,10 @@ export const STR = {
       supercharged: 'Supercharged',
     },
     redline: (rpm: string): string => `${rpm} rpm redline`,
+    /** Voicing status (phase-4 contract T4): the badge until the user's listening sign-off. */
+    betaVoicing: 'Beta voicing',
+    /** Last fact of the spec line while a voicing tuned against reference recordings awaits sign-off. */
+    tuned: 'Tuned',
   },
   units: { mph: 'mph', kmh: 'km/h' },
 
@@ -333,8 +342,11 @@ export const STR = {
       visual: 'Visual viewport',
       screen: 'Screen',
       touch: 'Touch points',
+      serviceWorker: 'Service worker',
       build: 'Build',
     },
+    /** The app service-worker registration (src/platform/sw-register.ts; 'pending' until it has run after load). */
+    swStates: { pending: 'pending', registered: 'registered', unsupported: 'unsupported', failed: 'failed' },
     fixesValue: (accepted: string, rejected: string): string => `${accepted}\u00a0accepted, ${rejected}\u00a0rejected`,
     recoveriesValue: (resumed: number, failed: number, rebuilt: number): string =>
       `${resumed}\u00a0resumed, ${failed}\u00a0failed, ${rebuilt}\u00a0rebuilt`,

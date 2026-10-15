@@ -1,6 +1,9 @@
-# Tesbox in-car checklist (Phase 0 probe, Phase 3 app alpha)
+# Tesbox in-car checklist (Phase 0 probe, Phase 3 app alpha, Phase 4 v1.0)
 
-Sections 0–7 run the Phase 0 probe; sections 8–10 test the app itself (the Phase 3 exit gate).
+Sections 0–7 run the Phase 0 probe; sections 8–10 test the app itself (the Phase 3 exit gate: a
+10-minute drive); sections 11–13 test the 1.0 release (the Phase 4 exit gate: offline relaunch,
+update prompt and a 30-minute drive). Every app step says when it is done: **Parked**, **Driving**
+(the driver only drives) or **At a desk**.
 
 The probe page answers the open platform questions in spec §16 before any engine sound is built.
 Results come back as QR codes (statistics only, never coordinates) and are committed as
@@ -35,7 +38,7 @@ marked **Parked**.
 |---|---|---|
 | 1.1 | **Build** section shows "Up to date" | If "Stale build", tap the `?b=…` link and start again |
 | 1.2 | **Environment**: read dpr, viewport, WebGL renderer, MCU guess, feature table | Automatic (in the QR; every window size the page sees is kept as QR note `viewport.<n>`) |
-| 1.3 | **Storage** runs on load: note *Visits*, *Cache entry from earlier visit*, *Page controlled at load* | Automatic |
+| 1.3 | **Storage** runs on load: note *Visits*, *Cache entry from earlier visit*, *Page controlled at load*, *Controlling worker at load* | Automatic. On a repeat visit the expected reading is *Page controlled at load* = true with *Controlling worker at load* = `/probe/sw.js` (a first visit reads false / none). If it shows `/sw.js`, the app's worker controls the page: reload `/probe/` once and record the reading after the reload |
 | 1.4 | **Export → Notes**: choose the car model | Model |
 
 ## 2. Parked — audio, routes, wheel, music
@@ -89,7 +92,7 @@ screen while moving.
 | 5.1 | Parked: tap **Show QR** (browser full size); scan every page (**Next QR**) with the phone, in order | Each code starts `TBX i/n` |
 | 5.2 | Reassemble each export separately (interim from 3.3 and final): strip the first line `TBX i/n` from each scan and concatenate in order | One JSON document per export |
 | 5.3 | Commit both as `docs/research/probe-results-<date>.json` (an array of the exports; no coordinates) | — |
-| 5.4 | Next day (after the car slept): open the probe again. Show QR and append the export in a follow-up commit | *Visits* +1, *Cache entry age* (shown in seconds; 3600 s = 1 h) roughly equals the time since the previous visit, *Page controlled at load* = true means persistence works |
+| 5.4 | Next day (after the car slept): open the probe again. Show QR and append the export in a follow-up commit | *Visits* +1, *Cache entry age* (shown in seconds; 3600 s = 1 h) roughly equals the time since the previous visit, *Page controlled at load* = true means persistence works. Expected: *Page controlled at load* = true with *Controlling worker at load* = `/probe/sw.js`; if it shows `/sw.js`, the app's worker controls the page: reload `/probe/` once and record the reading after the reload |
 
 ## 6. Spec §16 questions → probe actions
 
@@ -115,45 +118,80 @@ delivery delay, and a provisional `gpsLatencyS` (keep the spec default 1.0 s unl
 otherwise; do not set it to the median age, because `ageS` already adds `Date.now() − timestamp`,
 spec §4.3). Phase 1 refines `gpsLatencyS` against the phone GPX log from step 0.6.
 
-## 8. Parked — app alpha setup (Phase 3)
+## 8. Parked — app setup (Phase 3 gate, part 1)
 
 Phase 3 exit gate (spec §15): the app deployed, then a 10-minute drive with the Diagnostics error
 counters at 0. Deploy the Phase 3 image, note its `sha` (as in step 0.2), then open
 `https://tesbox.example.com/?b=<sha>` — the app this time, not `/probe/`. Every step of this
-section is done parked.
+section is done **parked**.
 
-| Step | App action | Record |
-|---|---|---|
-| 8.1 | First run: read the five notices, tap **OK** | — |
-| 8.2 | Pick the car: model → generation → trim; answer the MCU2 question if it is asked | Car, for the results commit |
-| 8.3 | Subwoofer: keep the pre-selected best guess unless you know the car's audio package | QR `settings.subwoofer` |
-| 8.4 | Set the car's volume where you usually listen, then **Play tones**: tap the lowest of the six tones that sounded clean (no rattle, no buzz). **Skip** keeps 40 Hz | QR `settings.hpCornerHz` |
-| 8.5 | Acceleration mode: the one the car is set to | — |
-| 8.6 | Garage: **Preview** two or three engines, then **Drive** on the one to test | QR `settings.engineId` |
-| 8.7 | **Start engine**; allow location when the browser asks. The status dot turns green within a few seconds (amber *Waiting for GPS* first is normal) | If the location banner appears: allow location for the site in the browser settings and reload |
-| 8.8 | **Settings → Controls → Test steering-wheel shifting**: tilt the LEFT scroll wheel to the RIGHT, then to the LEFT, when asked (tilt only — never press) | *Works* or *No wheel tilt reached Tesbox* (QR `settings.wheelShift`) |
-| 8.9 | Settings: speed source **GPS**, quality **Auto**, volume trim to taste; then **Drive** (gearbox **Auto**) | — |
-| 8.10 | Hold the status dot (about 1 s) → **Diagnostics**: read *Tier*, *Headroom k*, *MCU guess* and *Output latency*, then **Back** | Automatic (in the QR) |
+| Step | When | App action | Record |
+|---|---|---|---|
+| 8.1 | Parked | First run: read the five notices, tap **OK** | — |
+| 8.2 | Parked | Pick the car: model → generation → trim; answer the MCU2 question if it is asked | Car, for the results commit |
+| 8.3 | Parked | Subwoofer: keep the pre-selected best guess unless you know the car's audio package | QR `settings.subwoofer` |
+| 8.4 | Parked | Set the car's volume where you usually listen, then **Play tones**: tap the lowest of the six tones that sounded clean (no rattle, no buzz). **Skip** keeps 40 Hz | QR `settings.hpCornerHz` |
+| 8.5 | Parked | Acceleration mode: the one the car is set to | — |
+| 8.6 | Parked | Garage: **Preview** two or three engines, then **Drive** on the one to test | QR `settings.engineId` |
+| 8.7 | Parked | **Start engine**; allow location when the browser asks. The status dot turns green within a few seconds (amber *Waiting for GPS* first is normal) | If the location banner appears: allow location for the site in the browser settings and reload |
+| 8.8 | Parked | **Settings → Controls → Test steering-wheel shifting**: tilt the LEFT scroll wheel to the RIGHT, then to the LEFT, when asked (tilt only — never press) | *Works* or *No wheel tilt reached Tesbox* (QR `settings.wheelShift`) |
+| 8.9 | Parked | Settings: speed source **GPS**, quality **Auto**, volume trim to taste; then **Drive** (gearbox **Auto**) | — |
+| 8.10 | Parked | Hold the status dot (about 1 s) → **Diagnostics**: read *Tier*, *Headroom k*, *MCU guess* and *Output latency*, then **Back** | Automatic (in the QR) |
 
-## 9. Driving — app alpha, 10-minute drive (Phase 3)
+## 9. Driving — app, 10-minute drive (Phase 3 gate, part 2)
 
 The driver only drives: Auto shifts, and Settings are locked while the car moves. A passenger may
 watch the screen and take notes; nobody taps it while moving.
 
-| Step | App action | Record |
-|---|---|---|
-| 9.1 | Drive at least 10 minutes with the engine running: pull away from a stop, cruise steadily, stop a few times, a brisk merge if it is safe, an underpass or tunnel if there is one | — |
-| 9.2 | Listen: dropouts or clicks; the engine lagging a speed change by more than about 2 s; a gear that does not fit the speed; level against the car's own sounds and sirens | Notes for the results commit |
-| 9.3 | Only if 8.8 passed: the driver may tilt the wheel to shift when it is safe (Auto takes over again 8 s later) | Notes |
-| 9.4 | Keep Tesbox on screen. If it was minimised (e.g. by the reverse camera) and the sound stopped, tap **Tap to resume** once parked | An interruption: note what caused it |
+| Step | When | App action | Record |
+|---|---|---|---|
+| 9.1 | Driving | Drive at least 10 minutes with the engine running: pull away from a stop, cruise steadily, stop a few times, a brisk merge if it is safe, an underpass or tunnel if there is one | — |
+| 9.2 | Driving (listen; a passenger takes notes) | Listen: dropouts or clicks; the engine lagging a speed change by more than about 2 s; a gear that does not fit the speed; level against the car's own sounds and sirens | Notes for the results commit |
+| 9.3 | Driving | Only if 8.8 passed: the driver may tilt the wheel to shift when it is safe (Auto takes over again 8 s later) | Notes |
+| 9.4 | Parked | Keep Tesbox on screen. If it was minimised while driving (e.g. by the reverse camera) and the sound stopped, tap **Tap to resume** once parked | An interruption: note what caused it |
 
-## 10. After the drive — app Diagnostics QR export
+## 10. Parked — after the drive: app Diagnostics QR export (Phase 3 gate, part 3)
 
-| Step | App action | Record |
-|---|---|---|
-| 10.1 | Parked, browser full size: hold the status dot → **Diagnostics** → **Show QR**; scan every page (**Next**) with the phone, in order | Each code starts `TBX i/n` |
-| 10.2 | Strip the first line `TBX i/n` from each scan and concatenate them in order | One JSON document: statistics only, never coordinates |
-| 10.3 | Exit gate: `counters.overloadEvents`, `counters.nonFiniteResets` and `counters.audioErrors` are 0, `counters.interruptions` is 0 apart from those noted in 9.4, and `counters.snapshots` is above 0 | Pass / fail |
-| 10.4 | Commit the export as `docs/research/app-alpha-<date>.json`, with the notes from 9.2–9.4 and the car's software version in the commit message | — |
+| Step | When | App action | Record |
+|---|---|---|---|
+| 10.1 | Parked | Browser full size: hold the status dot → **Diagnostics** → **Show QR**; scan every page (**Next**) with the phone, in order | Each code starts `TBX i/n` |
+| 10.2 | At a desk | Strip the first line `TBX i/n` from each scan and concatenate them in order | One JSON document: statistics only, never coordinates |
+| 10.3 | At a desk | Exit gate: `counters.overloadEvents`, `counters.nonFiniteResets` and `counters.audioErrors` are 0, `counters.interruptions` is 0 apart from those noted in 9.4, and `counters.snapshots` is above 0 | Pass / fail |
+| 10.4 | At a desk | Commit the export as `docs/research/app-alpha-<date>.json`, with the notes from 9.2–9.4 and the car's software version in the commit message | — |
 
-The Phase 4 gate (spec §1.3 b) repeats sections 9–10 with a 30-minute drive.
+## 11. Parked — 1.0 setup: offline relaunch and update prompt (Phase 4 gate, part 1)
+
+Phase 4 exit gate (spec §15, success criterion §1.3 b): the 1.0 image deployed, then a 30-minute
+drive with Diagnostics counters at 0 for non-finite resets, audio-overload events and audio
+interruptions the user did not cause, read via the QR export. Deploy the release image
+(`ghcr.io/atvriders/tesbox:v1.0.0`), note its `sha` (as in step 0.2), then open
+`https://tesbox.example.com/?b=<sha>`. Every step of this section is done **parked**.
+
+| Step | When | App action | Record |
+|---|---|---|---|
+| 11.1 | Parked | The garage cards show **Beta voicing** on engines not yet signed off, and *Tuned* at the end of the spec line of tuned ones | Matches the voicing table of `CHANGELOG.md` |
+| 11.2 | Parked | Open the app a second time (reload), then **Settings** → **Diagnostics** → *Platform*: read *Service worker* | `registered` = offline relaunch available; `unsupported` = this browser has no service workers (note it; 11.3 is skipped); `failed` = note it for the results commit |
+| 11.3 | Parked | Only if 11.2 read `registered`, and only where the car can be without a connection (e.g. an underground car park without signal, or the phone hotspot switched off in a car without Premium Connectivity): reload the page there. The app opens from the cache and **Start engine** plays (the GPS works without a connection) | Opens offline: yes / no / not tested |
+| 11.4 | Parked | Only when a newer build is deployed while the app is open (or a tab still shows an older build): with the engine off, **Update available — tap to reload** appears at the top within 30 minutes (the check runs at start and every 30 minutes; never while the engine runs or the car moves). Tap it: the page reloads and the build in the Settings footer is the new `sha` | Banner seen: yes / no / not tested; build before → after |
+| 11.5 | Parked | Repeat 8.7–8.10 with the engine and settings for the drive (speed source **GPS**, quality **Auto**, gearbox **Auto**) | — |
+
+## 12. Driving — 1.0, 30-minute drive (Phase 4 gate, part 2)
+
+As in section 9: the driver only drives, a passenger may watch and take notes, nobody taps the
+screen while moving.
+
+| Step | When | App action | Record |
+|---|---|---|---|
+| 12.1 | Driving | Drive at least 30 minutes with the engine running, through a stretch with poor or no reception if there is one (tunnel, underground car park ramp, rural dead zone): a running engine needs no network | — |
+| 12.2 | Driving (listen; a passenger takes notes) | Listen as in 9.2; also whether the sound survives the reception loss of 12.1 | Notes for the results commit |
+| 12.3 | Driving (passenger watches) | The update banner never appears while the car moves or the engine runs (it is parked-only, engine off) | Seen while driving: yes (a bug) / no |
+| 12.4 | Parked | Keep Tesbox on screen; if the sound stopped while driving, tap **Tap to resume** once parked, as in 9.4 | An interruption: note what caused it |
+
+## 13. Parked — after the drive: 1.0 Diagnostics QR export (Phase 4 gate, part 3)
+
+| Step | When | App action | Record |
+|---|---|---|---|
+| 13.1 | Parked | Browser full size: hold the status dot → **Diagnostics** → **Show QR**; scan every page (**Next**) with the phone, in order | Each code starts `TBX i/n` |
+| 13.2 | At a desk | Strip the first line `TBX i/n` from each scan and concatenate them in order | One JSON document: statistics only, never coordinates |
+| 13.3 | At a desk | Exit gate (spec §1.3 b): `counters.nonFiniteResets`, `counters.overloadEvents` and `counters.audioErrors` are 0, `counters.interruptions` is 0 apart from those you caused or noted in 12.4, and `counters.snapshots` is above 0 | Pass / fail |
+| 13.4 | At a desk | Commit the export as `docs/research/v1-drive-<date>.json`, with the notes from 11–12 and the car's software version in the commit message | — |

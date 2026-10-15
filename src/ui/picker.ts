@@ -10,6 +10,7 @@ import { DEFAULT_OUTPUT, type EngineDef, type EngineSet, type Subwoofer, type Te
 import { NOT_LISTED_MASS_RANGE_KG, NOT_LISTED_ZERO_TO_100_RANGE_S, type NotListed, type Settings } from '../app/settings';
 import { TESLAS } from '../data/catalogue';
 import { ENGINES } from '../data/engines';
+import { voicingStatus } from '../data/voicing-status';
 import { STR } from './strings';
 
 // ───────────────────────────── Catalogue navigation ─────────────────────────────
@@ -245,4 +246,19 @@ export function engineSpecLine(def: EngineDef): string {
   return engineSpecParts(def)
     .map((part) => part.replace(/ /g, NBSP).replace(/-/g, NBHY))
     .join(`${NBSP}· `);
+}
+
+/**
+ * The card's badge (phase-4 contract T4): "Beta voicing" while the voicing is an estimate — the default,
+ * or tuned against reference recordings — until the user's listening sign-off sets `estimated` to false;
+ * then none.
+ */
+export function voicingBadge(def: EngineDef): string | null {
+  return def.voicing.estimated ? STR.garage.betaVoicing : null;
+}
+
+/** The card's spec line: engineSpecLine, plus "Tuned" while a tuned voicing waits for the sign-off (T4). */
+export function garageSpecLine(def: EngineDef): string {
+  const line = engineSpecLine(def);
+  return voicingStatus(def) === 'tuned' ? `${line}${NBSP}· ${STR.garage.tuned}` : line;
 }

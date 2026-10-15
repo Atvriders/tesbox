@@ -653,7 +653,9 @@ function renderStorage(r: StorageReport): void {
     ['Cache entry age', r.cacheAgeS === null ? '—' : `${r.cacheAgeS} s`],
     ['Service worker supported', String(r.swSupported)],
     ['Service worker registered', String(r.swRegistered)],
+    // By the probe's own /probe/sw.js; the next row names whichever worker it was (the app's /sw.js also covers /probe/).
     ['Page controlled at load', String(r.swControlled)],
+    ['Controlling worker at load', r.controllerScript ?? 'none'],
     ['Errors', r.error ?? 'none'],
   ]);
 }
@@ -665,7 +667,7 @@ function initStorage(): void {
       renderStorage(r);
       log.push(
         'storage',
-        `localStorage=${r.localStorage} visits=${r.visits} cache=${r.cacheStorage} persisted=${String(r.cachePersisted)} sw=${r.swRegistered} controlled=${r.swControlled}`,
+        `localStorage=${r.localStorage} visits=${r.visits} cache=${r.cacheStorage} persisted=${String(r.cachePersisted)} sw=${r.swRegistered} controlled=${r.swControlled} controller=${r.controllerScript ?? 'none'}`,
       );
     },
     (e: unknown) => fail('storage', e),

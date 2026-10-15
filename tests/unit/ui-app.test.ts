@@ -12,7 +12,7 @@ import {
   type OutputRoute,
 } from '../../src/contracts';
 import { DEFAULT_SETTINGS, sanitizeSettings, teslaParamsFor, type Settings } from '../../src/app/settings';
-import type { AudioState, GpsState, GpsStatus, Screen } from '../../src/app/store';
+import type { AudioState, GpsState, GpsStatus, Screen, UpdateState } from '../../src/app/store';
 import { GpsSource } from '../../src/audio/gps-source';
 import { getEngine } from '../../src/data/engines';
 import { BUILD_SHA } from '../../src/platform/build-info';
@@ -25,6 +25,7 @@ import {
   SCREEN_VIEWS,
   ScreenBoundary,
   TOAST_MS,
+  UpdateBanner,
   WARM_WINDOW_MS,
   applyTouchSize,
   buildStartInit,
@@ -36,6 +37,7 @@ import {
   showUnsupported,
   trackTouchSize,
   unsupportedReason,
+  updateBannerVisible,
   wireConfig,
   wireGps,
   type GpsLike,
@@ -44,6 +46,7 @@ import {
   type Shell,
   type ShellAudio,
   type ShellDeps,
+  type UpdateWiring,
 } from '../../src/ui/app';
 import type { EngineAudioCallbacks, EngineAudioDiagnostics, EngineAudioStart } from '../../src/audio/engine-audio';
 import { STR } from '../../src/ui/strings';
@@ -330,6 +333,83 @@ describe('App router', () => {
     expect(html(AudioAlert({ audio: failed, shell: spyShell }))).toContain(`<p>${STR.audioFailed(STR.audioStates.error)}</p>`);
     (button?.props.onClick as () => void)();
     expect(starts).toBe(1);
+  });
+});
+
+// ───────────────────────────── update banner ─────────────────────────────
+
+describe('update banner (phase-4 contract T3; spec §12: only with the engine off and the car parked)', () => {
+  const view = (name: string) => (): ComponentChildren => h('p', { class: 'view' }, name);
+  const views: ScreenViews = {
+    'first-run': view('first-run'),
+    garage: view('garage'),
+    drive: view('drive'),
+    settings: view('settings'),
+    diagnostics: view('diagnostics'),
+  };
+  const shell = makeShell(fixture()).shell;
+  const STALE: UpdateState = { kind: 'stale', remote: 'def5678' };
+  const SCREENS = ['first-run', 'garage', 'drive', 'settings', 'diagnostics'] as const;
+
+  function wiring(initial: UpdateState | null = STALE) {
+    const applied: UpdateState[] = [];
+    const update = signal<UpdateState | null>(initial);
+    const parked = signal(true);
+    const updates: UpdateWiring = { update, parked, onApply: (u) => void applied.push(u) };
+    return { updates, applied, update, parked };
+  }
+
+  const bannerHtml = (kind: UpdateState['kind']): string =>
+    `<button class="update-banner banner" data-update="${kind}">${STR.update.banner}</button>`;
+
+  it('is visible only with an update known, the engine off (not starting, running, interrupted or failed) and parked', () => {
+    for (const u of [null, STALE, { kind: 'sw' } as const]) {
+      for (const state of ['off', 'starting', 'running', 'interrupted', 'error'] as const) {
+        for (const parked of [true, false]) {
+          expect(updateBannerVisible(u, state, parked), `${u?.kind ?? 'none'} ${state} parked=${parked}`).toBe(
+            u !== null && state === 'off' && parked,
+          );
+        }
+      }
+    }
+  });
+
+  it('shows "Update available — tap to reload" as one button (a full touch target) over every screen', () => {
+    const w = wiring();
+    const audio = signal<AudioState>(OFF);
+    for (const s of SCREENS) {
+      expect(html(App({ screen: signal<Screen>(s), toast: signal(null), audio, shell, views, updates: w.updates }))).toContain(bannerHtml('stale'));
+    }
+    w.update.value = { kind: 'sw' };
+    expect(html(App({ screen: signal<Screen>('drive'), toast: signal(null), audio, shell, views, updates: w.updates }))).toContain(bannerHtml('sw'));
+  });
+
+  it('never shows over an engine that is on, while moving, or without an update; App without the wiring shows none', () => {
+    const w = wiring();
+    const audio = signal<AudioState>(OFF);
+    const render = (): string => html(App({ screen: signal<Screen>('drive'), toast: signal(null), audio, shell, views, updates: w.updates }));
+    for (const state of ['starting', 'running', 'interrupted', 'error'] as const) {
+      audio.value = { ...OFF, state };
+      expect(render(), state).not.toContain('update-banner');
+    }
+    audio.value = OFF;
+    w.parked.value = false;
+    expect(render()).not.toContain('update-banner');
+    w.parked.value = true;
+    expect(render()).toContain('update-banner');
+    w.update.value = null;
+    expect(render()).not.toContain('update-banner');
+    w.update.value = STALE;
+    expect(html(App({ screen: signal<Screen>('garage'), toast: signal(null), audio, shell, views }))).not.toContain('update-banner');
+  });
+
+  it('the tap hands the update state of that moment to onApply', () => {
+    const w = wiring();
+    const audio = signal<AudioState>(OFF);
+    const button = findEl(UpdateBanner({ ...w.updates, audio }), 'button');
+    w.update.value = { kind: 'sw' }; // a waiting worker arrived after the render: it wins
+    (button?.props.onClick as () => void)();
+    expect(w.applied).toEqual([{ kind: 'sw' }]);
   });
 });
 
