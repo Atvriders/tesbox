@@ -83,7 +83,7 @@ export const FIXTURE_SPECS: readonly (readonly [string, EngineSpec])[] = [
 /** Minimal complete voicing; only launchRpm and overrun.fuelCutResumeRpm matter to SimCore. */
 export function testVoicing(spec: EngineSpec, launchRpm: number): EngineVoicing {
   return {
-    pulse: { widthDeg: 60, alpha: 9, beta: 4, evoOffsetDeg: 140, cycleAsymmetry: 0.1 },
+    pulse: { widthDeg: 60, alpha: 9, beta: 4, evoOffsetDeg: 140, cycleAsymmetry: 0.1, cylinderSpreadDb: 0 },
     headersM: spec.combustion.map(() => 0.6),
     collectors: [{ banks: [0], lengthM: 0.35 }],
     turbine: null,
@@ -98,7 +98,7 @@ export function testVoicing(spec: EngineSpec, launchRpm: number): EngineVoicing 
     forcedInduction: null,
     mechanical: { blockGain: 0.3, valvetrainGain: 0.1 },
     overrun: { crackleRate: 0.5, fuelCutResumeRpm: spec.rpm.idle + 500 },
-    cabin: { lowpassHz: 600, leakDb: -30 },
+    cabin: { lowpassHz: 600, leakDb: -30, boomHz: 100, boomDb: 0 },
     launchRpm,
     estimated: true,
   };

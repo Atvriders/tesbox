@@ -98,7 +98,8 @@
       "alpha": 14.93,
       "beta": 3.22,
       "evoOffsetDeg": 140,
-      "cycleAsymmetry": 0.139
+      "cycleAsymmetry": 0.139,
+      "cylinderSpreadDb": 0
     },
     "headersM": [
       0.383,
@@ -131,7 +132,7 @@
         0.401,
         0.554
       ],
-      "mufflerAction": 0.47,
+      "mufflerAction": 0.42,
       "tailpipeM": 0.907,
       "valve": {
         "fitted": true,
@@ -153,7 +154,7 @@
     },
     "mechanical": {
       "blockGain": 0.199,
-      "valvetrainGain": 0.611
+      "valvetrainGain": 0.961
     },
     "overrun": {
       "crackleRate": 0.5,
@@ -161,7 +162,9 @@
     },
     "cabin": {
       "lowpassHz": 369,
-      "leakDb": -20.4
+      "leakDb": -20.4,
+      "boomHz": 100,
+      "boomDb": 0
     },
     "launchRpm": 3015,
     "estimated": true

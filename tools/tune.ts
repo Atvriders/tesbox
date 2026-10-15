@@ -11,8 +11,9 @@
  *   An engine with fewer than MIN_REF_CLIPS usable clips is unscored (spec §11.3) and is not tuned (exit 1); nor is
  *   one whose baseline render shares no comparable rpm bin with a reference (no voicing can change the bins).
  * - Search space: the TUNABLE voicing vector (VoicingSpace; phase 2b T6 as amended by D9 = phase 5 P0.3: one header
- *   scale per exhaust bank, one length per collector, the B18 whistle / outside levels and the B19 cabin leak), each
- *   parameter normalised to [0, 1] within its contract range; --params restricts the search to a subset. Spec fields
+ *   scale per exhaust bank, one length per collector, the B18 whistle / outside levels and the B19 cabin leak; D10 =
+ *   phase 5 P0b.3: the B20 per-cylinder spread and the B21 cabin boom), each parameter normalised to [0, 1] within
+ *   its contract range; --params restricts the search to a subset. Spec fields
  *   (firing angles, ratios, rpm) are never tuned, nor is any voicing field outside the vector.
  * - Objective (minimised, objectiveOf): −composite + DISCRIMINATION_WEIGHT · max(0, best other composite − own
  *   composite + DISCRIMINATION_MARGIN), from src/lab/score.ts scoreEngine over every scored render segment.
@@ -94,16 +95,17 @@ const FIXTURE_DIR = join(REPO_ROOT, 'tests', 'fixtures');
 // ───────────────────────────── the tunable voicing vector ─────────────────────────────
 
 /**
- * The contract's TUNABLE vector, in contract order (phase 2b T6 as amended by D9, phase 5 contract P0.3). `.scale`
- * parameters multiply every entry of a list: `headersM.bank<b>.scale` the headers of exhaust bank b (one parameter per
- * bank the engine has), `exhaust.mufflerSectionsM.scale` every muffler section; `collectors[<c>].lengthM` is one
- * collector's length (one parameter per collector).
+ * The contract's TUNABLE vector, in contract order (phase 2b T6 as amended by D9 and D10, phase 5 contract P0.3 and
+ * P0b.3). `.scale` parameters multiply every entry of a list: `headersM.bank<b>.scale` the headers of exhaust bank b
+ * (one parameter per bank the engine has), `exhaust.mufflerSectionsM.scale` every muffler section;
+ * `collectors[<c>].lengthM` is one collector's length (one parameter per collector).
  */
 export const PARAM_KEYS = [
   'pulse.widthDeg',
   'pulse.alpha',
   'pulse.beta',
   'pulse.cycleAsymmetry',
+  'pulse.cylinderSpreadDb',
   'headersM.bank0.scale',
   'headersM.bank1.scale',
   'headersM.bank2.scale',
@@ -126,6 +128,8 @@ export const PARAM_KEYS = [
   'mechanical.valvetrainGain',
   'cabin.lowpassHz',
   'cabin.leakDb',
+  'cabin.boomHz',
+  'cabin.boomDb',
   'forcedInduction.cabinGainDb',
   'forcedInduction.whistleDb',
   'forcedInduction.outsideGainDb',
@@ -271,6 +275,8 @@ const RULES: readonly ParamRule[] = [
   field('pulse.alpha', 3, 20, 2, (v) => v.pulse.alpha, (v, x) => (v.pulse.alpha = x)),
   field('pulse.beta', 1, 10, 2, (v) => v.pulse.beta, (v, x) => (v.pulse.beta = x)),
   field('pulse.cycleAsymmetry', 0, 0.5, 3, (v) => v.pulse.cycleAsymmetry, (v, x) => (v.pulse.cycleAsymmetry = x)),
+  // Phase 2a amendment B20 (D10): the per-cylinder combustion-level spread (half orders), on a 0.01 dB grid.
+  field('pulse.cylinderSpreadDb', 0, 6, 2, (v) => v.pulse.cylinderSpreadDb, (v, x) => (v.pulse.cylinderSpreadDb = x)),
   // Per-bank header scales and per-collector lengths (D9): bank-asymmetric exhausts keep the half-orders that
   // identical banks cancel.
   ...HEADER_BANKS.map((b) => bankScale(`headersM.bank${b}.scale`, b)),
@@ -294,6 +300,9 @@ const RULES: readonly ParamRule[] = [
   field('mechanical.valvetrainGain', 0, 1, 3, (v) => v.mechanical.valvetrainGain, (v, x) => (v.mechanical.valvetrainGain = x)),
   field('cabin.lowpassHz', 200, 2000, 0, (v) => v.cabin.lowpassHz, (v, x) => (v.cabin.lowpassHz = x)),
   field('cabin.leakDb', -60, -10, 1, (v) => v.cabin.leakDb, (v, x) => (v.cabin.leakDb = x)),
+  // B21 (D10): the cabin's body boom, centre on a 1 Hz grid, level on a 0.1 dB grid.
+  field('cabin.boomHz', 40, 200, 0, (v) => v.cabin.boomHz, (v, x) => (v.cabin.boomHz = x)),
+  field('cabin.boomDb', 0, 12, 1, (v) => v.cabin.boomDb, (v, x) => (v.cabin.boomDb = x)),
   {
     // Contract range −24 … −6 dB, limited to the −20 … −10 dB that engine.schema.json and contracts.ts allow, so a
     // tuned voicing always validates.

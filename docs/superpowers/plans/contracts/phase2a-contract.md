@@ -491,3 +491,36 @@ ITU-R BS.1770 (true peak), Kaiser window design.
   (D4(4)), and the same-engine fiPresence of i4-test's cruise4k (0.87 < 0.9; engine harmonics near
   the D5 detector's threshold); a fit at the −12 dB point (× 1/√2) kept the whistle tests but left
   v8-flatplane-test's cabin voiced share at 0.32.
+- **B20 Per-cylinder combustion-level spread (2026-10-15, phase 5 contract P0b.1):** `voicing.pulse`
+  gains `cylinderSpreadDb` (0 … 6 dB, default 0; required by the schema, set by `defaultVoicing`).
+  Every firing of combustion entry k — its blowdown pulse and its ignition impulse, like the rotary's
+  face signature — is scaled by dbToGain(cylinderSpreadDb · p(k, n)), with the fixed pattern
+  `cylinderSpreadPattern(k, n)` of `src/dsp/combustion.ts`: p(0, n) = +1 and p(k, n) = −1/(n − 1) for
+  k = 1 … n − 1 (0 for a single entry). It has zero mean in dB: cylinder 1 deviates and the others share
+  the opposite offset, so the firing train is g₁ × the even train plus (g₀ − g₁) × cylinder 1's own
+  train, whose lines are equally strong at every multiple of the cycle rate (½ order; ⅓ e-shaft order
+  for a rotary). Every non-firing order therefore gains the same level whatever the firing order and
+  the layout; for an even-firing engine |non-firing| / |firing| = (g₀ − g₁) / (g₀ + (n − 1)·g₁) (I4:
+  −21.7 dB at 2 dB, −11.2 dB at 6 dB). The factor is computed in `configure` and multiplies the
+  per-entry level the tick already applies; at 0 dB it is left out entirely, so the output is
+  bit-identical to Tesbox 1.3.0. Proof: `tests/unit/render-identity.test.ts` hashes (SHA-256) every
+  score render — all fifteen garage engines × the six score segments × cabin and outside — against the
+  hashes the 1.3.0 code rendered (`tests/fixtures/render-identity-1.3.0.json`; the engines re-tuned
+  since render their stored 1.3.0 voicing). The DSP test fixtures carry the neutral value. Evidence
+  (1.3.0 scores, docs/sound-scores.md): i4-turbo-20 sub-orders 0.492 against the 0.527 gate (the
+  render's half orders short outside and in other rpm bins); flat4-turbo-25 order profile 0.705
+  against 0.750 (orders 2.5–3.5 6–15 dB strong, 6.5–8 5–10 dB weak) — real engines' cylinder-to-
+  cylinder variation creates half orders directly, which no other voicing parameter does.
+- **B21 Cabin boom (2026-10-15, phase 5 contract P0b.2):** `voicing.cabin` gains `boomHz` (40 … 200 Hz,
+  default 100) and `boomDb` (0 … 12 dB, default 0), both required by the schema and set by
+  `defaultVoicing`. The cabin's (exhaust + airflow + intake) path passes, after the B19 transfer, a
+  peaking filter — the Audio EQ Cookbook peakingEQ biquad (`Biquad.peaking`) centred on `boomHz` with
+  `boomDb` of boost and Q = 1 (`CABIN_BOOM_Q`, ≈ 1.4 octaves between the points at half the boost in
+  dB): a body / cabin-volume resonance. The block and forced-induction buses and the outside mix do not
+  pass it. `boomDb` is clamped to 0 … 12 and 0 bypasses the filter (it is not run), so at 0 dB the
+  output is bit-identical to Tesbox 1.3.0 (same proof as B20). The cabin mix line of §APIs reads:
+  cabin: (exhaust + airflow + intake) → the B19 transfer → this boom; + block (LP 250) × 1.0; + fi →
+  2nd-order LP 2.8 kHz × dbToGain(cabinGainDb). The DSP test fixtures carry the neutral values (100 Hz,
+  0 dB). Evidence (1.3.0 scores): v8-sc-62 order profile 0.696 against the 0.709 gate — the cabin
+  recordings are led by orders 1–2 (a low boom near 90–180 Hz at 5,500 rpm), the render by the firing
+  order 4, and no voicing parameter shaped the cabin's low orders.

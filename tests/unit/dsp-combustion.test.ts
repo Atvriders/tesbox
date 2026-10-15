@@ -8,10 +8,12 @@ import {
   RPM_CEIL,
   ROTARY_FACE_DEPTH,
   clampAlpha,
+  cylinderSpreadPattern,
   peakFraction,
   pulsePeak,
   pulseShape,
 } from '../../src/dsp/combustion';
+import { dbToGain } from '../../src/dsp/util';
 
 const FS = 48000;
 
@@ -28,6 +30,7 @@ interface PulseOpts {
   beta?: number;
   evoOffsetDeg?: number;
   cycleAsymmetry?: number;
+  cylinderSpreadDb?: number;
 }
 
 function makeEngine(angles: number[], cycleDeg: 720 | 1080 = 720, pulse: PulseOpts = {}): { spec: EngineSpec; voicing: EngineVoicing } {
@@ -53,6 +56,7 @@ function makeEngine(angles: number[], cycleDeg: 720 | 1080 = 720, pulse: PulseOp
       beta: pulse.beta ?? 4,
       evoOffsetDeg: pulse.evoOffsetDeg ?? 140,
       cycleAsymmetry: pulse.cycleAsymmetry ?? 0,
+      cylinderSpreadDb: pulse.cylinderSpreadDb ?? 0,
     },
     headersM: angles.map(() => 0.6),
     collectors: [{ banks: [0], lengthM: 0.35 }],
@@ -68,7 +72,7 @@ function makeEngine(angles: number[], cycleDeg: 720 | 1080 = 720, pulse: PulseOp
     forcedInduction: null,
     mechanical: { blockGain: 0.3, valvetrainGain: 0.1 },
     overrun: { crackleRate: 0.5, fuelCutResumeRpm: 1300 },
-    cabin: { lowpassHz: 600, leakDb: -30 },
+    cabin: { lowpassHz: 600, leakDb: -30, boomHz: 100, boomDb: 0 },
     launchRpm: 3000,
     estimated: true,
   };
@@ -368,6 +372,69 @@ describe('CombustionSource: clock, firing, amplitude', () => {
       const db = 10 * Math.log10(lineEnergy(cap.ign, side * order) / main);
       expect(db).toBeGreaterThan(-30);
       expect(db).toBeLessThan(-20);
+    }
+  });
+});
+
+describe('CombustionSource: per-cylinder combustion-level spread (phase 2a amendment B20)', () => {
+  it('cylinderSpreadPattern: cylinder 1 at +1, every other cylinder at −1/(n − 1) — zero mean in dB; 0 for a single cylinder', () => {
+    expect(cylinderSpreadPattern(0, 1)).toBe(0);
+    for (let n = 2; n <= MAX_COMBUSTION; n++) {
+      const p = Array.from({ length: n }, (_, k) => cylinderSpreadPattern(k, n));
+      expect(p[0], `n ${n}`).toBe(1);
+      for (let k = 1; k < n; k++) expect(at(p, k), `n ${n}, cylinder ${k + 1}`).toBe(-1 / (n - 1));
+      expect(Math.abs(p.reduce((s, x) => s + x, 0)), `n ${n}`).toBeLessThan(1e-12);
+    }
+    // no such cylinder: no scale
+    expect(cylinderSpreadPattern(4, 4)).toBe(0);
+    expect(cylinderSpreadPattern(-1, 4)).toBe(0);
+  });
+
+  it("scales cylinder k's firings — blowdown pulse and ignition impulse alike — by dbToGain(cylinderSpreadDb·pattern(k))", () => {
+    const angles = [0, 180, 360, 540];
+    const flat = render(makeSource(angles), 4, FS, { rpm: 3000 });
+    const spread = render(makeSource(angles, 720, { cylinderSpreadDb: 6 }), 4, FS, { rpm: 3000 });
+    // same seed, same jitter draws: every sample of entry i is the unspread one × the entry's fixed gain
+    for (let i = 0; i < 4; i++) {
+      const g = dbToGain(6 * cylinderSpreadPattern(i, 4));
+      const a = at(spread.ex, i);
+      const b = at(flat.ex, i);
+      let peak = 0;
+      let err = 0;
+      for (let k = 0; k < FS; k++) {
+        err = Math.max(err, Math.abs(at(a, k) - g * at(b, k)));
+        peak = Math.max(peak, Math.abs(at(b, k)));
+      }
+      expect(peak, `entry ${i}`).toBeGreaterThan(0.1);
+      expect(err, `entry ${i}`).toBeLessThan(1e-12);
+    }
+    const idx = firings(flat.ign);
+    expect(idx.length).toBe(100);
+    expect(firings(spread.ign)).toEqual(idx);
+    for (const k of idx) {
+      const cylinder = Math.floor(at(flat.crank, k) / 180); // a firing at angle a ends its tick at crank ∈ (a, a + d]
+      expect(at(spread.ign, k) / at(flat.ign, k), `tick ${k}`).toBeCloseTo(dbToGain(6 * cylinderSpreadPattern(cylinder, 4)), 12);
+    }
+    // cylinder 1 at +6 dB, the other three at −2 dB: zero mean in dB
+    expect(6 * cylinderSpreadPattern(0, 4)).toBe(6);
+    expect(6 * cylinderSpreadPattern(3, 4)).toBeCloseTo(-2, 12);
+  });
+
+  it('creates the half orders directly: every non-firing order of an I4 at the level the pattern predicts, none without spread', () => {
+    const angles = [0, 180, 360, 540];
+    const crankHz = 50; // 3000 rpm
+    for (const spreadDb of [0, 2, 6]) {
+      const cap = render(makeSource(angles, 720, { cylinderSpreadDb: spreadDb }), 4, 2 * FS, { rpm: 3000 });
+      const fire = lineEnergy(cap.ign, 2 * crankHz);
+      // the ignition train Σ g_k δ at the four firing positions: |half order| / |firing order| = |g₀ − g₁| / (g₀ + 3·g₁)
+      const g0 = dbToGain(spreadDb);
+      const g1 = dbToGain(-spreadDb / 3);
+      const want = 20 * Math.log10(Math.abs(g0 - g1) / (g0 + 3 * g1));
+      for (const order of [0.5, 1, 1.5, 2.5, 3, 3.5]) {
+        const db = 10 * Math.log10(lineEnergy(cap.ign, order * crankHz) / fire);
+        if (spreadDb === 0) expect(db, `order ${order}`).toBeLessThan(-25);
+        else expect(Math.abs(db - want), `${spreadDb} dB spread, order ${order}: ${db.toFixed(2)} vs ${want.toFixed(2)} dB`).toBeLessThan(1);
+      }
     }
   });
 });

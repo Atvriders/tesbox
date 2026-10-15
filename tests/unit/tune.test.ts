@@ -189,7 +189,8 @@ describe('tesbox-tune arguments', () => {
 
 describe('tunable voicing vector', () => {
   // phase 5 contract P0.3 (amendment D9): per-bank header scales and per-collector lengths, the full schema
-  // ranges of cabin.lowpassHz and mechanical.valvetrainGain, and the B18/B19 levels
+  // ranges of cabin.lowpassHz and mechanical.valvetrainGain, and the B18/B19 levels; P0b.3 (amendment D10): the B20
+  // per-cylinder spread and the B21 cabin boom
   const BANK_KEYS = ['headersM.bank0.scale', 'headersM.bank1.scale', 'headersM.bank2.scale', 'headersM.bank3.scale'];
   const COLLECTOR_KEYS = Array.from({ length: 8 }, (_, c) => `collectors[${c}].lengthM`);
 
@@ -199,6 +200,7 @@ describe('tunable voicing vector', () => {
       'pulse.alpha',
       'pulse.beta',
       'pulse.cycleAsymmetry',
+      'pulse.cylinderSpreadDb',
       ...BANK_KEYS,
       ...COLLECTOR_KEYS,
       'exhaust.midPipeM',
@@ -211,6 +213,8 @@ describe('tunable voicing vector', () => {
       'mechanical.valvetrainGain',
       'cabin.lowpassHz',
       'cabin.leakDb',
+      'cabin.boomHz',
+      'cabin.boomDb',
       'forcedInduction.cabinGainDb',
       'forcedInduction.whistleDb',
       'forcedInduction.outsideGainDb',
@@ -220,6 +224,7 @@ describe('tunable voicing vector', () => {
       ['pulse.alpha', 3, 20],
       ['pulse.beta', 1, 10],
       ['pulse.cycleAsymmetry', 0, 0.5],
+      ['pulse.cylinderSpreadDb', 0, 6],
       ...headers,
       ...collectors,
       ['exhaust.midPipeM', 0.6, 3.0],
@@ -232,6 +237,8 @@ describe('tunable voicing vector', () => {
       ['mechanical.valvetrainGain', 0, 1],
       ['cabin.lowpassHz', 200, 2000],
       ['cabin.leakDb', -60, -10],
+      ['cabin.boomHz', 40, 200],
+      ['cabin.boomDb', 0, 12],
     ];
     // a V8 with two banks and two collectors: two header scales, two collector lengths, no forced induction
     const na = new VoicingSpace(garage('v8-na-50'));
@@ -271,6 +278,21 @@ describe('tunable voicing vector', () => {
     expect(() => new VoicingSpace(garage('i5-turbo-25'), ['collectors[1].lengthM'])).toThrow(/collectors\[1\]/);
     expect(() => new VoicingSpace(garage('v8-na-50'), ['spec.rpm.idle'])).toThrow(/unknown/);
     expect(() => new VoicingSpace(garage('v8-na-50'), [])).toThrow(/at least one/);
+  });
+
+  it('P0b.3 (amendment D10): tunes the cylinder spread (0–6 dB) and the cabin boom (40–200 Hz, 0–12 dB) on their grids', () => {
+    const def = garage('v8-na-50');
+    const s = new VoicingSpace(def, ['pulse.cylinderSpreadDb', 'cabin.boomHz', 'cabin.boomDb']);
+    // an engine left at the neutral defaults (no spread; boom at 100 Hz, 0 dB) sits on the box's lower edges
+    expect(s.values(def.voicing)).toEqual([0, 100, 0]);
+    expect(s.encode(def.voicing)).toEqual([0, 0.375, 0]);
+    const v = s.decode([0.5004, 0.33, 0.2512]); // 3.0024 dB → 0.01 dB grid, 92.8 Hz → 1 Hz, 3.0144 dB → 0.1 dB
+    expect([v.pulse.cylinderSpreadDb, v.cabin.boomHz, v.cabin.boomDb]).toEqual([3, 93, 3]);
+    expect(s.decode([1, 1, 1]).pulse.cylinderSpreadDb).toBe(6);
+    expect([s.decode([1, 1, 1]).cabin.boomHz, s.decode([1, 1, 1]).cabin.boomDb]).toEqual([200, 12]);
+    // nothing else moves
+    expect({ ...v, pulse: def.voicing.pulse, cabin: def.voicing.cabin }).toEqual(def.voicing);
+    expect(() => assertEngineFits({ ...def, voicing: v }, MIN_SAMPLE_RATE)).not.toThrow();
   });
 
   it('round-trips every starting voicing: decode(encode(v)) is v', () => {

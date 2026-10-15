@@ -116,46 +116,47 @@
   },
   "voicing": {
     "pulse": {
-      "widthDeg": 47.4,
-      "alpha": 13.44,
-      "beta": 8.83,
+      "widthDeg": 65.7,
+      "alpha": 15.12,
+      "beta": 9.27,
       "evoOffsetDeg": 140,
-      "cycleAsymmetry": 0.182
+      "cycleAsymmetry": 0.313,
+      "cylinderSpreadDb": 0
     },
     "headersM": [
-      0.671,
-      0.586,
-      0.686,
-      0.784,
-      0.624,
-      0.713,
-      0.827,
-      0.723
+      0.704,
+      0.535,
+      0.626,
+      0.823,
+      0.57,
+      0.748,
+      0.868,
+      0.66
     ],
     "collectors": [
       {
         "banks": [
           0
         ],
-        "lengthM": 0.43
+        "lengthM": 0.362
       },
       {
         "banks": [
           1
         ],
-        "lengthM": 0.1
+        "lengthM": 0.322
       }
     ],
     "turbine": null,
     "exhaust": {
-      "midPipeM": 1.329,
+      "midPipeM": 1.528,
       "mufflerSectionsM": [
-        0.172,
-        0.279,
-        0.385
+        0.155,
+        0.252,
+        0.348
       ],
-      "mufflerAction": 0.533,
-      "tailpipeM": 0.42,
+      "mufflerAction": 0.202,
+      "tailpipeM": 1.047,
       "valve": {
         "fitted": true,
         "openGainDb": 4
@@ -163,28 +164,30 @@
     },
     "intake": {
       "runnerM": 0.3,
-      "helmholtzHz": 213.4,
-      "gain": 0.687
+      "helmholtzHz": 192.1,
+      "gain": 0.914
     },
     "forcedInduction": {
       "spoolTimeS": 0.05,
       "maxShaftKrpm": 180,
       "lift": "bov",
-      "cabinGainDb": -19.4,
+      "cabinGainDb": -16.3,
       "whistleDb": -36,
-      "outsideGainDb": -54.2
+      "outsideGainDb": -38.1
     },
     "mechanical": {
-      "blockGain": 0.343,
-      "valvetrainGain": 0.023
+      "blockGain": 0,
+      "valvetrainGain": 0.053
     },
     "overrun": {
       "crackleRate": 0.5,
       "fuelCutResumeRpm": 1200
     },
     "cabin": {
-      "lowpassHz": 1202,
-      "leakDb": -60
+      "lowpassHz": 1910,
+      "leakDb": -51.9,
+      "boomHz": 143,
+      "boomDb": 11.5
     },
     "launchRpm": 2790,
     "estimated": true

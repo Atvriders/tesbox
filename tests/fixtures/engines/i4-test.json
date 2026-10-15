@@ -35,7 +35,7 @@
     }
   },
   "voicing": {
-    "pulse": {"widthDeg": 55, "alpha": 9, "beta": 4, "evoOffsetDeg": 140, "cycleAsymmetry": 0.05},
+    "pulse": {"widthDeg": 55, "alpha": 9, "beta": 4, "evoOffsetDeg": 140, "cycleAsymmetry": 0.05, "cylinderSpreadDb": 0},
     "headersM": [0.6, 0.6, 0.6, 0.6],
     "collectors": [{"banks": [0], "lengthM": 0.35}],
     "turbine": {"reflection": 0.45, "lpHz": 1500},
@@ -50,7 +50,7 @@
     "forcedInduction": {"spoolTimeS": 0.6, "maxShaftKrpm": 180, "lift": "bov", "cabinGainDb": -10, "whistleDb": 0, "outsideGainDb": 0},
     "mechanical": {"blockGain": 0.3, "valvetrainGain": 0.1},
     "overrun": {"crackleRate": 0.6, "fuelCutResumeRpm": 1250},
-    "cabin": {"lowpassHz": 710, "leakDb": -60},
+    "cabin": {"lowpassHz": 710, "leakDb": -60, "boomHz": 100, "boomDb": 0},
     "launchRpm": 2900,
     "estimated": true
   }

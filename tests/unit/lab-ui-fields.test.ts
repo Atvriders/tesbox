@@ -39,6 +39,7 @@ const SCALAR_RANGES: Record<string, [number, number]> = {
   'pulse.beta': [1, 10],
   'pulse.evoOffsetDeg': [0, 360],
   'pulse.cycleAsymmetry': [0, 1],
+  'pulse.cylinderSpreadDb': [0, 6],
   'exhaust.midPipeM': [0.1, 5],
   'exhaust.mufflerAction': [0, 1],
   'exhaust.tailpipeM': [0.05, 3],
@@ -52,6 +53,8 @@ const SCALAR_RANGES: Record<string, [number, number]> = {
   'overrun.fuelCutResumeRpm': [500, 6000],
   'cabin.lowpassHz': [200, 2000],
   'cabin.leakDb': [-60, -10],
+  'cabin.boomHz': [40, 200],
+  'cabin.boomDb': [0, 12],
   launchRpm: [1000, 10000],
 };
 

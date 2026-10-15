@@ -1,15 +1,22 @@
 import { describe, expect, it } from 'vitest';
 import type { EngineVoicing, Perspective } from '../../src/contracts';
 import { dbToGain } from '../../src/dsp/util';
-import { PerspectiveMixer } from '../../src/dsp/perspective';
+import { CABIN_BOOM_Q, PerspectiveMixer } from '../../src/dsp/perspective';
 import { loadFixture } from './helpers/fixtures';
 
 const FS = 48000;
 const DELAY_N = Math.round(0.0007 * FS); // 34 samples
 
-function voicing(cabinGainDb: number | null = -14, lowpassHz = 600, leakDb = -30, outsideGainDb = -30): EngineVoicing {
+function voicing(
+  cabinGainDb: number | null = -14,
+  lowpassHz = 600,
+  leakDb = -30,
+  outsideGainDb = -30,
+  boomHz = 100,
+  boomDb = 0,
+): EngineVoicing {
   const v = loadFixture('i4-test').voicing;
-  v.cabin = { lowpassHz, leakDb };
+  v.cabin = { lowpassHz, leakDb, boomHz, boomDb };
   v.forcedInduction =
     cabinGainDb === null ? null : { spoolTimeS: 0.6, maxShaftKrpm: 180, lift: 'bov', cabinGainDb, whistleDb: -36, outsideGainDb };
   return v;
@@ -20,6 +27,18 @@ function cabinGain(f: number, fc: number, leakDb: number): number {
   const g = dbToGain(leakDb);
   const om = Math.tan((Math.PI * f) / FS) / Math.tan((Math.PI * fc) / FS);
   return Math.sqrt((1 + g * g * om ** 4) / (1 + om ** 4));
+}
+
+/** |H| at f of the Audio EQ Cookbook peaking EQ at f0 (q, gainDb), from its biquad coefficients: the B21 cabin boom. */
+function peakingGain(f: number, f0: number, q: number, gainDb: number): number {
+  const A = 10 ** (gainDb / 40);
+  const w0 = (2 * Math.PI * f0) / FS;
+  const al = Math.sin(w0) / (2 * q);
+  const cs = Math.cos(w0);
+  const w = (2 * Math.PI * f) / FS;
+  const mag = (c0: number, c1: number, c2: number): number =>
+    Math.hypot(c0 + c1 * Math.cos(w) + c2 * Math.cos(2 * w), c1 * Math.sin(w) + c2 * Math.sin(2 * w));
+  return mag(1 + al * A, -2 * cs, 1 - al * A) / mag(1 + al / A, -2 * cs, 1 - al / A);
 }
 
 function mixer(p: Perspective, v: EngineVoicing = voicing()): PerspectiveMixer {
@@ -127,6 +146,39 @@ describe('PerspectiveMixer', () => {
     const tone = sine(2800, 1);
     const corner = render(mixer('cabin', voicing(-12)), FS / 2, (i) => [0, 0, 0, tone(i), 0]);
     expect(toneAmp(mono(corner), 2800, FS / 10) / dbToGain(-12)).toBeCloseTo(Math.SQRT1_2, 3);
+  });
+
+  it('cabin boom (B21): an Audio EQ Cookbook peaking filter (Q = CABIN_BOOM_Q = 1) at cabin.boomHz by cabin.boomDb after the cabin transfer', () => {
+    expect(CABIN_BOOM_Q).toBe(1);
+    for (const [boomHz, boomDb] of [[100, 12], [40, 6], [200, 3]] as const) {
+      expect(peakingGain(boomHz, boomHz, CABIN_BOOM_Q, boomDb)).toBeCloseTo(dbToGain(boomDb), 9); // +boomDb at the centre
+      for (const f of [boomHz, 2 * boomHz, boomHz / 2, 1000]) {
+        const x = sine(f, 0.5);
+        const out = render(mixer('cabin', voicing(-14, 600, -30, -30, boomHz, boomDb)), FS, (i) => [x(i), 0, 0, 0, 0]);
+        const want = cabinGain(f, 600, -30) * peakingGain(f, boomHz, CABIN_BOOM_Q, boomDb);
+        expect(toneAmp(mono(out), f, FS / 4) / 0.5 / want, `${boomHz} Hz +${boomDb} dB @ ${f} Hz`).toBeCloseTo(1, 2);
+      }
+    }
+  });
+
+  it('cabin boom (B21): on the cabin (exhaust + airflow + intake) path only; at 0 dB the filter is bypassed', () => {
+    const lo = sine(100, 0.5);
+    const all: Src = (i) => [lo(i), lo(i), lo(i), lo(i), lo(i)];
+    const buses: Src = (i) => [0, 0, lo(i), lo(i), 0]; // block and forced induction
+    const boom = voicing(-14, 600, -30, -30, 100, 12);
+    const none = voicing(-14, 600, -30, -30, 100, 0);
+    expect(render(mixer('cabin', boom), FS / 4, buses).l).toEqual(render(mixer('cabin', none), FS / 4, buses).l);
+    expect(render(mixer('outside', boom), FS / 4, all).l).toEqual(render(mixer('outside', none), FS / 4, all).l);
+    // the cabin path gets the boom: +12 dB at 100 Hz
+    const path: Src = (i) => [lo(i), lo(i), 0, 0, lo(i)];
+    const on = toneAmp(mono(render(mixer('cabin', boom), FS, path)), 100, FS / 4);
+    const off = toneAmp(mono(render(mixer('cabin', none), FS, path)), 100, FS / 4);
+    expect(20 * Math.log10(on / off)).toBeCloseTo(12, 1);
+    // at 0 dB the centre frequency is irrelevant: the B19 transfer alone, sample for sample
+    const at40 = render(mixer('cabin', voicing(-14, 600, -30, -30, 40, 0)), FS / 4, all);
+    const at200 = render(mixer('cabin', voicing(-14, 600, -30, -30, 200, 0)), FS / 4, all);
+    expect(at40.l).toEqual(at200.l);
+    expect(at40.r).toEqual(at200.r);
   });
 
   it('uses −14 dB (cabin) and −30 dB (outside) for the forced-induction gains when the voicing has none', () => {

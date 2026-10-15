@@ -99,7 +99,8 @@
       "alpha": 14.76,
       "beta": 6.2,
       "evoOffsetDeg": 140,
-      "cycleAsymmetry": 0.017
+      "cycleAsymmetry": 0.017,
+      "cylinderSpreadDb": 0
     },
     "headersM": [
       0.536,
@@ -112,7 +113,7 @@
         "banks": [
           0
         ],
-        "lengthM": 0.621
+        "lengthM": 0.666
       }
     ],
     "turbine": {
@@ -135,7 +136,7 @@
     },
     "intake": {
       "runnerM": 0.3,
-      "helmholtzHz": 184.5,
+      "helmholtzHz": 196.5,
       "gain": 0.876
     },
     "forcedInduction": {
@@ -156,7 +157,9 @@
     },
     "cabin": {
       "lowpassHz": 281,
-      "leakDb": -35.5
+      "leakDb": -33,
+      "boomHz": 100,
+      "boomDb": 3
     },
     "launchRpm": 2925,
     "estimated": true

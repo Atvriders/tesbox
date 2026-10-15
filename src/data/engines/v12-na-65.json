@@ -124,7 +124,8 @@
       "alpha": 6,
       "beta": 1,
       "evoOffsetDeg": 140,
-      "cycleAsymmetry": 0.319
+      "cycleAsymmetry": 0.319,
+      "cylinderSpreadDb": 0
     },
     "headersM": [
       0.669,
@@ -185,7 +186,9 @@
     },
     "cabin": {
       "lowpassHz": 480,
-      "leakDb": -29.5
+      "leakDb": -29.5,
+      "boomHz": 100,
+      "boomDb": 0
     },
     "launchRpm": 4895,
     "estimated": true

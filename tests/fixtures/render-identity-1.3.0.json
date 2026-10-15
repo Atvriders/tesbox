@@ -1,0 +1,651 @@
+{
+  "about": "Phase 5 contract P0b: SHA-256 of every score render (tests/helpers/render-hash.ts) of the fifteen garage engines as Tesbox 1.3.0 rendered them. Engines re-tuned since carry their 1.3.0 voicing, with the P0b fields at the neutral defaults (pulse.cylinderSpreadDb 0, cabin.boomHz 100, cabin.boomDb 0). Never regenerate: the hashes are the 1.3.0 renders.",
+  "engines": {
+    "flat4-turbo-25": {
+      "hashes": {
+        "idle": {
+          "cabin": "7efb8d0d754453cff11611135aee5cf135eb5e15cd19d0193e8426516e92eb8d",
+          "outside": "848ab9ec7ca6577765a5ead0b2758eff7f56fd036edaf1974ab05c8d62388add"
+        },
+        "cruise2k": {
+          "cabin": "307f5d35e44bb2e5d58550e1f3709061c6437533bff0e666a371bd417b9f20a9",
+          "outside": "e9470d8ab4a311422306d22cb6ca353bd83eb87f8c1a70a4acc2d185d743360c"
+        },
+        "cruise4k": {
+          "cabin": "d40e4f3d5d0c435809d02ffe5aa3937dae646918c5b1bc59a9c381f8055d4193",
+          "outside": "0120c4aad97524ce78370ff6f257158771a131752910556e828c0a10f220fb9b"
+        },
+        "cruise6k": {
+          "cabin": "58c51c9c277ecc67eb41fed98571a3097578554758ad98e09a76fec3e1947fec",
+          "outside": "352fbf3f6ec408b24fc7be3544a5b3aee35358eada7305d86f4a893ef96530ee"
+        },
+        "wotPull": {
+          "cabin": "46e73bab3373b3418b563cef7ce10b57f5e8748e393aaf22207f2b660430bbdb",
+          "outside": "077e8d4e9139f310cb1eb38a8f571df670ecb6da782ced6b9baabedf4171f58d"
+        },
+        "liftoff6k": {
+          "cabin": "4566f8e27ecc6fe8bf1fca1028afa1cdb3750153b69f7a6c44941eb3516b5050",
+          "outside": "ebc77f65a0878b0de0deddb3ab6dafbc1aab4ae2851ca7aab7f057e9527d2c93"
+        }
+      },
+      "voicing": {
+        "pulse": {
+          "widthDeg": 49.8,
+          "alpha": 14.93,
+          "beta": 3.22,
+          "evoOffsetDeg": 140,
+          "cycleAsymmetry": 0.139,
+          "cylinderSpreadDb": 0
+        },
+        "headersM": [
+          0.383,
+          0.639,
+          0.352,
+          0.587
+        ],
+        "collectors": [
+          {
+            "banks": [
+              0
+            ],
+            "lengthM": 0.411
+          },
+          {
+            "banks": [
+              1
+            ],
+            "lengthM": 0.215
+          }
+        ],
+        "turbine": {
+          "reflection": 0.45,
+          "lpHz": 1500
+        },
+        "exhaust": {
+          "midPipeM": 0.886,
+          "mufflerSectionsM": [
+            0.247,
+            0.401,
+            0.554
+          ],
+          "mufflerAction": 0.47,
+          "tailpipeM": 0.907,
+          "valve": {
+            "fitted": true,
+            "openGainDb": 4
+          }
+        },
+        "intake": {
+          "runnerM": 0.3,
+          "helmholtzHz": 100.3,
+          "gain": 0.806
+        },
+        "forcedInduction": {
+          "spoolTimeS": 0.6,
+          "maxShaftKrpm": 180,
+          "lift": "bov",
+          "cabinGainDb": -12.3,
+          "whistleDb": -36.9,
+          "outsideGainDb": -25.5
+        },
+        "mechanical": {
+          "blockGain": 0.199,
+          "valvetrainGain": 0.611
+        },
+        "overrun": {
+          "crackleRate": 0.5,
+          "fuelCutResumeRpm": 1250
+        },
+        "cabin": {
+          "lowpassHz": 369,
+          "leakDb": -20.4,
+          "boomHz": 100,
+          "boomDb": 0
+        },
+        "launchRpm": 3015,
+        "estimated": true
+      }
+    },
+    "flat6-na-40": {
+      "hashes": {
+        "idle": {
+          "cabin": "9b6793b76c04603040a63225c0b0e70ce6d21bae8ed6da282c8c17eec83c10ea",
+          "outside": "daa7849294272bdf81bceae631c3f8027f47b9c0537b48d9190a81f071383966"
+        },
+        "cruise2k": {
+          "cabin": "05ec11f577551c69adb897d2c901cb1bd588cfb53a0ef9109bd70f8d58eb5143",
+          "outside": "dbaceab0ef77a1e66e3427928bfddc0b8e0f03efd31096ec788992071d2343cc"
+        },
+        "cruise4k": {
+          "cabin": "f2367e1cb5eaba3a0639f91ff45cf7baaea4edf540e384bd536d1bbaf6225100",
+          "outside": "e7f3dd0515b0678fd98a35d3ce4bd595db13934f075f1f25926058eec9547cff"
+        },
+        "cruise6k": {
+          "cabin": "00d22e47bb45d832a249747d75ce11d74bc8abc9bd94f422bae153ed7b582558",
+          "outside": "c06f828b922b027fad6cc4e668645b183da34bde0d6ca6766351fa6d7756012b"
+        },
+        "wotPull": {
+          "cabin": "7c8d84d71b2852485c00eaee0881efc3d28845b2022a55c2d313bc4c3d8130b1",
+          "outside": "bfcc1c21b4fb2d01c1fbbbbd2b37eaaa0a36a9878ac903e933ab0eb777b0c7f9"
+        },
+        "liftoff6k": {
+          "cabin": "341a36920cfcb51fee335e16e04f7d33d9c676814030319f010d2c44cdbcabca",
+          "outside": "3a1479d4a617cb20b30524211e4fcea5804f33184ccef85b5aa039bca5f31ea2"
+        }
+      }
+    },
+    "i4-turbo-20": {
+      "hashes": {
+        "idle": {
+          "cabin": "f3dcfecb9d4401242d0f79635491d000bf8aa08c0cec92c8c6185c2aea25a90e",
+          "outside": "ce5326447df2c9e0b891140a7a56ab3c2c3086ef235f9b7ad2d6223d2b3c69fb"
+        },
+        "cruise2k": {
+          "cabin": "ef13cdc44e365a4328cccd607b90916a1134e2f2b46a7a794ee54467e350cdb7",
+          "outside": "eaae1b1a1e44c04bb7cf67e3d8324413d1b51852de3e7a863c9e2497df6f084b"
+        },
+        "cruise4k": {
+          "cabin": "38fbce47df3983bf6783512faed3f0679908458a15d4772074f12cde32d24020",
+          "outside": "bbcddb6730d1aa848544f80e68ffa2a303c334c1b6887d26c21c26add6461781"
+        },
+        "cruise6k": {
+          "cabin": "520486775a0e2fdae42727124dfcb2c2970588daa85b8e1502082a875e9a0b71",
+          "outside": "c6c954cf6be2831848b00ca7ed70724202196a18a6a6750120376b114f226a82"
+        },
+        "wotPull": {
+          "cabin": "696f6aec747632ec038332d66209f80d6e1d71c39e4b28456fd42465be0472a0",
+          "outside": "0ea524e11d6944f1dce10ae7700e5a2925c88aef8d497f1f895e6e35e54bf17c"
+        },
+        "liftoff6k": {
+          "cabin": "32d289a6fb9d192b0a1ae02c0a38adfc8e823ac775e17583f14911a99f735e5c",
+          "outside": "3cd0d74ccfeace16c721e2e96b27480c664c7e63b8fb40b69550953fe0bb1250"
+        }
+      },
+      "voicing": {
+        "pulse": {
+          "widthDeg": 58.6,
+          "alpha": 14.76,
+          "beta": 6.2,
+          "evoOffsetDeg": 140,
+          "cycleAsymmetry": 0.017,
+          "cylinderSpreadDb": 0
+        },
+        "headersM": [
+          0.536,
+          0.627,
+          0.57,
+          0.661
+        ],
+        "collectors": [
+          {
+            "banks": [
+              0
+            ],
+            "lengthM": 0.621
+          }
+        ],
+        "turbine": {
+          "reflection": 0.45,
+          "lpHz": 1500
+        },
+        "exhaust": {
+          "midPipeM": 2.05,
+          "mufflerSectionsM": [
+            0.154,
+            0.25,
+            0.345
+          ],
+          "mufflerAction": 1,
+          "tailpipeM": 1.141,
+          "valve": {
+            "fitted": true,
+            "openGainDb": 4
+          }
+        },
+        "intake": {
+          "runnerM": 0.3,
+          "helmholtzHz": 184.5,
+          "gain": 0.876
+        },
+        "forcedInduction": {
+          "spoolTimeS": 0.6,
+          "maxShaftKrpm": 180,
+          "lift": "bov",
+          "cabinGainDb": -19.9,
+          "whistleDb": -34,
+          "outsideGainDb": -50.8
+        },
+        "mechanical": {
+          "blockGain": 0.575,
+          "valvetrainGain": 0
+        },
+        "overrun": {
+          "crackleRate": 0.5,
+          "fuelCutResumeRpm": 1200
+        },
+        "cabin": {
+          "lowpassHz": 281,
+          "leakDb": -35.5,
+          "boomHz": 100,
+          "boomDb": 0
+        },
+        "launchRpm": 2925,
+        "estimated": true
+      }
+    },
+    "i5-turbo-25": {
+      "hashes": {
+        "idle": {
+          "cabin": "bd70d427c2b38ba8a7aef8c36def6bd2919de12c44eb9a1864f86b7875ce4d00",
+          "outside": "0bc0b0bd3cbd8cdeb1a06bd066c71367c77127c8a1ef4fcd5a5b47c8bd05beac"
+        },
+        "cruise2k": {
+          "cabin": "88cb0cfb273e8fd3cb3e4ef0a9b5091b626c62f173ed2611cade352526aa86a8",
+          "outside": "b1a32f184239e38b52ed187a049033d6cff8a566cc5b5091e78c3d6b1c24579a"
+        },
+        "cruise4k": {
+          "cabin": "8cb41d4f03868ee80c33f2e9fc33dfbdbb4d48568af1428b5fe06a37cb69664a",
+          "outside": "a15b556f8ddd4d8df629aefc1ba738c9566d00844b64e29f50fa679b68fc7ccd"
+        },
+        "cruise6k": {
+          "cabin": "019b1f6b7cb2604523edd3cf6c343befa5c68c4f23819df2b38dbb3f8c94b726",
+          "outside": "9279809a6149a2e1188e3e1b96ce62816cdc964b388d3a214c31e5b3efe5334f"
+        },
+        "wotPull": {
+          "cabin": "f91166c3ad0bcad4547c72698b7874e4db67a40808b6a4298ac3aef564f18ea0",
+          "outside": "7f46010ce87b62420366d1d80bb9def9d25e893847c21c9fe324b44bee9375e0"
+        },
+        "liftoff6k": {
+          "cabin": "7e5599ce99acff8075a8b027dda7a8fde88146f3dfa6048e3e3bde63325e9e35",
+          "outside": "59829a7fbc842ef8f6d2fdbb1f33ad54379dc27dacdc5d5ebdabac1f712a26b1"
+        }
+      }
+    },
+    "i6-twinturbo-30": {
+      "hashes": {
+        "idle": {
+          "cabin": "f57e30b44d954edff1f976090f6a080f4fde80e21d4b3d65023a8fb700a15895",
+          "outside": "d897fa2b6364f603d42539a6591cb53996703dbdfff7f00293c43a036e7bbdba"
+        },
+        "cruise2k": {
+          "cabin": "5e2bc2e131e1b0889bf75d36457f47a68385631b32e73f1bb580aecb039b11d2",
+          "outside": "d62d216dd7dcbf5dd7a0e2c437647d52e29df855cb9f719f2396e257c2aef78d"
+        },
+        "cruise4k": {
+          "cabin": "6751be82686a010cf7e83e95efb4224588b74d0e561ada64044f400d83327087",
+          "outside": "e246432527054cef993c33024677da52fccb86879e09f1fbe2eaa3e0ca1874b9"
+        },
+        "cruise6k": {
+          "cabin": "149f83f86af4aae5ff45243484fadcd39395e0e198cbd35e477977f1c19809a3",
+          "outside": "4f3eddde7a7060f95535a6a33515a151b03f4c1088d62467bb9f4e505e7c9524"
+        },
+        "wotPull": {
+          "cabin": "4ae97559aea1b8e3b325fe05d3eddd112565e86be27bb0ea327e5bec237dff96",
+          "outside": "209dd328d59cd083e46d67541b607462f69d3d3d1bf3e77abbfa00740f4fd8a6"
+        },
+        "liftoff6k": {
+          "cabin": "2b952c4c714292ef4404121cbb939c3d5a6cf92610c872517a77bf26c7874b2b",
+          "outside": "b71dd1a9ee9c25e09eef818b65973d8ec5250844d3b2aea3a4d0269f4f459937"
+        }
+      }
+    },
+    "rotary-twin-13": {
+      "hashes": {
+        "idle": {
+          "cabin": "cf54c9460f542a8c0029fff8bbde2d2a10f64ec5684ba218223a81cfe0081eaf",
+          "outside": "08ad15b1ba455b50be4c2768f08307ffa7b7592259a999532d64ee861ca3aad3"
+        },
+        "cruise2k": {
+          "cabin": "0a237495215a86c15040cc2781d410e90e1c2730fd6b2be8c4fced74f4730269",
+          "outside": "cfe30fc0d4d387f376d2516d18c7e22e3ba64ef9964200620186d985066752a0"
+        },
+        "cruise4k": {
+          "cabin": "80fa16280a41771a64bcffc76420358bc155915b268a3f50cfaf6766a3223c54",
+          "outside": "a6c106f697f64aa389baa6858612914f56def6c4087aa4c5ce28771dccbaa19e"
+        },
+        "cruise6k": {
+          "cabin": "4d4d665b4d990c4306d34dcea5427f684334b52f400d0f5d2ff3df4dbe8d3b69",
+          "outside": "f3a26b90c361e962d1f31661b8fd1533cb98a00e542196ad58829e6696811bd8"
+        },
+        "wotPull": {
+          "cabin": "9da21ee0f2af818cfd4eefeaeccaceb7a9ec009ccdcac800bc14dcf2c867d94e",
+          "outside": "03de3d54dc8c79a9b593097bca03ddff739b8c62aeccf79ca2a085789acd9dcc"
+        },
+        "liftoff6k": {
+          "cabin": "6da6873feccc99e432195bf7c6b6a2a26ef2ce9f2a8b7e222f1d36dc50aa689a",
+          "outside": "639ac4994e901763b46f11f1a1293f1aae95fc7ea63a62a269a4abcf1754c7aa"
+        }
+      }
+    },
+    "v10-na-48": {
+      "hashes": {
+        "idle": {
+          "cabin": "c593882708fce14827afc7ced2f493430f1c47bdd7b6bc05881029017d46fbb9",
+          "outside": "cee2364a7e0ca1eb34f4a17cacc9661b4cc640cd7b7c375c590f8a095e20231a"
+        },
+        "cruise2k": {
+          "cabin": "e1a42561922a8e0da1f959ab2d3e887113a705be8db7ac3562d09c41c2409fd0",
+          "outside": "6992b256702d2282d0a6382d100f6649fb1376968bb3af425ebc3a0746d1c53a"
+        },
+        "cruise4k": {
+          "cabin": "5d616990044b601fe0e0c3f433e2def7f41c7db9cfa3823d989abbf7a7fcc518",
+          "outside": "e499a10e4b0982c1d693b137bef287d3d45d02a83857e6ca747ba8079c4cc423"
+        },
+        "cruise6k": {
+          "cabin": "12e5d43e21c9384efda3792ab41658169d3822a02bffdb594505a385b66b948e",
+          "outside": "d2d6ab23cef3172e7e0d14f1df6aea42a5bade239dc75cf163c10f4b050679ad"
+        },
+        "wotPull": {
+          "cabin": "3f9afa691f130b3d27f9daffcfd6a3aeb2df243a3709db6f6d7364d6551888ac",
+          "outside": "ea20653a761e214cfcdf4038e37d5634f7821f91b32567e1d4b3888d01b3bbef"
+        },
+        "liftoff6k": {
+          "cabin": "6f6f5cfdc969c2ea35d8729d17a745c6930b1b62627d1c9468c1fe4096ae7d6d",
+          "outside": "e7b77ca524c875f52b0e75a570f9e6e7a0537cbb25cd2a9becea6ac9a8a23371"
+        }
+      }
+    },
+    "v10-na-52": {
+      "hashes": {
+        "idle": {
+          "cabin": "6316d6e866c493e1ead6bbb488639e8061388b4da33efa600766f16d3d06753f",
+          "outside": "9c40ab3cf4a57de3043169d5f497a6bed86269874b51f2f3e2be616997537ec1"
+        },
+        "cruise2k": {
+          "cabin": "ffb92d8d705f5f1d86886227961d50a4402772a6ea2e086183e6c9e33d43435a",
+          "outside": "f707ec4c86e9cfb4092ba192187ea93fb91f9b660462d1e1d73ea05f09eefe48"
+        },
+        "cruise4k": {
+          "cabin": "29a61b835c01e5d33f3aadf37063271d5e3b0a1b963ea3a12a4818de798c5980",
+          "outside": "c008a7be4c934ba4c2b2f6c1066ee25b41244e9a21173f5fac2dda6545f3a7b9"
+        },
+        "cruise6k": {
+          "cabin": "8c7e4faf2dabf9e1fba72137620449f2cfc9ce16f156ab653616a8c4ed18ac54",
+          "outside": "bdac95df7c090d47d932085b07de41266f08e99fa57fbb330d533548e602a6f8"
+        },
+        "wotPull": {
+          "cabin": "59ccc9542680e6766f84a3c8d0e810e5df8af274840bede688490f765c59fc7b",
+          "outside": "cb72d978a2a9476c68e5ec1356a5ea4b889b39c2bf4cb8ad913a38643fc0afdc"
+        },
+        "liftoff6k": {
+          "cabin": "1c7afb83d449f8152b26e862389942ff8c6ad9ec9a711316e604faf13fcf5583",
+          "outside": "01390f9679cc7b3280d6b1ff243c008cea0f69864fed4c134e5b120b489a890e"
+        }
+      }
+    },
+    "v12-na-65": {
+      "hashes": {
+        "idle": {
+          "cabin": "b9bcbe8f36e99dee9f3d8992247a852ca8dafc75eb412a51f741d821e48e0b12",
+          "outside": "d9fe864966822e214203e4b997979f8833dbdfd4a40a72c01479fbd7e4667fa0"
+        },
+        "cruise2k": {
+          "cabin": "62dfa1cb34047d7845524b71344e3a90e0064316fe99d4d7d652e1a638b068f2",
+          "outside": "a91b796cea6e68c8288bdae740a043e59638c5ac8cabbd9f60bfd67f3ce58000"
+        },
+        "cruise4k": {
+          "cabin": "b567d17e4a4b821a1da0862ae421f4a58b017c130b0e0f0d6fc46cac13ae3c80",
+          "outside": "510ee68a22bba3e6010f9092ad0ba26ebce3f0d6ed59d94740c8049060f3cb8f"
+        },
+        "cruise6k": {
+          "cabin": "5343a0756f5003c4a3c626776b7a77188dfd1d10d2212464de117551804aec9b",
+          "outside": "31b1944872b25172d03c9cd1cb81eafd21879e59fb36734618609ff64c7c9c09"
+        },
+        "wotPull": {
+          "cabin": "3616ca1b05e5025c5d33618e98fc7c5d27a758c5080a3d7eb7a220a420298cd5",
+          "outside": "1c4026a1f8718a9faf1fd60693f5d9c3e6065881e4d69dfa0c81d474f6f354db"
+        },
+        "liftoff6k": {
+          "cabin": "64a3f24a46202b639fba4dab170a560ddc5c583b93685f1916d5e1c565580a88",
+          "outside": "fd6bc62555db15c3e862717a88f9d068ac1e2ee7b43dd605db203d6a52632634"
+        }
+      }
+    },
+    "v6-twinturbo-38": {
+      "hashes": {
+        "idle": {
+          "cabin": "37f0d41ed9b7f389e22836b81dfb978753b1c0e7778a7a7e5a33c93e223858f9",
+          "outside": "ba13fa210c5dbc5a0e80670050f9d82d40acbf70952d1e1beba91510f7e77c87"
+        },
+        "cruise2k": {
+          "cabin": "a2c8946b943b619e7fd7bfc24d1ef6ba3bcc5cfe2eb2be99e77107ddd709762a",
+          "outside": "44bc6fb7b51c414304c0e757c2f584394b236efe7cbfaa40d3a0298963185e2a"
+        },
+        "cruise4k": {
+          "cabin": "46926696277fb672137a5140ce75a6111f992dcdc9eef41396e534fc7dd289cf",
+          "outside": "4c3931633e959c7bc82cfea8218d6608c5d6324ceebadae3e587c67f201d7004"
+        },
+        "cruise6k": {
+          "cabin": "a80f8c5ab4292cc844ea61fa0e278288351f6cd89852f98c486407f2160c40f9",
+          "outside": "add26da9d0332a569131d8cae3014a686d3b20575311af96575d01696425063d"
+        },
+        "wotPull": {
+          "cabin": "044b19acf4797839583158776c45b0e2f71eb85870ca18110ce6067e417cfb62",
+          "outside": "03af85934ccc3454e29fb972c405418fb4d5e82cc69fbfdb2390d4469aef9642"
+        },
+        "liftoff6k": {
+          "cabin": "cb833cd45492d8c6dcbd2d824a70b895f79efb51278d85b483a2c1ecd40f0cc2",
+          "outside": "4f74d115d89d8c9993fa38890b9c81d2fa249521971702cb2a168a737c4ce6c8"
+        }
+      }
+    },
+    "v8-flatplane-45": {
+      "hashes": {
+        "idle": {
+          "cabin": "ef8def1f4016b02c30cf7cc05d414a3d680e0b93e1718c13c92b286e4312bd34",
+          "outside": "b6fff997615ae992649125c37ab8064e861ee0097579467412706efdb42ae9da"
+        },
+        "cruise2k": {
+          "cabin": "d01cd039b113214f3d0bcbcb949cc24a6e8339efddab4110a63cfdcd69935073",
+          "outside": "299126335807a8d9cfbbe5a68a00726527453ee43e595b127d779fe469931a16"
+        },
+        "cruise4k": {
+          "cabin": "f5f22b468ff59ef5a11426ef46e7e4e7035fa3e01b29ab74d5ab6123e98b0945",
+          "outside": "78771f4654a7b3388eb58f62b9730bb9970e73146dbaf3fb693f4a9665b450d5"
+        },
+        "cruise6k": {
+          "cabin": "c45e923166416f8f6b67757f59ab20938332c26247864d69ec732c01ff5cbeff",
+          "outside": "4aed06a31cebe402bf81f7b9ba66f0e4a2949899ef8ee8ac347a16b514aaeb17"
+        },
+        "wotPull": {
+          "cabin": "8dbfd044d12b5e0f05fce516fdd994d686c16f0495b87d62a092b5af2f2805f1",
+          "outside": "46cd7239c5ed94f55ed585bae1c18e3417ca9343bcb464d307f1934394a64aa3"
+        },
+        "liftoff6k": {
+          "cabin": "f06cad52bb92513c19c43acb5cbc4cf31ec565c91c6ac9e6e31955be0e467fd8",
+          "outside": "78c1d01ec27d829014066431c7c7009f00db0b516366d6d822e0f2ad1105ad5c"
+        }
+      }
+    },
+    "v8-na-50": {
+      "hashes": {
+        "idle": {
+          "cabin": "78ad420ee45f338efb36b14909318872c4a6b2480a61b034e430be8ec151358d",
+          "outside": "79460cae5b2ce40c1dfa44ab53ae2ae3ab4b00351183f06b8c330aa9dccff9c3"
+        },
+        "cruise2k": {
+          "cabin": "39a182ce9293e6fc56f60bc86fdab9ea7a192439f9e774eed720ba11bd9042a0",
+          "outside": "ee23cadd864062bc299bab9f1602ddb48c2f8b578168762e25fb24bb905ae239"
+        },
+        "cruise4k": {
+          "cabin": "0eec2599272221e9d887a093554eb3363aac6116ac5f39d63d37e9c5166d0a6b",
+          "outside": "268d4139a5326610f0ca39eb6af1a6219678e300ddd7f876be1aef9f75f530b2"
+        },
+        "cruise6k": {
+          "cabin": "52eb65938bff5535c532034244b017645e0b1cd0b7cb6c907712f2f784a55d4b",
+          "outside": "dea354f2ce132dca3543ed76f8cf66754ca84dd7546d168236d811dd584a2e63"
+        },
+        "wotPull": {
+          "cabin": "e5bfd0bc2a0da982aeefdf688e117a14ad24fee7e4023e0944c197110b12d6d7",
+          "outside": "07218dfeeca660921998a638a8c4a8a4d51c7ddb23f2cbff5b110ecb928537f2"
+        },
+        "liftoff6k": {
+          "cabin": "33221123e258a6ebb46f5a1a41bcd5bf7840e90e94b3a5292c3cb48fd37fa0e3",
+          "outside": "6a909322e94f44bd5b04514ba9a70fbec42f9686ce0e340e83c4707a702678e3"
+        }
+      }
+    },
+    "v8-na-62": {
+      "hashes": {
+        "idle": {
+          "cabin": "4f67ffb5b0ca66a4566435f2e02952fc33393faaa612e01ef8224fa972a3849b",
+          "outside": "9cfc556a0a746b0f214d639cea4ac2f747eaed6df5f7f4dfef63d09ee0863af0"
+        },
+        "cruise2k": {
+          "cabin": "d99eebf425e6c418cdfe8a5a4ecf4c35ba2bb7c80299675fea12ba71b769f3f5",
+          "outside": "ec31de4522cce69baa520f20f2a1b7767b63c83e2e287720a766599fd5c8d56e"
+        },
+        "cruise4k": {
+          "cabin": "3bdc3bb6971ed1d41cecc463adcc33d1a09a7c36273069843ca1315bf8b133d9",
+          "outside": "f03103a598c663dfdbb843b2896afac530b52c67c38cc308955178509396d3c4"
+        },
+        "cruise6k": {
+          "cabin": "1dae68df6f6f108061be6cdb69ec563f199738292c8eea68943bace07a4f4c61",
+          "outside": "5dfd063e26475563c25acb81cba5121a2ea3ac0840a812796926f84b2acbcf08"
+        },
+        "wotPull": {
+          "cabin": "c8152715018caefa3e236b8787f146e80fa96e65ee72a18c659576a4325485c9",
+          "outside": "9aa4dc8b680d2565044088543436c2006f50b44d952e1bafe6f5d66839c33f2c"
+        },
+        "liftoff6k": {
+          "cabin": "c4d2dfc65dcea4f278e898c072e9f63ca0ef888ff5afa4b21af2257b1364dd62",
+          "outside": "d8af8f5019f67de148baea3173508e6448b57fe8eee99ca975317af582f4581e"
+        }
+      }
+    },
+    "v8-sc-62": {
+      "hashes": {
+        "idle": {
+          "cabin": "fccdba3b774c739a437eb984e7964a28d4f308f0cda0e227da2d33dfa1cc62c1",
+          "outside": "4d68a72335b26cf1bb7fe5562cb32cefbc8ee647f26a4db1beafbde0ac06405a"
+        },
+        "cruise2k": {
+          "cabin": "9c547c341f9b1f161901a1589719ff80d1a0f234ebffe1c575e2d6cb6a2d590d",
+          "outside": "aa1c20bcaf58dd9ab14b14496eed78b5eabd3818879cede7aaf12b64ae0f3209"
+        },
+        "cruise4k": {
+          "cabin": "1766d1188853ee8449da273800f7b6c5ee4058f4b62cbdd166da5e49fdeb71a4",
+          "outside": "4549ad53e64a411fe759eadf99ab7e61a411a8e187a45b95e187ff286231edd3"
+        },
+        "cruise6k": {
+          "cabin": "2fe8aaceef9ea92dd24d9425a588cb1d79e56567bf47209f0ded81abb4790650",
+          "outside": "ac6efbf99cf5321144e4cd0d92a8820c95997081b758682a02b9705b8e0460e7"
+        },
+        "wotPull": {
+          "cabin": "63e5aec15eac4d4668c34b82390a7fbc97dd50f460d5832685b2dc2377b23db5",
+          "outside": "c16fca6cdcd6c05826e436f7b74fcbec453ae741b6ace5cfe385877444f2a05e"
+        },
+        "liftoff6k": {
+          "cabin": "ecc64ff00ae439ad95bacc7c99158ad77a06c75535c6deec5d50f19545b5e8cd",
+          "outside": "cea6b3c857af6787824df9a00bdef95cbe8b5b6fd0695c118bde3cdaf6057297"
+        }
+      },
+      "voicing": {
+        "pulse": {
+          "widthDeg": 47.4,
+          "alpha": 13.44,
+          "beta": 8.83,
+          "evoOffsetDeg": 140,
+          "cycleAsymmetry": 0.182,
+          "cylinderSpreadDb": 0
+        },
+        "headersM": [
+          0.671,
+          0.586,
+          0.686,
+          0.784,
+          0.624,
+          0.713,
+          0.827,
+          0.723
+        ],
+        "collectors": [
+          {
+            "banks": [
+              0
+            ],
+            "lengthM": 0.43
+          },
+          {
+            "banks": [
+              1
+            ],
+            "lengthM": 0.1
+          }
+        ],
+        "turbine": null,
+        "exhaust": {
+          "midPipeM": 1.329,
+          "mufflerSectionsM": [
+            0.172,
+            0.279,
+            0.385
+          ],
+          "mufflerAction": 0.533,
+          "tailpipeM": 0.42,
+          "valve": {
+            "fitted": true,
+            "openGainDb": 4
+          }
+        },
+        "intake": {
+          "runnerM": 0.3,
+          "helmholtzHz": 213.4,
+          "gain": 0.687
+        },
+        "forcedInduction": {
+          "spoolTimeS": 0.05,
+          "maxShaftKrpm": 180,
+          "lift": "bov",
+          "cabinGainDb": -19.4,
+          "whistleDb": -36,
+          "outsideGainDb": -54.2
+        },
+        "mechanical": {
+          "blockGain": 0.343,
+          "valvetrainGain": 0.023
+        },
+        "overrun": {
+          "crackleRate": 0.5,
+          "fuelCutResumeRpm": 1200
+        },
+        "cabin": {
+          "lowpassHz": 1202,
+          "leakDb": -60,
+          "boomHz": 100,
+          "boomDb": 0
+        },
+        "launchRpm": 2790,
+        "estimated": true
+      }
+    },
+    "v8-twinturbo-40": {
+      "hashes": {
+        "idle": {
+          "cabin": "439d4cdf9c5b8e91e007bb553f1d1992000e8c4c6bad6102440fb1b55862cd1e",
+          "outside": "f7f4cae72716beffcd68b04eb85ac2260df3b775e63d9119ff0529d33163fbc5"
+        },
+        "cruise2k": {
+          "cabin": "899611446c89b1fccd4ebedf6f911a3c6db62cb3720ef1ea099df03488f73ef3",
+          "outside": "a984cdd2f96c699b5ea54416aada49030075650356b10b09d330a83a54dc456c"
+        },
+        "cruise4k": {
+          "cabin": "af083bb159e3e6dbf22b03eaefd412ac2c550f61d0029c8edca83bfd124c0511",
+          "outside": "b07135a95ff1902a9de7c8d62d013a903a8e0925bfd2eb50374fcab4b7b81095"
+        },
+        "cruise6k": {
+          "cabin": "2f99d2a4fd6d99606fc4242cbed67c6bfb8f30c967151401e56599e68b8a9c1d",
+          "outside": "a5d39e1757aac269eefb5fb46688775f90053aa3fbda7610fd20b20fa561a764"
+        },
+        "wotPull": {
+          "cabin": "64fabfd6ecf15f1d48784ac56b8d2dd6d7b29d0cf452aa1faadd7af95961d5dd",
+          "outside": "bb341f217f3c9b6dc0852fd30cd029d8115286ecfbcee024f48b37c94235564c"
+        },
+        "liftoff6k": {
+          "cabin": "1fb50323935a7922009c1d7720fe312f356e0dbaee8804e92e4f3ad643b7c15f",
+          "outside": "5726422da76f9d405cbc47a3276389d9f8d9d24bd8d4276a286c1d60c9af0a94"
+        }
+      }
+    }
+  }
+}

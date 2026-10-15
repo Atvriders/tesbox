@@ -97,6 +97,11 @@ export interface EngineVoicing {
     beta: number; // decay, > 0
     evoOffsetDeg: number; // exhaust-valve-opening offset after firing, default 140
     cycleAsymmetry: number; // 0–1 growl
+    /**
+     * Per-cylinder combustion-level spread (phase 2a amendment B20), 0–6 dB, default 0: cylinder k's firings carry
+     * dbToGain(cylinderSpreadDb · cylinderSpreadPattern(k, n)) (src/dsp/combustion.ts), which creates half orders.
+     */
+    cylinderSpreadDb: number;
   };
   /** Header length per combustion entry (same order as spec.combustion), metres. */
   headersM: number[];
@@ -126,9 +131,10 @@ export interface EngineVoicing {
   overrun: { crackleRate: number; fuelCutResumeRpm: number };
   /**
    * Cabin transfer (phase 2a amendment B19): a 2nd-order Butterworth low-pass at lowpassHz (200–2000) plus a
-   * high-frequency leak at leakDb (−60 … −10, default −30) that keeps the engine's upper harmonics.
+   * high-frequency leak at leakDb (−60 … −10, default −30) that keeps the engine's upper harmonics; then the body boom
+   * (B21), a peaking filter at boomHz (40–200, default 100) by boomDb (0–12, default 0 = off).
    */
-  cabin: { lowpassHz: number; leakDb: number };
+  cabin: { lowpassHz: number; leakDb: number; boomHz: number; boomDb: number };
   /** Clutch/DCT launch target rpm (voicing, not manufacturer data). */
   launchRpm: number;
   /** true until tuned and signed off in the Sound Lab. */

@@ -11,11 +11,15 @@
  * Pulse shape (contract): E(φ) = (1 − e^(−αφ))²·e^(−βφ)·taper(φ), φ ∈ [0, 1] over widthDeg crank
  * degrees, taper = cos² fade over the last 25 %, normalised so its peak is the firing amplitude.
  *
+ * Per-cylinder level (phase 2a amendment B20): entry k's firing amplitude — its blowdown pulse and its ignition
+ * impulse alike — carries the fixed factor dbToGain(cylinderSpreadDb · cylinderSpreadPattern(k, n)), set at configure
+ * (exactly 1 at cylinderSpreadDb 0, so the tick is unchanged).
+ *
  * `tick` is a hot path (spec §4.4): no allocation; all state is capacity-sized in the constructor.
  */
 import { MAX_COMBUSTION } from '../contracts';
 import type { EngineSpec, EngineVoicing } from '../contracts';
-import { clamp, flush, Rng } from './util';
+import { clamp, dbToGain, flush, Rng } from './util';
 
 /** Per-entry DC blocker corner (first-order high-pass: zero at DC, pole e^(−2π·10/fs)), Hz. */
 export const DC_BLOCK_HZ = 10;
@@ -29,6 +33,8 @@ export const RPM_CEIL = 30000;
  * pattern → sidebands at ±⅓ e-shaft order around every firing harmonic (≈ −26 dB).
  */
 export const ROTARY_FACE_DEPTH = 0.1;
+/** voicing.pulse.cylinderSpreadDb ceiling (engine.schema.json; phase 2a amendment B20). */
+export const CYLINDER_SPREAD_MAX_DB = 6;
 
 const BETA_FLOOR = 1e-3;
 /** Minimum blowdown time-to-peak in samples (contract α clamp). */
@@ -53,6 +59,20 @@ const INV_GOLDEN = (Math.sqrt(5) - 1) / 2;
 
 function finiteOr(x: number, fallback: number): number {
   return Number.isFinite(x) ? x : fallback;
+}
+
+/**
+ * Phase 2a amendment B20: the fixed per-cylinder combustion-level pattern, in units of voicing.pulse.cylinderSpreadDb —
+ * cylinder (combustion entry) k of n: +1 for k = 0, −1/(n − 1) for every other k; 0 for a single cylinder and for k
+ * outside 0 … n − 1. Zero mean in dB across the cylinders. One cylinder deviates and the others share the opposite
+ * offset, so the firing train is g₁ × the even train plus (g₀ − g₁) × one cylinder's own train (g = the cylinders'
+ * gains), whose lines are equally strong at every multiple of the cycle rate (½ order; ⅓ e-shaft order for a
+ * rotary): every non-firing order gains the same level whatever the firing order or the layout — for an even-firing
+ * engine |non-firing| / |firing| = (g₀ − g₁) / (g₀ + (n − 1)·g₁), −11.2 dB for an I4 at 6 dB. Allocation-free.
+ */
+export function cylinderSpreadPattern(k: number, n: number): number {
+  if (!(n >= 2) || !(k >= 0) || k >= n) return 0;
+  return k === 0 ? 1 : -1 / (n - 1);
 }
 
 /** x wrapped into [0, cycle). */
@@ -144,7 +164,8 @@ export class CombustionSource {
   // Per-entry state, capacity MAX_COMBUSTION.
   private readonly angle = new Float64Array(MAX_COMBUSTION);
   private readonly gateOrigin = new Float64Array(MAX_COMBUSTION);
-  private readonly faceScale = new Float64Array(MAX_COMBUSTION);
+  /** Fixed per-entry level: the rotary face signature × the B20 cylinder spread (1 for a 4-stroke without spread). */
+  private readonly levelScale = new Float64Array(MAX_COMBUSTION);
   private readonly parity = new Uint8Array(MAX_COMBUSTION);
   private readonly pendOn = new Uint8Array(MAX_COMBUSTION);
   private readonly pendRem = new Float64Array(MAX_COMBUSTION);
@@ -205,12 +226,15 @@ export class CombustionSource {
     this.asymEven = 1 - 0.5 * asym;
     this.asymOdd = 1 + 0.5 * asym;
     const gateStart = rotary ? INTAKE_START_ROTARY_DEG : INTAKE_START_4S_DEG;
+    const spread = clamp(finiteOr(p.cylinderSpreadDb, 0), 0, CYLINDER_SPREAD_MAX_DB);
     for (let i = 0; i < MAX_COMBUSTION; i++) {
       const entry = spec.combustion[i];
       const a = entry === undefined ? 0 : wrapDeg(finiteOr(entry.angleDeg, 0), cycle);
       this.angle[i] = a;
       this.gateOrigin[i] = wrapDeg(a + gateStart - INTAKE_EDGE_DEG / 2, cycle);
-      this.faceScale[i] = rotary ? 1 + ROTARY_FACE_DEPTH * Math.cos((2 * Math.PI * a) / cycle) : 1;
+      const face = rotary ? 1 + ROTARY_FACE_DEPTH * Math.cos((2 * Math.PI * a) / cycle) : 1;
+      // B20: no spread leaves the factor out entirely, so a voicing at 0 dB renders bit-identically to one without it.
+      this.levelScale[i] = spread > 0 ? face * dbToGain(spread * cylinderSpreadPattern(i, n)) : face;
     }
     this.seedValue = finiteOr(seed, 1);
     this.reset();
@@ -292,7 +316,7 @@ export class CombustionSource {
           if (this.skipIsIgnition) this.pops++;
         } else {
           const level = 0.15 + 0.85 * Math.pow(ld, 0.7);
-          const amp = level * jitter * (odd ? this.asymOdd : this.asymEven) * (this.faceScale[i] ?? 1) * gain;
+          const amp = level * jitter * (odd ? this.asymOdd : this.asymEven) * (this.levelScale[i] ?? 1) * gain;
           ignition += amp;
           this.pendAmp[i] = amp;
           this.pendLoad[i] = ld;

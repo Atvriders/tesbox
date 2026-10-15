@@ -21,13 +21,13 @@ const KEYS: Record<string, string[]> = {
     'pulse', 'headersM', 'collectors', 'turbine', 'exhaust', 'intake', 'forcedInduction',
     'mechanical', 'overrun', 'cabin', 'launchRpm', 'estimated',
   ],
-  'voicing.pulse': ['widthDeg', 'alpha', 'beta', 'evoOffsetDeg', 'cycleAsymmetry'],
+  'voicing.pulse': ['widthDeg', 'alpha', 'beta', 'evoOffsetDeg', 'cycleAsymmetry', 'cylinderSpreadDb'],
   'voicing.exhaust': ['midPipeM', 'mufflerSectionsM', 'mufflerAction', 'tailpipeM', 'valve'],
   'voicing.exhaust.valve': ['fitted', 'openGainDb'],
   'voicing.intake': ['runnerM', 'helmholtzHz', 'gain'],
   'voicing.mechanical': ['blockGain', 'valvetrainGain'],
   'voicing.overrun': ['crackleRate', 'fuelCutResumeRpm'],
-  'voicing.cabin': ['lowpassHz', 'leakDb'],
+  'voicing.cabin': ['lowpassHz', 'leakDb', 'boomHz', 'boomDb'],
 };
 
 function at(root: unknown, path: string): unknown {
@@ -320,5 +320,14 @@ describe('fixture engines (tests/fixtures/engines)', () => {
     expect(fire('i6-test', 6000)).toBeCloseTo(300, 9);
     expect(fire('v8-crossplane-test', 6000)).toBeCloseTo(400, 9);
     expect(fire('rotary-test', 6000)).toBeCloseTo(200, 9);
+  });
+});
+
+describe('fixture engines: phase 2a amendments B20/B21 (phase 5 contract P0b)', () => {
+  it('carry the per-cylinder spread and the cabin boom at their neutral defaults (0 dB; 100 Hz, 0 dB)', () => {
+    for (const [id, def] of DEFS) {
+      expect(def.voicing.pulse.cylinderSpreadDb, id).toBe(0);
+      expect([def.voicing.cabin.boomHz, def.voicing.cabin.boomDb], id).toEqual([100, 0]);
+    }
   });
 });

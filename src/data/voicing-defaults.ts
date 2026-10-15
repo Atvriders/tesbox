@@ -18,6 +18,13 @@ export const DEFAULT_WHISTLE_DB = -36;
 export const DEFAULT_OUTSIDE_FI_DB = -30;
 /** Cabin high-frequency leak (phase 2a amendment B19). */
 export const DEFAULT_CABIN_LEAK_DB = -30;
+/**
+ * Per-cylinder combustion-level spread and cabin boom (phase 2a amendments B20, B21), neutral: at these values every
+ * engine renders exactly as it did before the two existed.
+ */
+export const DEFAULT_CYLINDER_SPREAD_DB = 0;
+export const DEFAULT_BOOM_HZ = 100;
+export const DEFAULT_BOOM_DB = 0;
 
 function round3(x: number): number {
   return Math.round(x * 1000) / 1000;
@@ -81,6 +88,7 @@ export function defaultVoicing(spec: EngineSpec): EngineVoicing {
       beta: 4,
       evoOffsetDeg: 140,
       cycleAsymmetry: 0.1,
+      cylinderSpreadDb: DEFAULT_CYLINDER_SPREAD_DB,
     },
     headersM: headerLengths(spec),
     collectors: banks.map((b) => ({ banks: [b], lengthM: COLLECTOR_M })),
@@ -109,7 +117,7 @@ export function defaultVoicing(spec: EngineSpec): EngineVoicing {
       : null,
     mechanical: { blockGain: 0.3, valvetrainGain: 0.1 },
     overrun: { crackleRate: 0.5, fuelCutResumeRpm: spec.rpm.idle + 500 },
-    cabin: { lowpassHz: 600, leakDb: DEFAULT_CABIN_LEAK_DB },
+    cabin: { lowpassHz: 600, leakDb: DEFAULT_CABIN_LEAK_DB, boomHz: DEFAULT_BOOM_HZ, boomDb: DEFAULT_BOOM_DB },
     launchRpm: Math.round((forced ? 0.45 : 0.55) * spec.rpm.redline),
     estimated: true,
   };

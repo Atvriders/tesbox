@@ -182,13 +182,14 @@
         "pulse": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["widthDeg", "alpha", "beta", "evoOffsetDeg", "cycleAsymmetry"],
+          "required": ["widthDeg", "alpha", "beta", "evoOffsetDeg", "cycleAsymmetry", "cylinderSpreadDb"],
           "properties": {
             "widthDeg": { "type": "number", "minimum": 40, "maximum": 300 },
             "alpha": { "type": "number", "exclusiveMinimum": 0 },
             "beta": { "type": "number", "exclusiveMinimum": 0 },
             "evoOffsetDeg": { "type": "number", "minimum": 0, "maximum": 360 },
-            "cycleAsymmetry": { "type": "number", "minimum": 0, "maximum": 1 }
+            "cycleAsymmetry": { "type": "number", "minimum": 0, "maximum": 1 },
+            "cylinderSpreadDb": { "type": "number", "minimum": 0, "maximum": 6 }
           }
         },
         "headersM": {
@@ -302,10 +303,12 @@
         "cabin": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["lowpassHz", "leakDb"],
+          "required": ["lowpassHz", "leakDb", "boomHz", "boomDb"],
           "properties": {
             "lowpassHz": { "type": "number", "minimum": 200, "maximum": 2000 },
-            "leakDb": { "type": "number", "minimum": -60, "maximum": -10 }
+            "leakDb": { "type": "number", "minimum": -60, "maximum": -10 },
+            "boomHz": { "type": "number", "minimum": 40, "maximum": 200 },
+            "boomDb": { "type": "number", "minimum": 0, "maximum": 12 }
           }
         },
         "launchRpm": { "type": "number", "minimum": 1000, "maximum": 10000 },

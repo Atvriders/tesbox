@@ -174,3 +174,13 @@ Same policy as above: nothing from rupteur.app or anything that references it; n
 | `src/dsp/biquad.ts` (`lowpassLeak`), `src/dsp/perspective.ts` | Cabin transfer (phase 2a amendment B19): a 2nd-order Butterworth low-pass with a high-frequency leak g as one minimum-phase biquad, H(s) = (1 + √(2g)·s + g·s²) / (1 + √2·s + s²), whose squared magnitude (1 + g²Ω⁴) / (1 + Ω⁴) is the power sum of the Butterworth low-pass and the leak through the matching Butterworth high-pass (no notch where the two paths cross); bilinear transform prewarped at the corner | First principles (Butterworth power complementarity, factoring the summed power response into its minimum-phase biquad); S. Butterworth, 1930 (as above); bilinear transform with frequency prewarping as in the Audio EQ Cookbook (R. Bristow-Johnson) |
 | `src/dsp/forced.ts`, `src/dsp/perspective.ts` | Whistle-only level and outside forced-induction level (amendment B18): constant gains dbToGain(whistleDb) on the turbo whistle voices and dbToGain(outsideGainDb) on the outside forced-induction bus | First principles |
 | `tools/tune.ts` | Tunable vector v2 (phase 2b amendment D9): one header scale per exhaust bank (each header's bank is its combustion entry's bank, the key the exhaust network routes it by), one length per collector, the B18 / B19 levels | First principles |
+
+## Phase 5 source log — near-miss gates (P0b)
+
+Same policy as above: nothing from rupteur.app or anything that references it; no code copied or adapted.
+
+| Module | Algorithm | Source |
+|---|---|---|
+| `src/dsp/combustion.ts` (`cylinderSpreadPattern`) | Per-cylinder combustion-level spread (phase 2a amendment B20): a fixed level per combustion entry, dbToGain(spread · p(k, n)) with p = +1 for cylinder 1 and −1/(n − 1) for the others (zero mean in dB), so cylinder 1's own pulse train adds equally strong lines at every multiple of the cycle rate whatever the firing order; left out at 0 dB | First principles (Fourier series of a periodic pulse train) |
+| `src/dsp/perspective.ts` | Cabin boom (amendment B21): a peaking biquad (Q 1) at cabin.boomHz with cabin.boomDb of boost after the cabin transfer, bypassed at 0 dB | Audio EQ Cookbook (R. Bristow-Johnson), peakingEQ — the existing `Biquad.peaking` |
+| `tools/tune.ts` | Tunable vector v3 (phase 2b amendment D10): the B20 spread and the B21 boom centre and level | First principles |

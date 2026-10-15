@@ -33,7 +33,7 @@ const ENGINE: EngineDef = {
     sources: { layout: ['a'], combustion: ['b'], rpm: ['c'], aspiration: ['d'], gearbox: ['e'] },
   },
   voicing: {
-    pulse: { widthDeg: 60, alpha: 9, beta: 4, evoOffsetDeg: 140, cycleAsymmetry: 0.1 },
+    pulse: { widthDeg: 60, alpha: 9, beta: 4, evoOffsetDeg: 140, cycleAsymmetry: 0.1, cylinderSpreadDb: 0 },
     headersM: [0.55, 0.55, 0.6, 0.6, 0.65, 0.65, 0.7, 0.7],
     collectors: [
       { banks: [0], lengthM: 0.35 },
@@ -45,7 +45,7 @@ const ENGINE: EngineDef = {
     forcedInduction: null,
     mechanical: { blockGain: 0.3, valvetrainGain: 0.1 },
     overrun: { crackleRate: 0.5, fuelCutResumeRpm: 1200 },
-    cabin: { lowpassHz: 600, leakDb: -30 },
+    cabin: { lowpassHz: 600, leakDb: -30, boomHz: 100, boomDb: 0 },
     launchRpm: 4125,
     estimated: true,
   },
@@ -124,7 +124,15 @@ describe('engine.schema.json', () => {
     }],
     ['cabin leakDb above -10', (e) => (e.voicing.cabin.leakDb = -9)],
     ['cabin leakDb below -60', (e) => (e.voicing.cabin.leakDb = -61)],
-    ['a cabin without leakDb', (e) => Object.assign(e.voicing, { cabin: { lowpassHz: 600 } })],
+    ['a cabin without leakDb', (e) => Object.assign(e.voicing, { cabin: { lowpassHz: 600, boomHz: 100, boomDb: 0 } })],
+    ['cylinderSpreadDb above 6', (e) => (e.voicing.pulse.cylinderSpreadDb = 6.1)],
+    ['cylinderSpreadDb below 0', (e) => (e.voicing.pulse.cylinderSpreadDb = -0.1)],
+    ['a pulse without cylinderSpreadDb', (e) => Object.assign(e.voicing, { pulse: { widthDeg: 60, alpha: 9, beta: 4, evoOffsetDeg: 140, cycleAsymmetry: 0.1 } })],
+    ['cabin boomHz below 40', (e) => (e.voicing.cabin.boomHz = 39)],
+    ['cabin boomHz above 200', (e) => (e.voicing.cabin.boomHz = 201)],
+    ['cabin boomDb below 0', (e) => (e.voicing.cabin.boomDb = -0.5)],
+    ['cabin boomDb above 12', (e) => (e.voicing.cabin.boomDb = 12.5)],
+    ['a cabin without the boom', (e) => Object.assign(e.voicing, { cabin: { lowpassHz: 600, leakDb: -30 } })],
   ])('rejects %s', (_label, fn) => {
     expect(validateEngine(mutate(ENGINE, fn))).toBe(false);
   });
