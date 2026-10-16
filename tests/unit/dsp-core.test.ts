@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { MAX_COMBUSTION, MAX_SAMPLE_RATE, QUANTUM, type EngineDef, type OutputConfig } from '../../src/contracts';
 import { rmsDb } from '../../src/dsp/analysis';
-import { MIN_SAMPLE_RATE, TesboxDspCore, assertEngineFits } from '../../src/dsp/dsp-core';
+import { CUT_PULSE_OFF_DB, MIN_SAMPLE_RATE, TesboxDspCore, assertEngineFits, cutPulseGain } from '../../src/dsp/dsp-core';
+import { dbToGain } from '../../src/dsp/util';
 import {
   CoreHarness,
   FS,
@@ -513,5 +514,110 @@ describe('TesboxDspCore robustness and control', () => {
       if (expectPops) expect(pops, type).toBeGreaterThan(0);
       else expect(pops, type).toBe(0);
     }
+  });
+});
+
+describe('TesboxDspCore: engine pulses during overrun (phase 2a amendment B23)', () => {
+  /** v8-crossplane-test with voicing.overrun.cutPulseDb set. */
+  function withCut(cutPulseDb: number): EngineDef {
+    const def = structuredClone(loadFixture('v8-crossplane-test'));
+    def.voicing.overrun.cutPulseDb = cutPulseDb;
+    return def;
+  }
+
+  /** Records every CombustionSource.tick of the core: each entry's blowdown output and the ignition sum. */
+  function captureCombustion(core: TesboxDspCore, entries: number): { ex: number[][]; ign: number[] } {
+    const src = internals(core).combustion;
+    const tick = src.tick.bind(src);
+    const cap = { ex: Array.from({ length: entries }, (): number[] => []), ign: [] as number[] };
+    src.tick = (rpm, load, gain, exhaustOut, intakeGate) => {
+      const ign = tick(rpm, load, gain, exhaustOut, intakeGate);
+      for (let k = 0; k < entries; k++) cap.ex[k]?.push(exhaustOut[k] ?? 0);
+      cap.ign.push(ign);
+      return ign;
+    };
+    return cap;
+  }
+
+  it('cutPulseGain: dbToGain(cutPulseDb) up to 0 dB; at or below −60 dB (the neutral default) and for NaN no pulses', () => {
+    expect(CUT_PULSE_OFF_DB).toBe(-60);
+    expect(cutPulseGain(-60)).toBe(0);
+    expect(cutPulseGain(-75)).toBe(0);
+    expect(cutPulseGain(Number.NaN)).toBe(0);
+    expect(cutPulseGain(-59.9)).toBeCloseTo(dbToGain(-59.9), 15);
+    expect(cutPulseGain(-20)).toBeCloseTo(0.1, 15);
+    expect(cutPulseGain(0)).toBe(1);
+    expect(cutPulseGain(6)).toBe(1); // clamped to 0 dB
+  });
+
+  it('an eligible fuel cut holds the combustion gain at dbToGain(cutPulseDb) instead of 0; fuel resumes from at least that level', () => {
+    for (const db of [-60, -20, -6]) {
+      const cutGain = db === -60 ? 0 : dbToGain(db);
+      const h = new CoreHarness(withCut(db));
+      const ctl = makeCtl(5000, 0.5);
+      h.run(0.2, ctl);
+      ctl.load = -0.6;
+      h.run(0.2, ctl);
+      expect(internals(h.core).regime).toBe(1);
+      expect(internals(h.core).lastCombustionGain, `${db} dB, fuel cut`).toBeCloseTo(cutGain, 12);
+      ctl.load = -0.03; // regime 0.5: the crossfade leads while it is above the cut level
+      h.run(0.2, ctl);
+      expect(internals(h.core).lastCombustionGain, `${db} dB, regime 0.5`).toBeCloseTo(Math.max(0.5, cutGain), 9);
+      ctl.load = -0.6;
+      h.run(0.2, ctl);
+      // not eligible (clutch open): regime slews back to 0 from ≈ 0.967 while the resume floor holds the gain at
+      // max(0.15, cut level) — the 1.4.0 idle floor of 0.15 without cut pulses
+      ctl.driveline = 'clutch-open';
+      h.run(QUANTUM / FS, ctl);
+      expect(internals(h.core).lastCombustionGain, `${db} dB, resuming`).toBeCloseTo(Math.max(0.15, cutGain), 9);
+      h.run(0.2, ctl);
+      expect(internals(h.core).lastCombustionGain, `${db} dB, resumed`).toBe(1);
+    }
+  });
+
+  it('the cut pulses are the idle-load pulses × dbToGain(cutPulseDb): the same firing order, timing and pulse shape', () => {
+    const def = withCut(-20);
+    const n = def.spec.combustion.length;
+    const rpm = 3000;
+    expect(rpm).toBeGreaterThan(def.voicing.overrun.fuelCutResumeRpm);
+    // idle load: load 0 with the clutch open (no fuel cut, combustion gain 1), the idle segment's operating point
+    const idle = new CoreHarness(def);
+    const idleCap = captureCombustion(idle.core, n);
+    idle.run(1, makeCtl(rpm, 0, { driveline: 'clutch-open' }));
+    // closed throttle, engaged, above the resume rpm: a fuel cut
+    const cut = new CoreHarness(def);
+    const cutCap = captureCombustion(cut.core, n);
+    cut.run(1, makeCtl(rpm, -0.6));
+    expect(internals(cut.core).regime).toBe(1);
+    const none = new CoreHarness(withCut(-60));
+    const noneCap = captureCombustion(none.core, n);
+    none.run(1, makeCtl(rpm, -0.6));
+    // compare after the 80 ms regime slew and the 10 Hz DC blockers' memory of it (e^−33 by 0.6 s)
+    const from = Math.round(0.6 * FS);
+    const g = dbToGain(-20);
+    let peak = 0;
+    let err = 0;
+    let left = 0;
+    for (let k = 0; k < n; k++) {
+      const a = idleCap.ex[k] ?? [];
+      const b = cutCap.ex[k] ?? [];
+      const c = noneCap.ex[k] ?? [];
+      expect(a.length).toBe(FS);
+      for (let i = from; i < FS; i++) {
+        peak = Math.max(peak, Math.abs(a[i] ?? 0));
+        err = Math.max(err, Math.abs((b[i] ?? 0) - g * (a[i] ?? 0)));
+        left = Math.max(left, Math.abs(c[i] ?? 0));
+      }
+    }
+    expect(peak).toBeGreaterThan(0.05);
+    expect(err, 'cut pulses vs 0.1 × the idle-load pulses').toBeLessThan(1e-9 * peak);
+    expect(left, 'cutPulseDb −60: no pulses on fuel cut (Tesbox 1.4.0)').toBeLessThan(1e-9 * peak);
+    // the ignition impulses (which also drive the block layer): the same ticks, at 0.1 × the idle-load impulse
+    const fired = (ign: number[]): number[] => ign.flatMap((x, i) => (i >= from && x !== 0 ? [i] : []));
+    // 0.4 s × 25 cycles/s × 8 firings per cycle
+    expect(Math.abs(fired(idleCap.ign).length - 0.4 * (rpm / 120) * n)).toBeLessThanOrEqual(1);
+    expect(fired(cutCap.ign)).toEqual(fired(idleCap.ign));
+    for (const i of fired(idleCap.ign)) expect((cutCap.ign[i] ?? 0) / (idleCap.ign[i] ?? 1), `tick ${i}`).toBeCloseTo(g, 12);
+    expect(fired(noneCap.ign)).toEqual([]);
   });
 });

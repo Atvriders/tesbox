@@ -33,7 +33,7 @@ import { OutputStage } from './output-stage';
 import { OverrunLayer } from './overrun';
 import { PerspectiveMixer } from './perspective';
 import { RpmState } from './rpm-state';
-import { clamp, smoothstep } from './util';
+import { clamp, dbToGain, smoothstep } from './util';
 
 /** Engine / tier / bass changes while running: fade-out → apply → fade-in, each this long (s). */
 export const CONFIG_FADE_S = 0.3;
@@ -50,6 +50,11 @@ const HOT_MUFFLER_MPS = 460;
 const REGIME_SLEW_S = 0.08;
 const VALVE_SLEW_S = 0.2;
 const IDLE_FLOOR = 0.15;
+/**
+ * voicing.overrun.cutPulseDb at or below which a fuel cut fires no pulses (phase 2a amendment B23): the neutral default,
+ * the fuel cut of Tesbox 1.4.0. engine.schema.json's floor.
+ */
+export const CUT_PULSE_OFF_DB = -60;
 /** Ignition on: excitation and mix ramp up over this (s). */
 const IGNITION_RISE_S = 0.02;
 /** Ignition off: combustion/layer excitation fades over this… */
@@ -86,6 +91,17 @@ function finiteOr(x: number, fallback: number): number {
 /** Distinct, decorrelated module seeds from the core seed (golden-ratio increment). */
 function deriveSeed(seed: number, k: number): number {
   return (seed ^ Math.imul(k, 0x9e3779b9)) >>> 0;
+}
+
+/**
+ * Phase 2a amendment B23: the fuel-cut floor of the combustion gain for voicing.overrun.cutPulseDb — dbToGain(cutPulseDb)
+ * above CUT_PULSE_OFF_DB (clamped to 0 dB), else 0: no pulses, the Tesbox 1.4.0 fuel cut (also for NaN). A firing's
+ * amplitude is level(load) × gain with level(0) = the idle-load level, and an eligible fuel cut runs at load ≤ −0.08
+ * (clamped to 0), so a cut firing is the idle-load firing × this gain: cutPulseDb below the idle pulse. Allocation-free.
+ */
+export function cutPulseGain(cutPulseDb: number): number {
+  if (!(cutPulseDb > CUT_PULSE_OFF_DB)) return 0;
+  return cutPulseDb < 0 ? dbToGain(cutPulseDb) : 1;
 }
 
 function copyOutput(src: OutputConfig, dst: OutputConfig, trimDb: number): void {
@@ -231,6 +247,10 @@ export class TesboxDspCore implements DspCore {
   private isTurbo = false;
   private valveFitted = false;
   private fuelCutResumeRpm = 0;
+  /** B23: the combustion-gain floor during an eligible fuel cut (cutPulseGain; 0 = no pulses, as in 1.4.0)… */
+  private cutFloor = 0;
+  /** …and outside eligibility, where fuel resumes: max(IDLE_FLOOR, cutFloor), so it never dips below the cut level. */
+  private resumeFloor = IDLE_FLOOR;
   private trimDb = 0;
 
   // deferred swap
@@ -394,7 +414,8 @@ export class TesboxDspCore implements DspCore {
     const throttle = load > 0 ? load : 0;
     const eligible = c.ignitionOn && c.rpm > this.fuelCutResumeRpm && c.driveline === 'engaged';
     const regimeTarget = eligible ? 1 - smoothstep(-0.08, 0.02, load) : 0;
-    const floor = eligible ? 0 : IDLE_FLOOR;
+    // B23: an eligible fuel cut keeps its firings at cutFloor × the idle-load pulse (0 at the neutral −60 dB: none)
+    const floor = eligible ? this.cutFloor : this.resumeFloor;
 
     const warmup = this.hot || c.warm ? 1 : 1 - Math.exp(-c.runTimeS / WARMUP_TAU_S);
     const heat = warmup * (0.6 + 0.4 * throttle);
@@ -583,6 +604,8 @@ export class TesboxDspCore implements DspCore {
     this.isTurbo = spec.aspiration.type === 'turbo';
     this.valveFitted = voicing.exhaust.valve.fitted;
     this.fuelCutResumeRpm = voicing.overrun.fuelCutResumeRpm;
+    this.cutFloor = cutPulseGain(voicing.overrun.cutPulseDb);
+    this.resumeFloor = this.cutFloor > IDLE_FLOOR ? this.cutFloor : IDLE_FLOOR;
   }
 
   private resetModules(): void {

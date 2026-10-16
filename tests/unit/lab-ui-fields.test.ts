@@ -51,10 +51,11 @@ const SCALAR_RANGES: Record<string, [number, number]> = {
   'mechanical.valvetrainGain': [0, 1],
   'overrun.crackleRate': [0, 10],
   'overrun.fuelCutResumeRpm': [500, 6000],
+  'overrun.cutPulseDb': [-60, 0],
   'cabin.lowpassHz': [200, 2000],
   'cabin.leakDb': [-60, -10],
-  'cabin.boomHz': [40, 200],
-  'cabin.boomDb': [0, 12],
+  'cabin.boomHz': [40, 400],
+  'cabin.boomDb': [-12, 12],
   launchRpm: [1000, 10000],
 };
 

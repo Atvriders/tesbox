@@ -365,22 +365,22 @@ Sign-off: pending — the user's listening check (default vs tuned previews, cab
 
 Tuned voicing: i4-turbo-20
 
-Composite (render vs references): default **0.462** → tuned **0.696**. Gates: 5 pass, 1 fail (subOrder); discrimination **pass** → **FAIL**.
+Composite (render vs references): default **0.462** → tuned **0.726**. Gates: 6 pass, 0 fail; discrimination **pass** → **PASS**.
 
-History: 1.3.0 tuned 0.684; phase 5 P0b re-tune 0.696 (sub-orders 0.492 → 0.494).
+History: 1.3.0 tuned 0.684; phase 5 P0b re-tune 0.696 (sub-orders 0.492 → 0.494, below their 0.527 gate); phase 5 P0c re-tune 0.726.
 
 | metric | ref vs ref | gate (0.8 ×) | default | tuned | result |
 |---|---|---|---|---|---|
-| Order profile | 0.912 | 0.730 | 0.666 | 0.781 | pass |
-| Spectral tilt | 0.673 | 0.539 | 0.594 | 0.766 | pass |
-| Spectral centroid | 0.329 | 0.263 | 0.231 | 0.483 | pass |
-| Sub-orders | 0.659 | 0.527 | 0.510 | 0.494 | fail |
-| Pulse irregularity | 0.564 | 0.451 | 0.593 | 0.581 | pass |
+| Order profile | 0.912 | 0.730 | 0.666 | 0.812 | pass |
+| Spectral tilt | 0.673 | 0.539 | 0.594 | 0.774 | pass |
+| Spectral centroid | 0.329 | 0.263 | 0.231 | 0.511 | pass |
+| Sub-orders | 0.659 | 0.527 | 0.510 | 0.582 | pass |
+| Pulse irregularity | 0.564 | 0.451 | 0.593 | 0.594 | pass |
 | Forced-induction line | — | — | — | — | n/a |
 | Overrun | — | — | 0.170 | 1.000 | n/a |
 | Forced-induction presence | 0.949 | 0.759 | 0.957 | 0.957 | pass |
 
-Discrimination (tuned render vs each tuned engine's references): own 0.696; flat4-turbo-25 0.627; flat6-na-40 0.570; i5-turbo-25 0.456; i6-twinturbo-30 0.409; rotary-twin-13 0.512; v10-na-48 0.379; v10-na-52 0.492; v12-na-65 0.508; v6-twinturbo-38 0.560; v8-flatplane-45 0.553; v8-na-50 0.561; v8-na-62 0.596; v8-sc-62 0.599; v8-twinturbo-40 0.584.
+Discrimination (tuned render vs each tuned engine's references): own 0.726; flat4-turbo-25 0.632; flat6-na-40 0.530; i5-turbo-25 0.403; i6-twinturbo-30 0.406; rotary-twin-13 0.527; v10-na-48 0.366; v10-na-52 0.435; v12-na-65 0.453; v6-twinturbo-38 0.534; v8-flatplane-45 0.581; v8-na-50 0.540; v8-na-62 0.579; v8-sc-62 0.597; v8-twinturbo-40 0.572.
 
 References (private, local only — never committed or shipped):
 
@@ -392,9 +392,9 @@ References (private, local only — never committed or shipped):
 | `gti-exhaust-a` | outside | [2021 VW Golf 8 GTI DSG Stock Exhaust Sounds with Burbles / OnBoard, Exhaust, Accelerations & More!](https://www.youtube.com/watch?v=RfMebPPZD8I) | liftoff: 2.4, wot: 1.2 | used |
 | `gti-exhaust-b` | outside | [2022 Volkswagen Golf GTI DSG Walkaround + Exhaust (No Talking)(ASMR)](https://www.youtube.com/watch?v=PtJ0gcujMt4) | idle: 4.0 | used |
 
-Gates not passed and their most likely structural causes (Phase 5 items):
+What changed in phase 5 P0c:
 
-- **Sub-orders** (0.494 against 0.527, a near miss; 1.3.0: 0.492): per reference the four WOT pairs score 0.52–0.75 and the two lift-off pairs 0.15 (cabin) and 0.13 (outside) — the shortfall is the lift-off. The render's fuel-cut overrun has no combustion pulses, so the per-cylinder spread cannot add half orders there; under power it moves the render away from the recordings (forced to 1 / 2 / 3 dB: sub-orders 0.490 / 0.484 / 0.478, composite 0.695 / 0.672 / 0.671), so the re-tune left it at 0 dB (it set the cabin boom to 100 Hz, +3 dB, the collector to 0.666 m, intake.helmholtzHz to 196.5 Hz and cabin.leakDb to −33 dB). Engine pulses during overrun (the deferred P0 fuel-cut floor) are the likely fix (phase 5 follow-up).
+- **Sub-orders** now pass (0.582 against the 0.527 gate; 1.4.0: 0.494). The engine keeps firing on the fuel cut (phase 2a amendment B23) at cutPulseDb 0 dB, its idle-load pulse level: the cabin lift-off pair rises from 0.12 to 0.67 (the outside lift-off pair falls from 0.13 to 0.05; the four WOT pairs score 0.55–0.81). The re-tune took two runs of the same CMA-ES command (D11 vector, all fifteen libraries). From the 1.4.0 voicing, with cutPulseDb at its neutral −60 dB, it stalled at 0.707 (sub-orders 0.495): the score does not move between −60 and −12 dB, so neither CMA-ES nor the polish ever raised the level (forced to −6 / 0 dB: sub-orders 0.503 / 0.542, composite 0.709 / 0.719). Started again from that result with cutPulseDb at 0 dB, it kept 0 dB and reached 0.726. Against 1.4.0 the voicing now has a wider pulse (widthDeg 58.6 → 66.1, beta 6.2 → 6.65), headers × 0.965, collector 0.711 m, mid-pipe 1.93 m, tailpipe 1.191 m, intake.gain 0.826, cabin.leakDb −28 dB and a boom of +5.4 dB at 64 Hz.
 
 Sign-off: pending — the user's listening check (default vs tuned previews, cabin and outside).
 
@@ -402,22 +402,22 @@ Sign-off: pending — the user's listening check (default vs tuned previews, cab
 
 Tuned voicing: flat4-turbo-25
 
-Composite (render vs references): default **0.564** → tuned **0.792**. Gates: 5 pass, 1 fail (orderProfile); discrimination **pass** → **FAIL**.
+Composite (render vs references): default **0.564** → tuned **0.793**. Gates: 5 pass, 1 fail (orderProfile); discrimination **pass** → **FAIL**.
 
-History: 1.3.0 tuned 0.786; phase 5 P0b re-tune 0.792 (order profile unchanged at 0.705).
+History: 1.3.0 tuned 0.786; phase 5 P0b re-tune 0.792 (order profile unchanged at 0.705); phase 5 P0c re-tune 0.793 (order profile still 0.705).
 
 | metric | ref vs ref | gate (0.8 ×) | default | tuned | result |
 |---|---|---|---|---|---|
 | Order profile | 0.937 | 0.750 | 0.542 | 0.705 | fail |
-| Spectral tilt | 0.787 | 0.629 | 0.572 | 0.753 | pass |
-| Spectral centroid | 0.560 | 0.448 | 0.346 | 0.826 | pass |
+| Spectral tilt | 0.787 | 0.629 | 0.572 | 0.764 | pass |
+| Spectral centroid | 0.560 | 0.448 | 0.346 | 0.824 | pass |
 | Sub-orders | 0.537 | 0.430 | 0.487 | 0.777 | pass |
-| Pulse irregularity | 0.793 | 0.635 | 0.668 | 0.763 | pass |
+| Pulse irregularity | 0.793 | 0.635 | 0.668 | 0.762 | pass |
 | Forced-induction line | — | — | — | — | n/a |
 | Overrun | — | — | — | — | n/a |
 | Forced-induction presence | 0.849 | 0.679 | 0.921 | 0.949 | pass |
 
-Discrimination (tuned render vs each tuned engine's references): own 0.792; flat6-na-40 0.593; i4-turbo-20 0.482; i5-turbo-25 0.482; i6-twinturbo-30 0.544; rotary-twin-13 0.447; v10-na-48 0.280; v10-na-52 0.518; v12-na-65 0.628; v6-twinturbo-38 0.564; v8-flatplane-45 0.405; v8-na-50 0.578; v8-na-62 0.497; v8-sc-62 0.504; v8-twinturbo-40 0.462.
+Discrimination (tuned render vs each tuned engine's references): own 0.793; flat6-na-40 0.592; i4-turbo-20 0.485; i5-turbo-25 0.484; i6-twinturbo-30 0.541; rotary-twin-13 0.439; v10-na-48 0.278; v10-na-52 0.516; v12-na-65 0.631; v6-twinturbo-38 0.564; v8-flatplane-45 0.407; v8-na-50 0.582; v8-na-62 0.499; v8-sc-62 0.504; v8-twinturbo-40 0.465.
 
 References (private, local only — never committed or shipped):
 
@@ -431,7 +431,7 @@ References (private, local only — never committed or shipped):
 
 Gates not passed and their most likely structural causes (Phase 5 items):
 
-- **Order profile** (0.705 against 0.750, unchanged by the phase 5 P0b re-tune): per reference the cabin idle pair scores 0.58 and the three cabin WOT pairs 0.74–0.76. In the cabin at 6,000 rpm the render's orders 2.5–3.5 sit 6–15 dB above both recordings while its orders 6.5–8 are 5–10 dB weak (1.3.0 analysis); the tuner trades one against the other (the recordings agree with each other unusually well: ceiling 0.937). Neither P0b parameter can cut those orders: the per-cylinder spread only adds half orders (forced to 2 dB: order profile 0.705, sub-orders 0.777 → 0.730, composite 0.779) and the cabin boom only boosts 40–200 Hz, so the re-tune left both neutral and moved only mufflerAction (0.47 → 0.42) and valvetrainGain (0.611 → 0.961). Finer control of the boxer's unequal-header half orders, or a cabin-transfer cut near 250–350 Hz, is the likely fix (phase 5 follow-up).
+- **Order profile** (0.705 against 0.750, unchanged by the phase 5 P0b and P0c re-tunes): per reference the cabin idle pair scores 0.58 and the three cabin WOT pairs 0.74–0.76, so with the idle pair as it is the WOT pairs would have to average 0.81. The P0c re-tune (CMA-ES over the D11 vector) left the new cabin cut (phase 2a amendment B22) neutral and moved only valvetrainGain (0.961 → 1) and forcedInduction.cabinGainDb (−12.3 → −15.8 dB). Forced cuts show why: −6 dB at 250 / 300 / 350 / 400 Hz lifts the WOT pairs to 0.75–0.77 but the order profile only to 0.695 / 0.710 / 0.715 / 0.715, at a composite of 0.735–0.739 (centroid, sub-orders and irregularity fall); −3 dB at 300 Hz gives 0.711 at 0.766. Engine pulses during overrun (B23) cannot help: no flat4-turbo-25 reference has a lift-off segment. The idle pair — the render's orders at ≈ 800 rpm, which no cut at 250–350 Hz reaches — is the likely next target (phase 5 follow-up).
 
 Sign-off: pending — the user's listening check (default vs tuned previews, cabin and outside).
 

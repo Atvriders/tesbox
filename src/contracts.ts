@@ -128,11 +128,20 @@ export interface EngineVoicing {
     outsideGainDb: number; // −60 … 0
   } | null;
   mechanical: { blockGain: number; valvetrainGain: number };
-  overrun: { crackleRate: number; fuelCutResumeRpm: number };
+  overrun: {
+    crackleRate: number;
+    fuelCutResumeRpm: number;
+    /**
+     * Engine pulses during overrun (phase 2a amendment B23), −60 … 0 dB, default −60 = none (the fuel cut fires no
+     * pulses): above −60, fuel-cut firings keep their blowdown pulse and ignition impulse at this level relative to the
+     * engine's idle-load pulse (src/dsp/dsp-core.ts cutPulseGain).
+     */
+    cutPulseDb: number;
+  };
   /**
    * Cabin transfer (phase 2a amendment B19): a 2nd-order Butterworth low-pass at lowpassHz (200–2000) plus a
    * high-frequency leak at leakDb (−60 … −10, default −30) that keeps the engine's upper harmonics; then the body boom
-   * (B21), a peaking filter at boomHz (40–200, default 100) by boomDb (0–12, default 0 = off).
+   * (B21, B22), a peaking filter at boomHz (40–400, default 100) by boomDb (−12 … +12, a cut below 0; default 0 = off).
    */
   cabin: { lowpassHz: number; leakDb: number; boomHz: number; boomDb: number };
   /** Clutch/DCT launch target rpm (voicing, not manufacturer data). */

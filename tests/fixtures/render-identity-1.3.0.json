@@ -1,5 +1,5 @@
 {
-  "about": "Phase 5 contract P0b: SHA-256 of every score render (tests/helpers/render-hash.ts) of the fifteen garage engines as Tesbox 1.3.0 rendered them. Engines re-tuned since carry their 1.3.0 voicing, with the P0b fields at the neutral defaults (pulse.cylinderSpreadDb 0, cabin.boomHz 100, cabin.boomDb 0). Never regenerate: the hashes are the 1.3.0 renders. Each render also carries its per-channel RMS: the hashes are bit-exact only on the runtime below (Node/V8), so another runtime compares the RMS.",
+  "about": "Phase 5 contract P0b: SHA-256 of every score render (tests/helpers/render-hash.ts) of the fifteen garage engines as Tesbox 1.3.0 rendered them. Engines re-tuned since carry their 1.3.0 voicing, with the P0b and P0c fields at the neutral defaults (pulse.cylinderSpreadDb 0, cabin.boomHz 100, cabin.boomDb 0, overrun.cutPulseDb -60). Never regenerate: the hashes are the 1.3.0 renders. Each render also carries its per-channel RMS: the hashes are bit-exact only on the runtime below (Node/V8), so another runtime compares the RMS.",
   "runtime": {
     "node": "24.19.0",
     "v8": "13.6.233.17-node.51"
@@ -98,7 +98,8 @@
         },
         "overrun": {
           "crackleRate": 0.5,
-          "fuelCutResumeRpm": 1250
+          "fuelCutResumeRpm": 1250,
+          "cutPulseDb": -60
         },
         "cabin": {
           "lowpassHz": 369,
@@ -349,7 +350,8 @@
         },
         "overrun": {
           "crackleRate": 0.5,
-          "fuelCutResumeRpm": 1200
+          "fuelCutResumeRpm": 1200,
+          "cutPulseDb": -60
         },
         "cabin": {
           "lowpassHz": 281,
@@ -1417,7 +1419,8 @@
         },
         "overrun": {
           "crackleRate": 0.5,
-          "fuelCutResumeRpm": 1200
+          "fuelCutResumeRpm": 1200,
+          "cutPulseDb": -60
         },
         "cabin": {
           "lowpassHz": 1202,

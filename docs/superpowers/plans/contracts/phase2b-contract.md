@@ -179,9 +179,9 @@ bounded **Nelder–Mead** over the TUNABLE voicing vector (each normalised to [0
 | cabin.lowpassHz | 300–1200 |
 | forcedInduction.cabinGainDb (if present) | −24 – −6 |
 
-(Superseded by amendments D9 and D10: one header scale per bank, one length per collector, the full schema ranges of
-`cabin.lowpassHz` and `mechanical.valvetrainGain`, the phase 2a B18/B19 levels, and (D10) the B20 spread and the
-B21 boom.)
+(Superseded by amendments D9, D10 and D11: one header scale per bank, one length per collector, the full schema ranges
+of `cabin.lowpassHz` and `mechanical.valvetrainGain`, the phase 2a B18/B19 levels, (D10) the B20 spread and the
+B21 boom, and (D11) the B22 boom ranges and the B23 overrun pulses.)
 
 Objective = −(composite renderVsRef over all scored segments) + 0.5·max(0, bestOtherComposite −
 ownComposite + 0.02). Spec fields (firing angles, ratios, rpm) are never tuned. Every candidate must
@@ -340,3 +340,17 @@ Phase 2b lands as one verified commit.
   ranges follow. Only the three near-miss engines (v8-sc-62, flat4-turbo-25, i4-turbo-20) are re-tuned
   with v3; every other engine keeps its 1.3.0 voicing with the neutral defaults and renders
   bit-identically (phase 2a B20/B21).
+- **D11 Tunable vector v4 (2026-10-15, phase 5 contract P0c; extends D10):** the B23 overrun pulses join
+  the vector and the boom takes its B22 ranges, inside the schema, so every candidate still validates:
+
+  | parameter | range | grid | position |
+  |---|---|---|---|
+  | overrun.cutPulseDb (phase 2a B23) | −60–0 dB | 0.1 dB | after mechanical.valvetrainGain |
+  | cabin.boomHz (phase 2a B21, B22) | 40–400 Hz (D10: 40–200) | 1 Hz | after cabin.leakDb |
+  | cabin.boomDb (phase 2a B21, B22) | −12–12 dB (D10: 0–12) | 0.1 dB | after cabin.boomHz |
+
+  A voicing at the neutral −60 dB starts on the lower box edge of cutPulseDb (CMA-ES evaluates such
+  candidates at their clamp with the P1 boundary penalty); the neutral boom level, 0 dB, is now the middle
+  of its box, so the search may boost or cut. The Lab's T6 ranges follow. Only the two engines still
+  missing a gate (flat4-turbo-25, i4-turbo-20) are re-tuned with v4; every other engine keeps its 1.4.0
+  voicing with cutPulseDb −60 and renders bit-identically (phase 2a B22/B23).

@@ -524,3 +524,44 @@ ITU-R BS.1770 (true peak), Kaiser window design.
   0 dB). Evidence (1.3.0 scores): v8-sc-62 order profile 0.696 against the 0.709 gate — the cabin
   recordings are led by orders 1–2 (a low boom near 90–180 Hz at 5,500 rpm), the render by the firing
   order 4, and no voicing parameter shaped the cabin's low orders.
+- **B22 Cabin boom cut (2026-10-15, phase 5 contract P0c.1; extends B21):** `cabin.boomDb` widens to
+  −12 … +12 dB and `cabin.boomHz` to 40 … 400 Hz (defaults unchanged: 0 dB, 100 Hz; the schema enforces
+  both ranges). Below 0 dB the same peakingEQ biquad (`Biquad.peaking`, Q = `CABIN_BOOM_Q` = 1) cuts by
+  |boomDb| at `boomHz`: with A = 10^(boomDb/40), A → 1/A swaps the biquad's numerator and denominator, so
+  the cut is the exact inverse of the boost by as many dB, |H(f; −G)| = 1/|H(f; +G)| at every f — still
+  minimum phase (the boost's zeros, inside the unit circle, become the cut's poles) and as wide (≈ 1.4
+  octaves between the points at half the cut in dB). `boomDb` is clamped to ±12 dB (`CABIN_BOOM_MAX_DB`)
+  and only 0 bypasses the filter, so every Tesbox 1.4.0 voicing — the boosts of v8-sc-62 (+11.5 dB at
+  143 Hz) and i4-turbo-20 (+3 dB at 100 Hz) included — renders bit-identically. Proof:
+  `tests/unit/render-identity.test.ts` also hashes the score renders of the three P0b re-tunes at their
+  1.4.0 voicings against the hashes the 1.4.0 code rendered (`tests/fixtures/render-identity-1.4.0.json`;
+  flat4-turbo-25 and i4-turbo-20, re-tuned since, render their stored 1.4.0 voicing). Evidence (1.4.0
+  scores, docs/sound-scores.md): flat4-turbo-25 order profile 0.705 against the 0.750 gate — the render's
+  orders 2.5–3.5 sit 6–15 dB above both cabin recordings at 6,000 rpm (≈ 250–350 Hz), and the B21 boom
+  could only boost, and only up to 200 Hz.
+- **B23 Engine pulses during overrun (2026-10-15, phase 5 contract P0c.2):** `voicing.overrun` gains
+  `cutPulseDb` (−60 … 0 dB, default −60; required by the schema, set by `defaultVoicing`). Until now an
+  eligible fuel cut (ignition on, driveline engaged, rpm above `fuelCutResumeRpm`; the regime slews to 1
+  as the load falls below −0.08) faded the combustion gain to 1 − regime = 0: a lifted engine fired
+  nothing, and its exhaust carried only the overrun layer's airflow and crackle. A motored cylinder still
+  compresses and expands its charge and still blows down when its exhaust valve opens — a weaker pulse at
+  the same crank angle, in the same firing order — which is why lift-off recordings keep the engine's
+  orders. Definition: the per-sample combustion gain is max(1 − regime, floor) × ign, and while eligible
+  its floor is now g_cut = `cutPulseGain(cutPulseDb)` (`src/dsp/dsp-core.ts`): dbToGain(cutPulseDb) above
+  −60 dB (`CUT_PULSE_OFF_DB`; clamped to 0 dB), else 0. A firing's amplitude is level(ld) × jitter ×
+  cycle asymmetry × the fixed per-entry level (B20 spread, rotary face) × gain, with level(ld) =
+  0.15 + 0.85·ld^0.7 and ld the load clamped to 0 … 1; an eligible cut runs at load ≤ −0.08, so ld = 0 —
+  the idle segment's operating point (load 0, clutch open, combustion gain 1). Every firing of a fuel cut
+  therefore keeps its scheduled event — the blowdown pulse with the idle-load onset (α × 0.7) and width,
+  and the ignition impulse, which also drives the block layer — at exactly g_cut × the engine's idle-load
+  firing at that rpm: cutPulseDb below the idle pulse, with the same firing order, timing, per-cylinder
+  levels and pulse shape, so lift-off carries the engine's orders and half orders at that level. The
+  regime crossfade still leads while 1 − regime > g_cut (lifting off, the pulses fade from the driven
+  level to the cut level over the 80 ms regime slew). Outside eligibility, where fuel resumes, the floor
+  is max(0.15, g_cut) (`IDLE_FLOOR` = 0.15 before), so resuming never dips below the cut level. The intake
+  stays shut (throttle 0) and the overrun layer is unchanged. At the neutral −60 dB g_cut = 0 and the
+  resume floor is 0.15, exactly the 1.4.0 constants, so the output is bit-identical to Tesbox 1.4.0 (proof
+  as B22). The DSP test fixtures carry the neutral value. Evidence (1.4.0 scores): i4-turbo-20 sub-orders
+  0.494 against the 0.527 gate — per reference the four WOT pairs score 0.52–0.75 and the two lift-off
+  pairs 0.15 (cabin) and 0.13 (outside); the render's fuel cut had no pulses for the per-cylinder spread
+  (B20) to shape.

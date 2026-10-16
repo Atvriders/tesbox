@@ -66,7 +66,7 @@ export interface FieldGroup {
 }
 
 /**
- * Phase 2b contract T6 tunable ranges (as amended by D9 and D10) of single voicing fields (`[]` = any element), used
+ * Phase 2b contract T6 tunable ranges (as amended by D9, D10 and D11) of single voicing fields (`[]` = any element), used
  * only where the schema sets no maximum (today pulse.alpha and pulse.beta). pulse.widthDeg is left out: its T6
  * range depends on the engine (rotary or not), and the schema bounds it anyway.
  */
@@ -85,8 +85,9 @@ export const T6_RANGES: Readonly<Record<string, readonly [number, number]>> = {
   'mechanical.valvetrainGain': [0, 1],
   'cabin.lowpassHz': [200, 2000],
   'cabin.leakDb': [-60, -10],
-  'cabin.boomHz': [40, 200],
-  'cabin.boomDb': [0, 12],
+  'overrun.cutPulseDb': [-60, 0],
+  'cabin.boomHz': [40, 400],
+  'cabin.boomDb': [-12, 12],
   'forcedInduction.cabinGainDb': [-24, -6],
   'forcedInduction.whistleDb': [-60, 0],
   'forcedInduction.outsideGainDb': [-60, 0],

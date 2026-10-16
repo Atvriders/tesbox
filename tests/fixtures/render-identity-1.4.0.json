@@ -1,0 +1,429 @@
+{
+  "about": "Phase 5 contract P0c: SHA-256 of every score render (tests/helpers/render-hash.ts) of the three engines re-tuned in P0b (flat4-turbo-25, i4-turbo-20, v8-sc-62) at their 1.4.0 voicings, as Tesbox 1.4.0 rendered them. Engines re-tuned since (P0c: flat4-turbo-25, i4-turbo-20) carry their 1.4.0 voicing, with the P0c field at its neutral default (overrun.cutPulseDb -60); v8-sc-62 renders its shipped voicing. Never regenerate: the hashes are the 1.4.0 renders. Each render also carries its per-channel RMS: the hashes are bit-exact only on the runtime below (Node/V8), so another runtime compares the RMS.",
+  "runtime": {
+    "node": "24.19.0",
+    "v8": "13.6.233.17-node.51"
+  },
+  "engines": {
+    "flat4-turbo-25": {
+      "hashes": {
+        "idle": {
+          "cabin": "cdb1e314265bbd3a6485eb504a345e78e01f0d3771d24e05c2f8d0c16fa0ba7e",
+          "outside": "908f14f35e831f0c9b0b1aaa3cab3c77104985fb6144733ec1d9a10f39209d36"
+        },
+        "cruise2k": {
+          "cabin": "a5b640d90fe70e7f10fac5e6b4955db2a9534444bb884e330e1ee91713ad8741",
+          "outside": "3b6f7f91f5979d23cb46df6a092fc04309639a9bad6ea6b9280ebfd836ff1bad"
+        },
+        "cruise4k": {
+          "cabin": "26625396853c8dfdf9c16e67c138ec035c69fed86331df399a9c8e1038c87449",
+          "outside": "9cec35c428b9c14f4b739696bcebefc5ee9adb26af246b2e762b987d6a9c28f4"
+        },
+        "cruise6k": {
+          "cabin": "32ba302e9e7018391e2d46eeb46c4e3ab536fe52a934a60762a4136618ee2e8b",
+          "outside": "6c2ffaa361f799c83f20302bf8aaf4e8a90645f7ec0b9f7a981251bb6501601a"
+        },
+        "wotPull": {
+          "cabin": "a445e5e64af290ae9f7f99636c8abd63af556cfcb193c0e281c406aa4b9bec1e",
+          "outside": "4231d9c1edab4cfdaf136e05ad33524b072f291bde287e6c71f927bc99ea6595"
+        },
+        "liftoff6k": {
+          "cabin": "b82543255e7cae658afac144ccfe3d62e25c8eeeb64284ab425f5a2a20c1c805",
+          "outside": "99cec6db34f41c7d4389040ebe101a39ddf878beb6795258f85238e95f1e4185"
+        }
+      },
+      "rms": {
+        "idle": {
+          "cabin": [
+            0.029133945323263615,
+            0.02496755671383009
+          ],
+          "outside": [
+            0.028806150690816865,
+            0.02480857374577908
+          ]
+        },
+        "cruise2k": {
+          "cabin": [
+            0.08442079775655537,
+            0.07438729551582046
+          ],
+          "outside": [
+            0.07679756171148241,
+            0.06941364058764522
+          ]
+        },
+        "cruise4k": {
+          "cabin": [
+            0.06813142273066894,
+            0.06099210701282677
+          ],
+          "outside": [
+            0.06031178867938794,
+            0.057557516016941715
+          ]
+        },
+        "cruise6k": {
+          "cabin": [
+            0.0675453638368848,
+            0.06066917139010547
+          ],
+          "outside": [
+            0.06357695283607773,
+            0.06104887750222293
+          ]
+        },
+        "wotPull": {
+          "cabin": [
+            0.13515425327634137,
+            0.12017125098308462
+          ],
+          "outside": [
+            0.11353260490212493,
+            0.10578727193886055
+          ]
+        },
+        "liftoff6k": {
+          "cabin": [
+            0.035357720627851516,
+            0.032559838066857964
+          ],
+          "outside": [
+            0.05094967035041497,
+            0.05075563104497091
+          ]
+        }
+      },
+      "voicing": {
+        "pulse": {
+          "widthDeg": 49.8,
+          "alpha": 14.93,
+          "beta": 3.22,
+          "evoOffsetDeg": 140,
+          "cycleAsymmetry": 0.139,
+          "cylinderSpreadDb": 0
+        },
+        "headersM": [
+          0.383,
+          0.639,
+          0.352,
+          0.587
+        ],
+        "collectors": [
+          {
+            "banks": [
+              0
+            ],
+            "lengthM": 0.411
+          },
+          {
+            "banks": [
+              1
+            ],
+            "lengthM": 0.215
+          }
+        ],
+        "turbine": {
+          "reflection": 0.45,
+          "lpHz": 1500
+        },
+        "exhaust": {
+          "midPipeM": 0.886,
+          "mufflerSectionsM": [
+            0.247,
+            0.401,
+            0.554
+          ],
+          "mufflerAction": 0.42,
+          "tailpipeM": 0.907,
+          "valve": {
+            "fitted": true,
+            "openGainDb": 4
+          }
+        },
+        "intake": {
+          "runnerM": 0.3,
+          "helmholtzHz": 100.3,
+          "gain": 0.806
+        },
+        "forcedInduction": {
+          "spoolTimeS": 0.6,
+          "maxShaftKrpm": 180,
+          "lift": "bov",
+          "cabinGainDb": -12.3,
+          "whistleDb": -36.9,
+          "outsideGainDb": -25.5
+        },
+        "mechanical": {
+          "blockGain": 0.199,
+          "valvetrainGain": 0.961
+        },
+        "overrun": {
+          "crackleRate": 0.5,
+          "fuelCutResumeRpm": 1250,
+          "cutPulseDb": -60
+        },
+        "cabin": {
+          "lowpassHz": 369,
+          "leakDb": -20.4,
+          "boomHz": 100,
+          "boomDb": 0
+        },
+        "launchRpm": 3015,
+        "estimated": true
+      }
+    },
+    "i4-turbo-20": {
+      "hashes": {
+        "idle": {
+          "cabin": "2e958ed28f8bfeb6feda6fa28c2dc09cb64a1cd688443e3049b48eb2007d1854",
+          "outside": "00cd35b7ab35fc2717c55d0b3dd09882f0d5bf724dcc3912a52e38c77054b63b"
+        },
+        "cruise2k": {
+          "cabin": "8d0a290ee320d70a40f3915791112601af55ffdff714e3507e56d7403f0da475",
+          "outside": "b533a426d715b0c72f947c475c9193704206418d4c483f376fbe73c2c2aabb01"
+        },
+        "cruise4k": {
+          "cabin": "225acc93551cf1851c4f472362864e8080403a780238d3061ad1677fbc27eb4c",
+          "outside": "5eb95f7326c061817d73673024655c83bf8acd3757cf8c9ef9115f9bd1f03721"
+        },
+        "cruise6k": {
+          "cabin": "91415035dadb4f3113f8e9a12cad14d28b82f8a09a38fd9c41cf7d7b47730f4f",
+          "outside": "35be00ac0eb0e480fefd1b56bac3d98bfd6429327ddf789f8627cccd3f220c29"
+        },
+        "wotPull": {
+          "cabin": "0a9a9d1dbaac49716ddd0437d62abbe3e13da635c56843e644bf123a9e429960",
+          "outside": "1e3c60ac6c306af2d34f137c96bd575682624acac4cb69f7e5a8af2aa5c2e735"
+        },
+        "liftoff6k": {
+          "cabin": "46b128113db06ff2d4693692aec61482c84c47c4cd264405b45a511721a89978",
+          "outside": "76198c807cdb1dc487ee03209851da93a684e435c0e7b0088d442b127abe6d1d"
+        }
+      },
+      "rms": {
+        "idle": {
+          "cabin": [
+            0.01929527036069044,
+            0.016626540557663837
+          ],
+          "outside": [
+            0.016522673993971282,
+            0.014271267590802425
+          ]
+        },
+        "cruise2k": {
+          "cabin": [
+            0.08992253028565964,
+            0.08102959465033913
+          ],
+          "outside": [
+            0.08365101243329243,
+            0.07674818790969179
+          ]
+        },
+        "cruise4k": {
+          "cabin": [
+            0.07994163972902639,
+            0.07180019052005229
+          ],
+          "outside": [
+            0.06017287958118114,
+            0.0567598728009027
+          ]
+        },
+        "cruise6k": {
+          "cabin": [
+            0.10900976006149646,
+            0.09866099665001218
+          ],
+          "outside": [
+            0.09537539678270528,
+            0.08761541352716382
+          ]
+        },
+        "wotPull": {
+          "cabin": [
+            0.14149566804907343,
+            0.12814005477328044
+          ],
+          "outside": [
+            0.11475590862728738,
+            0.1101460326846055
+          ]
+        },
+        "liftoff6k": {
+          "cabin": [
+            0.04332934489697896,
+            0.03916499477329217
+          ],
+          "outside": [
+            0.05425850361284751,
+            0.053411049422120896
+          ]
+        }
+      },
+      "voicing": {
+        "pulse": {
+          "widthDeg": 58.6,
+          "alpha": 14.76,
+          "beta": 6.2,
+          "evoOffsetDeg": 140,
+          "cycleAsymmetry": 0.017,
+          "cylinderSpreadDb": 0
+        },
+        "headersM": [
+          0.536,
+          0.627,
+          0.57,
+          0.661
+        ],
+        "collectors": [
+          {
+            "banks": [
+              0
+            ],
+            "lengthM": 0.666
+          }
+        ],
+        "turbine": {
+          "reflection": 0.45,
+          "lpHz": 1500
+        },
+        "exhaust": {
+          "midPipeM": 2.05,
+          "mufflerSectionsM": [
+            0.154,
+            0.25,
+            0.345
+          ],
+          "mufflerAction": 1,
+          "tailpipeM": 1.141,
+          "valve": {
+            "fitted": true,
+            "openGainDb": 4
+          }
+        },
+        "intake": {
+          "runnerM": 0.3,
+          "helmholtzHz": 196.5,
+          "gain": 0.876
+        },
+        "forcedInduction": {
+          "spoolTimeS": 0.6,
+          "maxShaftKrpm": 180,
+          "lift": "bov",
+          "cabinGainDb": -19.9,
+          "whistleDb": -34,
+          "outsideGainDb": -50.8
+        },
+        "mechanical": {
+          "blockGain": 0.575,
+          "valvetrainGain": 0
+        },
+        "overrun": {
+          "crackleRate": 0.5,
+          "fuelCutResumeRpm": 1200,
+          "cutPulseDb": -60
+        },
+        "cabin": {
+          "lowpassHz": 281,
+          "leakDb": -33,
+          "boomHz": 100,
+          "boomDb": 3
+        },
+        "launchRpm": 2925,
+        "estimated": true
+      }
+    },
+    "v8-sc-62": {
+      "hashes": {
+        "idle": {
+          "cabin": "b7a1a86bde0037e621118ed08364165ab888292dea67eedae6c3de1353858586",
+          "outside": "516af07fe467a8c9810aa164c874b18e8d791037b2a85fe0bfd8f6b334621a0f"
+        },
+        "cruise2k": {
+          "cabin": "fa82dcfbc2c5e68796cf4dc1cd4aceae04a67acc8558790364d61e6b4223e88e",
+          "outside": "faa1157b48251d2695e9872ab1b78e40bf253cce257f55924076e3b538bb93db"
+        },
+        "cruise4k": {
+          "cabin": "74ee170a687b3336332c81a24251917b7e9e09fc5244631d9b68503ba194d7bd",
+          "outside": "6ceddb86d75e71045c9e5ae24dd75332cc3422e9be6dc19580fba872ecee6454"
+        },
+        "cruise6k": {
+          "cabin": "42fab576e6f1840b832c3d741b8bb7ed65f3550e0ff2b8a2a4c9641b204e8ec6",
+          "outside": "504473038aa1b02681e9bcb1d2e1e413668b90eefb272a3907942493ca7b061e"
+        },
+        "wotPull": {
+          "cabin": "c133e06ed8418cad36a62ff2d65c3d38e9c7d08e2f13ab3ee113ba0cd1ff47e4",
+          "outside": "0e5334d6e060bd7a1ec1c3b9fa5d4d1a5edf638230bec780d42e32d339a18a0f"
+        },
+        "liftoff6k": {
+          "cabin": "b23106bb803fb847aa3f1a822e4bab003b0bc2b43bcc20e1dc0c62646ecb08b1",
+          "outside": "4d25f8c8751f0bab8c01d62d16432914ac7d00fee96af49455c30f2a9ccf05ca"
+        }
+      },
+      "rms": {
+        "idle": {
+          "cabin": [
+            0.033439419286818386,
+            0.029330928738925274
+          ],
+          "outside": [
+            0.013250442343965059,
+            0.011532450716219599
+          ]
+        },
+        "cruise2k": {
+          "cabin": [
+            0.12744044692808695,
+            0.11513142960495436
+          ],
+          "outside": [
+            0.05802483637882617,
+            0.054581324513092916
+          ]
+        },
+        "cruise4k": {
+          "cabin": [
+            0.12199012162520617,
+            0.11138885919714892
+          ],
+          "outside": [
+            0.05954303768899042,
+            0.05799536314831934
+          ]
+        },
+        "cruise6k": {
+          "cabin": [
+            0.12616902839439598,
+            0.11472027640711052
+          ],
+          "outside": [
+            0.06129440302771861,
+            0.0591047173615042
+          ]
+        },
+        "wotPull": {
+          "cabin": [
+            0.1950076532869616,
+            0.17881054190022183
+          ],
+          "outside": [
+            0.11886661172436574,
+            0.11645644322776284
+          ]
+        },
+        "liftoff6k": {
+          "cabin": [
+            0.07369348444202374,
+            0.06929791546996504
+          ],
+          "outside": [
+            0.050065716396483266,
+            0.050097117400658774
+          ]
+        }
+      }
+    }
+  }
+}

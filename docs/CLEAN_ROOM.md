@@ -184,3 +184,13 @@ Same policy as above: nothing from rupteur.app or anything that references it; n
 | `src/dsp/combustion.ts` (`cylinderSpreadPattern`) | Per-cylinder combustion-level spread (phase 2a amendment B20): a fixed level per combustion entry, dbToGain(spread · p(k, n)) with p = +1 for cylinder 1 and −1/(n − 1) for the others (zero mean in dB), so cylinder 1's own pulse train adds equally strong lines at every multiple of the cycle rate whatever the firing order; left out at 0 dB | First principles (Fourier series of a periodic pulse train) |
 | `src/dsp/perspective.ts` | Cabin boom (amendment B21): a peaking biquad (Q 1) at cabin.boomHz with cabin.boomDb of boost after the cabin transfer, bypassed at 0 dB | Audio EQ Cookbook (R. Bristow-Johnson), peakingEQ — the existing `Biquad.peaking` |
 | `tools/tune.ts` | Tunable vector v3 (phase 2b amendment D10): the B20 spread and the B21 boom centre and level | First principles |
+
+## Phase 5 source log — the last two gates (P0c)
+
+Same policy as above: nothing from rupteur.app or anything that references it; no code copied or adapted.
+
+| Module | Algorithm | Source |
+|---|---|---|
+| `src/dsp/perspective.ts` | Cabin boom cut (phase 2a amendment B22): the B21 peaking biquad at 40–400 Hz with a negative gain, the exact inverse of the boost by as many dB (A → 1/A swaps its numerator and denominator), bypassed only at 0 dB | Audio EQ Cookbook (R. Bristow-Johnson), peakingEQ — the existing `Biquad.peaking` |
+| `src/dsp/dsp-core.ts` (`cutPulseGain`) | Engine pulses during overrun (amendment B23): an eligible fuel cut holds the combustion gain at dbToGain(cutPulseDb) instead of 0, so every firing keeps its blowdown pulse and ignition impulse at that level re the idle-load firing (same firing order, timing and pulse shape); fuel resumes from max(0.15, that level); none at −60 dB | First principles (a motored cylinder still compresses, expands and blows down its charge at its firing angle) |
+| `tools/tune.ts` | Tunable vector v4 (phase 2b amendment D11): the B23 cut-pulse level and the B22 boom ranges | First principles |

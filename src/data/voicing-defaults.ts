@@ -25,6 +25,11 @@ export const DEFAULT_CABIN_LEAK_DB = -30;
 export const DEFAULT_CYLINDER_SPREAD_DB = 0;
 export const DEFAULT_BOOM_HZ = 100;
 export const DEFAULT_BOOM_DB = 0;
+/**
+ * Engine pulses during overrun (phase 2a amendment B23), neutral: at −60 dB the fuel cut fires no pulses, as it did
+ * before the parameter existed.
+ */
+export const DEFAULT_CUT_PULSE_DB = -60;
 
 function round3(x: number): number {
   return Math.round(x * 1000) / 1000;
@@ -116,7 +121,7 @@ export function defaultVoicing(spec: EngineSpec): EngineVoicing {
         }
       : null,
     mechanical: { blockGain: 0.3, valvetrainGain: 0.1 },
-    overrun: { crackleRate: 0.5, fuelCutResumeRpm: spec.rpm.idle + 500 },
+    overrun: { crackleRate: 0.5, fuelCutResumeRpm: spec.rpm.idle + 500, cutPulseDb: DEFAULT_CUT_PULSE_DB },
     cabin: { lowpassHz: 600, leakDb: DEFAULT_CABIN_LEAK_DB, boomHz: DEFAULT_BOOM_HZ, boomDb: DEFAULT_BOOM_DB },
     launchRpm: Math.round((forced ? 0.45 : 0.55) * spec.rpm.redline),
     estimated: true,

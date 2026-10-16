@@ -44,7 +44,7 @@ const ENGINE: EngineDef = {
     intake: { runnerM: 0.3, helmholtzHz: 160, gain: 0.4 },
     forcedInduction: null,
     mechanical: { blockGain: 0.3, valvetrainGain: 0.1 },
-    overrun: { crackleRate: 0.5, fuelCutResumeRpm: 1200 },
+    overrun: { crackleRate: 0.5, fuelCutResumeRpm: 1200, cutPulseDb: -60 },
     cabin: { lowpassHz: 600, leakDb: -30, boomHz: 100, boomDb: 0 },
     launchRpm: 4125,
     estimated: true,
@@ -129,12 +129,24 @@ describe('engine.schema.json', () => {
     ['cylinderSpreadDb below 0', (e) => (e.voicing.pulse.cylinderSpreadDb = -0.1)],
     ['a pulse without cylinderSpreadDb', (e) => Object.assign(e.voicing, { pulse: { widthDeg: 60, alpha: 9, beta: 4, evoOffsetDeg: 140, cycleAsymmetry: 0.1 } })],
     ['cabin boomHz below 40', (e) => (e.voicing.cabin.boomHz = 39)],
-    ['cabin boomHz above 200', (e) => (e.voicing.cabin.boomHz = 201)],
-    ['cabin boomDb below 0', (e) => (e.voicing.cabin.boomDb = -0.5)],
+    ['cabin boomHz above 400', (e) => (e.voicing.cabin.boomHz = 401)],
+    ['cabin boomDb below -12', (e) => (e.voicing.cabin.boomDb = -12.5)],
+    ['cutPulseDb below -60', (e) => (e.voicing.overrun.cutPulseDb = -60.5)],
+    ['cutPulseDb above 0', (e) => (e.voicing.overrun.cutPulseDb = 0.5)],
+    ['an overrun without cutPulseDb', (e) => Object.assign(e.voicing, { overrun: { crackleRate: 0.5, fuelCutResumeRpm: 1200 } })],
     ['cabin boomDb above 12', (e) => (e.voicing.cabin.boomDb = 12.5)],
     ['a cabin without the boom', (e) => Object.assign(e.voicing, { cabin: { lowpassHz: 600, leakDb: -30 } })],
   ])('rejects %s', (_label, fn) => {
     expect(validateEngine(mutate(ENGINE, fn))).toBe(false);
+  });
+
+  it('accepts the phase 5 P0c ranges: a cabin boom from −12 to +12 dB at 40–400 Hz, cut pulses from −60 to 0 dB', () => {
+    for (const [boomHz, boomDb] of [[400, -12], [40, 12], [300, -6.5]] as const) {
+      expect(validateEngine(mutate(ENGINE, (e) => Object.assign(e.voicing.cabin, { boomHz, boomDb }))), `${boomHz} Hz ${boomDb} dB`).toBe(true);
+    }
+    for (const cutPulseDb of [-60, -24.5, 0]) {
+      expect(validateEngine(mutate(ENGINE, (e) => (e.voicing.overrun.cutPulseDb = cutPulseDb))), `${cutPulseDb} dB`).toBe(true);
+    }
   });
 
   it('accepts a supercharged tc-auto engine with valid blocks', () => {

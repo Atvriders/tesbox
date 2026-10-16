@@ -190,7 +190,7 @@ describe('tesbox-tune arguments', () => {
 describe('tunable voicing vector', () => {
   // phase 5 contract P0.3 (amendment D9): per-bank header scales and per-collector lengths, the full schema
   // ranges of cabin.lowpassHz and mechanical.valvetrainGain, and the B18/B19 levels; P0b.3 (amendment D10): the B20
-  // per-cylinder spread and the B21 cabin boom
+  // per-cylinder spread and the B21 cabin boom; P0c (amendment D11): the B22 boom ranges and the B23 overrun pulses
   const BANK_KEYS = ['headersM.bank0.scale', 'headersM.bank1.scale', 'headersM.bank2.scale', 'headersM.bank3.scale'];
   const COLLECTOR_KEYS = Array.from({ length: 8 }, (_, c) => `collectors[${c}].lengthM`);
 
@@ -211,6 +211,7 @@ describe('tunable voicing vector', () => {
       'intake.gain',
       'mechanical.blockGain',
       'mechanical.valvetrainGain',
+      'overrun.cutPulseDb',
       'cabin.lowpassHz',
       'cabin.leakDb',
       'cabin.boomHz',
@@ -235,10 +236,11 @@ describe('tunable voicing vector', () => {
       ['intake.gain', 0, 1],
       ['mechanical.blockGain', 0, 1],
       ['mechanical.valvetrainGain', 0, 1],
+      ['overrun.cutPulseDb', -60, 0],
       ['cabin.lowpassHz', 200, 2000],
       ['cabin.leakDb', -60, -10],
-      ['cabin.boomHz', 40, 200],
-      ['cabin.boomDb', 0, 12],
+      ['cabin.boomHz', 40, 400],
+      ['cabin.boomDb', -12, 12],
     ];
     // a V8 with two banks and two collectors: two header scales, two collector lengths, no forced induction
     const na = new VoicingSpace(garage('v8-na-50'));
@@ -280,18 +282,36 @@ describe('tunable voicing vector', () => {
     expect(() => new VoicingSpace(garage('v8-na-50'), [])).toThrow(/at least one/);
   });
 
-  it('P0b.3 (amendment D10): tunes the cylinder spread (0–6 dB) and the cabin boom (40–200 Hz, 0–12 dB) on their grids', () => {
+  it('P0b.3 (amendment D10; boom ranges by D11): tunes the cylinder spread (0–6 dB) and the cabin boom (40–400 Hz, −12–12 dB) on their grids', () => {
     const def = garage('v8-na-50');
     const s = new VoicingSpace(def, ['pulse.cylinderSpreadDb', 'cabin.boomHz', 'cabin.boomDb']);
-    // an engine left at the neutral defaults (no spread; boom at 100 Hz, 0 dB) sits on the box's lower edges
+    // an engine left at the neutral defaults (no spread; boom at 100 Hz, 0 dB): the spread on the box's lower edge, the
+    // boom level in the middle of its box (B22: it may boost or cut)
     expect(s.values(def.voicing)).toEqual([0, 100, 0]);
-    expect(s.encode(def.voicing)).toEqual([0, 0.375, 0]);
-    const v = s.decode([0.5004, 0.33, 0.2512]); // 3.0024 dB → 0.01 dB grid, 92.8 Hz → 1 Hz, 3.0144 dB → 0.1 dB
-    expect([v.pulse.cylinderSpreadDb, v.cabin.boomHz, v.cabin.boomDb]).toEqual([3, 93, 3]);
+    expect(s.encode(def.voicing)).toEqual([0, 1 / 6, 0.5]);
+    const v = s.decode([0.5004, 0.33, 0.2512]); // 3.0024 dB → 0.01 dB grid, 158.8 Hz → 1 Hz, −5.9712 dB → 0.1 dB
+    expect([v.pulse.cylinderSpreadDb, v.cabin.boomHz, v.cabin.boomDb]).toEqual([3, 159, -6]);
     expect(s.decode([1, 1, 1]).pulse.cylinderSpreadDb).toBe(6);
-    expect([s.decode([1, 1, 1]).cabin.boomHz, s.decode([1, 1, 1]).cabin.boomDb]).toEqual([200, 12]);
+    expect([s.decode([1, 1, 1]).cabin.boomHz, s.decode([1, 1, 1]).cabin.boomDb]).toEqual([400, 12]);
+    expect([s.decode([0, 0, 0]).cabin.boomHz, s.decode([0, 0, 0]).cabin.boomDb]).toEqual([40, -12]);
     // nothing else moves
     expect({ ...v, pulse: def.voicing.pulse, cabin: def.voicing.cabin }).toEqual(def.voicing);
+    expect(() => assertEngineFits({ ...def, voicing: v }, MIN_SAMPLE_RATE)).not.toThrow();
+  });
+
+  it('P0c (amendment D11): tunes the engine pulses during overrun (−60–0 dB on a 0.1 dB grid); the neutral −60 dB sits on the lower box edge', () => {
+    const def = garage('v8-na-50');
+    const s = new VoicingSpace(def, ['overrun.cutPulseDb']);
+    expect(s.params).toEqual([{ key: 'overrun.cutPulseDb', lo: -60, hi: 0 }]);
+    expect(s.values(def.voicing)).toEqual([-60]);
+    expect(s.encode(def.voicing)).toEqual([0]);
+    const v = s.decode([0.6012]); // −23.928 dB → −23.9 dB
+    expect(v.overrun.cutPulseDb).toBe(-23.9);
+    expect(s.decode([1]).overrun.cutPulseDb).toBe(0);
+    expect(s.decode([0]).overrun.cutPulseDb).toBe(-60);
+    // nothing else moves
+    expect({ ...v, overrun: def.voicing.overrun }).toEqual(def.voicing);
+    expect({ ...v.overrun, cutPulseDb: -60 }).toEqual(def.voicing.overrun);
     expect(() => assertEngineFits({ ...def, voicing: v }, MIN_SAMPLE_RATE)).not.toThrow();
   });
 

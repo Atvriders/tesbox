@@ -148,17 +148,18 @@
       "spoolTimeS": 0.6,
       "maxShaftKrpm": 180,
       "lift": "bov",
-      "cabinGainDb": -12.3,
+      "cabinGainDb": -15.8,
       "whistleDb": -36.9,
       "outsideGainDb": -25.5
     },
     "mechanical": {
       "blockGain": 0.199,
-      "valvetrainGain": 0.961
+      "valvetrainGain": 1
     },
     "overrun": {
       "crackleRate": 0.5,
-      "fuelCutResumeRpm": 1250
+      "fuelCutResumeRpm": 1250,
+      "cutPulseDb": -60
     },
     "cabin": {
       "lowpassHz": 369,

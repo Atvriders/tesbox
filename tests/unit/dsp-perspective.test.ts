@@ -181,6 +181,31 @@ describe('PerspectiveMixer', () => {
     expect(at40.r).toEqual(at200.r);
   });
 
+  it('cabin boom cut (B22): a negative cabin.boomDb cuts by |boomDb| at cabin.boomHz (40–400 Hz), the exact inverse of the boost', () => {
+    for (const [boomHz, boomDb] of [[300, -6], [400, -12], [250, -3], [40, -9]] as const) {
+      // the peakingEQ with A → 1/A swaps its numerator and denominator: |H(f; −G)| = 1 / |H(f; +G)| at every f
+      for (const f of [boomHz / 3, boomHz, 2 * boomHz, 5000]) {
+        expect(peakingGain(f, boomHz, CABIN_BOOM_Q, boomDb) * peakingGain(f, boomHz, CABIN_BOOM_Q, -boomDb)).toBeCloseTo(1, 12);
+      }
+      expect(peakingGain(boomHz, boomHz, CABIN_BOOM_Q, boomDb)).toBeCloseTo(dbToGain(boomDb), 9); // −|boomDb| at the centre
+      for (const f of [boomHz, 2 * boomHz, boomHz / 2, 1000]) {
+        if (f < 30) continue; // below the Goertzel window's resolution
+        const x = sine(f, 0.5);
+        const out = render(mixer('cabin', voicing(-14, 600, -30, -30, boomHz, boomDb)), FS, (i) => [x(i), 0, 0, 0, 0]);
+        const want = cabinGain(f, 600, -30) * peakingGain(f, boomHz, CABIN_BOOM_Q, boomDb);
+        expect(toneAmp(mono(out), f, FS / 4) / 0.5 / want, `${boomHz} Hz ${boomDb} dB @ ${f} Hz`).toBeCloseTo(1, 2);
+      }
+    }
+    // the level is clamped to −12 … +12 dB: −30 dB cuts exactly as −12 dB does, sample for sample
+    const tone = sine(300, 0.5);
+    const path: Src = (i) => [tone(i), 0, 0, 0, 0];
+    const floor = render(mixer('cabin', voicing(-14, 600, -30, -30, 300, -12)), FS / 4, path);
+    expect(render(mixer('cabin', voicing(-14, 600, -30, -30, 300, -30)), FS / 4, path).l).toEqual(floor.l);
+    const off = toneAmp(mono(render(mixer('cabin', voicing(-14, 600, -30, -30, 300, 0)), FS, path)), 300, FS / 4);
+    const cut = toneAmp(mono(render(mixer('cabin', voicing(-14, 600, -30, -30, 300, -12)), FS, path)), 300, FS / 4);
+    expect(20 * Math.log10(cut / off)).toBeCloseTo(-12, 1);
+  });
+
   it('uses −14 dB (cabin) and −30 dB (outside) for the forced-induction gains when the voicing has none', () => {
     const { l, r } = render(mixer('cabin', voicing(null)), FS / 2, () => [0, 0, 0, 1, 0]);
     expect(((l[FS / 2 - 1] ?? 0) + (r[FS / 2 - 1] ?? 0)) / 2).toBeCloseTo(dbToGain(-14), 9);

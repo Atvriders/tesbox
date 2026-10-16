@@ -26,7 +26,7 @@ const KEYS: Record<string, string[]> = {
   'voicing.exhaust.valve': ['fitted', 'openGainDb'],
   'voicing.intake': ['runnerM', 'helmholtzHz', 'gain'],
   'voicing.mechanical': ['blockGain', 'valvetrainGain'],
-  'voicing.overrun': ['crackleRate', 'fuelCutResumeRpm'],
+  'voicing.overrun': ['crackleRate', 'fuelCutResumeRpm', 'cutPulseDb'],
   'voicing.cabin': ['lowpassHz', 'leakDb', 'boomHz', 'boomDb'],
 };
 
@@ -329,5 +329,9 @@ describe('fixture engines: phase 2a amendments B20/B21 (phase 5 contract P0b)', 
       expect(def.voicing.pulse.cylinderSpreadDb, id).toBe(0);
       expect([def.voicing.cabin.boomHz, def.voicing.cabin.boomDb], id).toEqual([100, 0]);
     }
+  });
+
+  it('carry no engine pulses during overrun: cutPulseDb at its neutral −60 dB (amendment B23, phase 5 contract P0c)', () => {
+    for (const [id, def] of DEFS) expect(def.voicing.overrun.cutPulseDb, id).toBe(-60);
   });
 });

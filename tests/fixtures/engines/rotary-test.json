@@ -51,7 +51,7 @@
     "intake": {"runnerM": 0.28, "helmholtzHz": 170, "gain": 0.45},
     "forcedInduction": {"spoolTimeS": 0.5, "maxShaftKrpm": 200, "lift": "bov", "cabinGainDb": -10, "whistleDb": 0, "outsideGainDb": 0},
     "mechanical": {"blockGain": 0.3, "valvetrainGain": 0.1},
-    "overrun": {"crackleRate": 0.9, "fuelCutResumeRpm": 1300},
+    "overrun": {"crackleRate": 0.9, "fuelCutResumeRpm": 1300, "cutPulseDb": -60},
     "cabin": {"lowpassHz": 687, "leakDb": -60, "boomHz": 100, "boomDb": 0},
     "launchRpm": 3600,
     "estimated": true

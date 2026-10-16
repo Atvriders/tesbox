@@ -97,7 +97,7 @@ export function testVoicing(spec: EngineSpec, launchRpm: number): EngineVoicing 
     intake: { runnerM: 0.3, helmholtzHz: 140, gain: 0.4 },
     forcedInduction: null,
     mechanical: { blockGain: 0.3, valvetrainGain: 0.1 },
-    overrun: { crackleRate: 0.5, fuelCutResumeRpm: spec.rpm.idle + 500 },
+    overrun: { crackleRate: 0.5, fuelCutResumeRpm: spec.rpm.idle + 500, cutPulseDb: -60 },
     cabin: { lowpassHz: 600, leakDb: -30, boomHz: 100, boomDb: 0 },
     launchRpm,
     estimated: true,

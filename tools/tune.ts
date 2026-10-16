@@ -12,7 +12,8 @@
  *   one whose baseline render shares no comparable rpm bin with a reference (no voicing can change the bins).
  * - Search space: the TUNABLE voicing vector (VoicingSpace; phase 2b T6 as amended by D9 = phase 5 P0.3: one header
  *   scale per exhaust bank, one length per collector, the B18 whistle / outside levels and the B19 cabin leak; D10 =
- *   phase 5 P0b.3: the B20 per-cylinder spread and the B21 cabin boom), each parameter normalised to [0, 1] within
+ *   phase 5 P0b.3: the B20 per-cylinder spread and the B21 cabin boom; D11 = phase 5 P0c: the B22 boom ranges (a boost
+ *   or a cut, 40–400 Hz) and the B23 engine pulses during overrun), each parameter normalised to [0, 1] within
  *   its contract range; --params restricts the search to a subset. Spec fields
  *   (firing angles, ratios, rpm) are never tuned, nor is any voicing field outside the vector.
  * - Objective (minimised, objectiveOf): −composite + DISCRIMINATION_WEIGHT · max(0, best other composite − own
@@ -95,8 +96,8 @@ const FIXTURE_DIR = join(REPO_ROOT, 'tests', 'fixtures');
 // ───────────────────────────── the tunable voicing vector ─────────────────────────────
 
 /**
- * The contract's TUNABLE vector, in contract order (phase 2b T6 as amended by D9 and D10, phase 5 contract P0.3 and
- * P0b.3). `.scale` parameters multiply every entry of a list: `headersM.bank<b>.scale` the headers of exhaust bank b
+ * The contract's TUNABLE vector, in contract order (phase 2b T6 as amended by D9, D10 and D11, phase 5 contract P0.3,
+ * P0b.3 and P0c). `.scale` parameters multiply every entry of a list: `headersM.bank<b>.scale` the headers of exhaust bank b
  * (one parameter per bank the engine has), `exhaust.mufflerSectionsM.scale` every muffler section;
  * `collectors[<c>].lengthM` is one collector's length (one parameter per collector).
  */
@@ -126,6 +127,7 @@ export const PARAM_KEYS = [
   'intake.gain',
   'mechanical.blockGain',
   'mechanical.valvetrainGain',
+  'overrun.cutPulseDb',
   'cabin.lowpassHz',
   'cabin.leakDb',
   'cabin.boomHz',
@@ -298,11 +300,14 @@ const RULES: readonly ParamRule[] = [
   field('mechanical.blockGain', 0, 1, 3, (v) => v.mechanical.blockGain, (v, x) => (v.mechanical.blockGain = x)),
   // The full schema ranges (D9): the recordings' 0.8–2.5 kHz band is mostly engine harmonics.
   field('mechanical.valvetrainGain', 0, 1, 3, (v) => v.mechanical.valvetrainGain, (v, x) => (v.mechanical.valvetrainGain = x)),
+  // B23 (D11): the engine pulses during overrun, re the idle-load pulse, on a 0.1 dB grid (−60 dB = none).
+  field('overrun.cutPulseDb', -60, 0, 1, (v) => v.overrun.cutPulseDb, (v, x) => (v.overrun.cutPulseDb = x)),
   field('cabin.lowpassHz', 200, 2000, 0, (v) => v.cabin.lowpassHz, (v, x) => (v.cabin.lowpassHz = x)),
   field('cabin.leakDb', -60, -10, 1, (v) => v.cabin.leakDb, (v, x) => (v.cabin.leakDb = x)),
-  // B21 (D10): the cabin's body boom, centre on a 1 Hz grid, level on a 0.1 dB grid.
-  field('cabin.boomHz', 40, 200, 0, (v) => v.cabin.boomHz, (v, x) => (v.cabin.boomHz = x)),
-  field('cabin.boomDb', 0, 12, 1, (v) => v.cabin.boomDb, (v, x) => (v.cabin.boomDb = x)),
+  // B21 (D10), widened by B22 (D11) to a boost or a cut up to 400 Hz: the cabin's body boom, centre on a 1 Hz grid,
+  // level on a 0.1 dB grid.
+  field('cabin.boomHz', 40, 400, 0, (v) => v.cabin.boomHz, (v, x) => (v.cabin.boomHz = x)),
+  field('cabin.boomDb', -12, 12, 1, (v) => v.cabin.boomDb, (v, x) => (v.cabin.boomDb = x)),
   {
     // Contract range −24 … −6 dB, limited to the −20 … −10 dB that engine.schema.json and contracts.ts allow, so a
     // tuned voicing always validates.

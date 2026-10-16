@@ -134,7 +134,7 @@ describe('defaultVoicing', () => {
     expect(defaultVoicing(V8).intake.helmholtzHz).toBe(160);
     expect(defaultVoicing(ROTARY).intake.helmholtzHz).toBe(130);
     expect(v.mechanical).toEqual({ blockGain: 0.3, valvetrainGain: 0.1 });
-    expect(v.overrun).toEqual({ crackleRate: 0.5, fuelCutResumeRpm: 1350 });
+    expect(v.overrun).toEqual({ crackleRate: 0.5, fuelCutResumeRpm: 1350, cutPulseDb: -60 }); // B23: no cut pulses
     expect(v.cabin).toEqual({ lowpassHz: 600, leakDb: -30, boomHz: 100, boomDb: 0 }); // B19 leak; B21 boom off
     expect(v.pulse).toEqual({ widthDeg: 60, alpha: 9, beta: 4, evoOffsetDeg: 140, cycleAsymmetry: 0.1, cylinderSpreadDb: 0 }); // B20: no spread
     expect(defaultVoicing(ROTARY).pulse.widthDeg).toBe(260);

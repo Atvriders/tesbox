@@ -9,7 +9,7 @@ const POP_N = Math.round(0.001 * FS); // 48-sample pop window at 48 kHz
 function makeLayer(seed: number, crackleRate = 2): OverrunLayer {
   const def = loadFixture('i4-test');
   def.spec.rpm.redline = 6000;
-  def.voicing.overrun = { crackleRate, fuelCutResumeRpm: 1300 };
+  def.voicing.overrun = { crackleRate, fuelCutResumeRpm: 1300, cutPulseDb: -60 };
   const layer = new OverrunLayer(FS);
   layer.configure(def.spec, def.voicing, seed);
   return layer;

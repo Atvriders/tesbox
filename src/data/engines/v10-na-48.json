@@ -168,7 +168,8 @@
     },
     "overrun": {
       "crackleRate": 0.5,
-      "fuelCutResumeRpm": 1400
+      "fuelCutResumeRpm": 1400,
+      "cutPulseDb": -60
     },
     "cabin": {
       "lowpassHz": 1578,

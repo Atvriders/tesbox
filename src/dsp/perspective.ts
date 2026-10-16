@@ -9,8 +9,9 @@ export const CABIN_BLOCK_LP_HZ = 250;
 /** Cabin: forced-induction bus through a 2nd-order Butterworth LP at 2.8 kHz × dbToGain(cabinGainDb). */
 export const CABIN_FI_LP_HZ = 2800;
 /**
- * Cabin boom (phase 2a amendment B21): the Audio EQ Cookbook peaking filter's Q (≈ 1.4 octaves between the points at
- * half the boost in dB), centred on cabin.boomHz; cabin.boomDb is clamped to 0 … CABIN_BOOM_MAX_DB and 0 bypasses it.
+ * Cabin boom (phase 2a amendments B21, B22): the Audio EQ Cookbook peaking filter's Q (≈ 1.4 octaves between the points
+ * at half the boost in dB), centred on cabin.boomHz; cabin.boomDb is clamped to ±CABIN_BOOM_MAX_DB (below 0 a cut, the
+ * exact inverse of the boost by as many dB) and 0 bypasses it.
  */
 export const CABIN_BOOM_Q = 1;
 export const CABIN_BOOM_MAX_DB = 12;
@@ -30,10 +31,10 @@ function finiteOr(x: number, fallback: number): number {
 }
 
 /**
- * Listening-point mix (spec §5.3.11; phase 2a amendments B18, B19, B21). Cabin: (exhaust + airflow + intake) through
- * a 2nd-order Butterworth low-pass at cabin.lowpassHz with a high-frequency leak at cabin.leakDb, then the body boom
- * (a peaking filter at cabin.boomHz by cabin.boomDb, bypassed at 0 dB), + block (LP 250 Hz) + forced-induction bus
- * (LP 2.8 kHz) × cabinGainDb. Outside: exhaust + airflow + 0.7·intake + 0.3·block +
+ * Listening-point mix (spec §5.3.11; phase 2a amendments B18, B19, B21, B22). Cabin: (exhaust + airflow + intake)
+ * through a 2nd-order Butterworth low-pass at cabin.lowpassHz with a high-frequency leak at cabin.leakDb, then the body
+ * boom (a peaking filter at cabin.boomHz by cabin.boomDb, a boost or a cut, bypassed at 0 dB), + block (LP 250 Hz)
+ * + forced-induction bus (LP 2.8 kHz) × cabinGainDb. Outside: exhaust + airflow + 0.7·intake + 0.3·block +
  * forced-induction bus × outsideGainDb. Both perspectives are computed every sample (filters stay
  * warm) and crossfaded with a 300 ms linear ramp shaped by smoothstep; a new target reverses the
  * ramp from where it is, so rapid toggling never steps. Mono-compatible stereo: l + r = 2m.
@@ -50,7 +51,7 @@ export class PerspectiveMixer {
   private dPos = 0;
   private fiGain = 1;
   private fiOutGain = 1;
-  /** B21: the boom filter runs only when cabin.boomDb > 0. */
+  /** B21/B22: the boom filter runs only when cabin.boomDb is not 0. */
   private boomOn = false;
   /** Crossfade position: 0 = cabin, 1 = outside. */
   private w = 0;
@@ -75,9 +76,10 @@ export class PerspectiveMixer {
     // Cabin transfer (phase 2a amendment B19): 2nd-order Butterworth low-pass + high-frequency leak at leakDb.
     const fc = clamp(voicing.cabin.lowpassHz, 20, 0.45 * this.fs);
     this.cabinLp.lowpassLeak(fc, dbToGain(voicing.cabin.leakDb), this.fs);
-    // Body boom (B21): a peaking filter after the transfer; 0 dB leaves it out, so such a voicing renders as before it.
-    const boomDb = clamp(finiteOr(voicing.cabin.boomDb, 0), 0, CABIN_BOOM_MAX_DB);
-    this.boomOn = boomDb > 0;
+    // Body boom (B21) or cut (B22): a peaking filter after the transfer; 0 dB leaves it out, so such a voicing renders
+    // as before it.
+    const boomDb = clamp(finiteOr(voicing.cabin.boomDb, 0), -CABIN_BOOM_MAX_DB, CABIN_BOOM_MAX_DB);
+    this.boomOn = boomDb !== 0;
     this.boom.peaking(clamp(finiteOr(voicing.cabin.boomHz, 100), 20, 0.45 * this.fs), CABIN_BOOM_Q, boomDb, this.fs);
     this.blockLp.lowpass(CABIN_BLOCK_LP_HZ, Math.SQRT1_2, this.fs);
     this.fiLp.lowpass(Math.min(CABIN_FI_LP_HZ, 0.45 * this.fs), Math.SQRT1_2, this.fs);

@@ -294,10 +294,11 @@
         "overrun": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["crackleRate", "fuelCutResumeRpm"],
+          "required": ["crackleRate", "fuelCutResumeRpm", "cutPulseDb"],
           "properties": {
             "crackleRate": { "type": "number", "minimum": 0, "maximum": 10 },
-            "fuelCutResumeRpm": { "type": "number", "minimum": 500, "maximum": 6000 }
+            "fuelCutResumeRpm": { "type": "number", "minimum": 500, "maximum": 6000 },
+            "cutPulseDb": { "type": "number", "minimum": -60, "maximum": 0 }
           }
         },
         "cabin": {
@@ -307,8 +308,8 @@
           "properties": {
             "lowpassHz": { "type": "number", "minimum": 200, "maximum": 2000 },
             "leakDb": { "type": "number", "minimum": -60, "maximum": -10 },
-            "boomHz": { "type": "number", "minimum": 40, "maximum": 200 },
-            "boomDb": { "type": "number", "minimum": 0, "maximum": 12 }
+            "boomHz": { "type": "number", "minimum": 40, "maximum": 400 },
+            "boomDb": { "type": "number", "minimum": -12, "maximum": 12 }
           }
         },
         "launchRpm": { "type": "number", "minimum": 1000, "maximum": 10000 },
