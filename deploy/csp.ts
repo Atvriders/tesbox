@@ -27,5 +27,14 @@ export const SECURITY_HEADERS: Record<string, string> = {
   'Permissions-Policy': 'geolocation=(self), camera=(), microphone=()',
 };
 
+/*
+ * Every Cache-Control value carries no-transform: a proxy in front of the server must not modify a response. Cloudflare,
+ * for one, honours it and then never injects scripts into the pages (its Web Analytics automatic setup adds a beacon
+ * <script> to every HTML page, which the CSP blocks and the browser logs as a violation).
+ */
 /** Cache-Control for content-hashed build output under /assets/. */
-export const IMMUTABLE = 'public, max-age=31536000, immutable';
+export const IMMUTABLE = 'public, max-age=31536000, immutable, no-transform';
+/** Cache-Control for the pages, the service worker and version.json: never cached. */
+export const NO_STORE = 'no-store, no-transform';
+/** Cache-Control for other files (revalidated on every use). */
+export const NO_CACHE = 'no-cache, no-transform';

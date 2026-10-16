@@ -4,14 +4,14 @@
  */
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import type { Plugin } from 'vite';
-import { IMMUTABLE, NO_STORE_PATHS, SECURITY_HEADERS } from './csp.ts';
+import { IMMUTABLE, NO_CACHE, NO_STORE, NO_STORE_PATHS, SECURITY_HEADERS } from './csp.ts';
 
-/** Mirrors nginx.conf: /assets/ immutable; NO_STORE_PATHS and extension-less (SPA/HTML) paths no-store; other files no-cache. */
+/** Mirrors nginx.conf: /assets/ immutable; NO_STORE_PATHS and extension-less (SPA/HTML) paths no-store; other files no-cache (all no-transform). */
 export function cacheControlFor(pathname: string): string {
   if (pathname.startsWith('/assets/')) return IMMUTABLE;
-  if (NO_STORE_PATHS.includes(pathname)) return 'no-store';
+  if (NO_STORE_PATHS.includes(pathname)) return NO_STORE;
   const lastSegment = pathname.slice(pathname.lastIndexOf('/') + 1);
-  return lastSegment.includes('.') ? 'no-cache' : 'no-store';
+  return lastSegment.includes('.') ? NO_CACHE : NO_STORE;
 }
 
 /** All headers for a request URL (query string ignored). */

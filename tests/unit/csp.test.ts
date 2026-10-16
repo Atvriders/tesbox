@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { CSP, IMMUTABLE, NO_STORE_PATHS, SECURITY_HEADERS } from '../../deploy/csp';
+import { CSP, IMMUTABLE, NO_CACHE, NO_STORE, NO_STORE_PATHS, SECURITY_HEADERS } from '../../deploy/csp';
 
 const read = (p: string): string => readFileSync(new URL(`../../${p}`, import.meta.url), 'utf8');
 const INCLUDE = 'include /etc/nginx/conf.d/security-headers.inc;';
@@ -30,7 +30,9 @@ describe('deploy/csp.ts', () => {
       'Referrer-Policy': 'no-referrer',
       'Permissions-Policy': 'geolocation=(self), camera=(), microphone=()',
     });
-    expect(IMMUTABLE).toBe('public, max-age=31536000, immutable');
+    expect(IMMUTABLE).toBe('public, max-age=31536000, immutable, no-transform');
+    expect(NO_STORE).toBe('no-store, no-transform');
+    expect(NO_CACHE).toBe('no-cache, no-transform');
     expect(NO_STORE_PATHS).toEqual([
       '/',
       '/index.html',
@@ -74,10 +76,18 @@ describe('nginx.conf', () => {
     const all = blocks();
     for (const p of NO_STORE_PATHS) {
       const block = all.find((b) => b.head === `= ${p}`);
-      expect(block?.body, p).toContain('add_header Cache-Control "no-store" always;');
+      expect(block?.body, p).toContain(`add_header Cache-Control "${NO_STORE}" always;`);
     }
     const assets = all.find((b) => b.head === '/assets/');
     expect(assets?.body).toContain(`add_header Cache-Control "${IMMUTABLE}";`);
+  });
+
+  // A proxy in front of the server (e.g. Cloudflare's Web Analytics automatic setup, which injects a beacon <script>
+  // into every HTML page — blocked by the CSP and logged as a violation) must not modify any response.
+  it('every Cache-Control nginx sends carries no-transform', () => {
+    const values = [...conf().matchAll(/add_header Cache-Control "([^"]+)"/g)].map((m) => m[1] ?? '');
+    expect(values.length).toBeGreaterThan(5);
+    for (const v of values) expect(v.split(/,\s*/), v).toContain('no-transform');
   });
 
   it('serves on 8080 with relative redirects, MIME additions, gzip and the SPA fallback', () => {

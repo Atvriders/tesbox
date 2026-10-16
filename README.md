@@ -100,7 +100,9 @@ No accounts, no analytics, no telemetry, no third-party requests (the Content-Se
 only your own server). Your location is used inside the browser to follow your speed; coordinates
 never leave the car. The app only downloads its own files and `version.json` from your server and
 uploads nothing; settings stay in the browser's local storage. The Diagnostics QR export holds
-statistics only, never coordinates, and you decide whether to scan it.
+statistics only, never coordinates, and you decide whether to scan it. Every response is sent with
+`Cache-Control: … no-transform`, so a CDN or proxy in front of your server (Cloudflare, for example) does
+not modify the pages or inject scripts such as its Web Analytics beacon.
 
 ### Known limitations
 

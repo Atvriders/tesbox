@@ -3,6 +3,15 @@
 All notable changes to Tesbox. Versions follow Semantic Versioning; each release is also published as
 the Docker image `ghcr.io/atvriders/tesbox:<version>` (for example `:v1.0.0`).
 
+## 1.5.1 — 2026-10-16
+
+- Every response now carries `Cache-Control: … no-transform` (nginx and the preview server). A proxy
+  in front of the server must not modify the pages: behind Cloudflare, its Web Analytics automatic
+  setup was injecting a beacon script into every HTML page, which the Content-Security-Policy blocked
+  and the browser logged as a violation on each load. Cloudflare honours `no-transform` and no longer
+  injects it. Found by running the e2e suite against a live deployment: with the beacon removed, all
+  55 tests passed there.
+
 ## 1.5.0 — 2026-10-15
 
 - **Engine pulses during lift-off** (`overrun.cutPulseDb`, −60…0 dB, default off): on a fuel cut the

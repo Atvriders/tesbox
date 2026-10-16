@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { IncomingMessage, ServerResponse } from 'node:http';
 import { Socket } from 'node:net';
 import { describe, expect, it, vi } from 'vitest';
-import { CSP, IMMUTABLE, NO_STORE_PATHS } from '../../deploy/csp';
+import { CSP, IMMUTABLE, NO_CACHE, NO_STORE, NO_STORE_PATHS } from '../../deploy/csp';
 import { cacheControlFor, headersFor, headersMiddleware, headersPlugin } from '../../deploy/headers-plugin';
 
 function request(url: string): { req: IncomingMessage; res: ServerResponse } {
@@ -13,14 +13,14 @@ function request(url: string): { req: IncomingMessage; res: ServerResponse } {
 
 describe('cacheControlFor (mirrors nginx.conf)', () => {
   it('no-store for every NO_STORE_PATH', () => {
-    for (const p of NO_STORE_PATHS) expect(cacheControlFor(p), p).toBe('no-store');
+    for (const p of NO_STORE_PATHS) expect(cacheControlFor(p), p).toBe(NO_STORE);
   });
 
   it('immutable for hashed assets, no-cache for other files, no-store for extension-less SPA paths', () => {
     expect(cacheControlFor('/assets/index-AbC123.js')).toBe(IMMUTABLE);
-    expect(cacheControlFor('/probe/anchor.wav')).toBe('no-cache');
-    expect(cacheControlFor('/lab')).toBe('no-store');
-    expect(cacheControlFor('/probe')).toBe('no-store');
+    expect(cacheControlFor('/probe/anchor.wav')).toBe(NO_CACHE);
+    expect(cacheControlFor('/lab')).toBe(NO_STORE);
+    expect(cacheControlFor('/probe')).toBe(NO_STORE);
   });
 });
 
@@ -31,7 +31,7 @@ describe('headersFor', () => {
     expect(h['X-Content-Type-Options']).toBe('nosniff');
     expect(h['Referrer-Policy']).toBe('no-referrer');
     expect(h['Permissions-Policy']).toBe('geolocation=(self), camera=(), microphone=()');
-    expect(h['Cache-Control']).toBe('no-store');
+    expect(h['Cache-Control']).toBe(NO_STORE);
   });
 });
 
@@ -44,7 +44,7 @@ describe('headersMiddleware', () => {
     expect(res.getHeader('content-security-policy')).toBe(CSP);
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('content-security-policy', "default-src *");
-    expect(res.getHeader('cache-control')).toBe('no-store');
+    expect(res.getHeader('cache-control')).toBe(NO_STORE);
     expect(res.getHeader('content-security-policy')).toBe(CSP);
     res.setHeader('Content-Type', 'text/html');
     expect(res.getHeader('content-type')).toBe('text/html');
@@ -56,9 +56,9 @@ describe('headersMiddleware', () => {
     headersMiddleware(a.req, a.res, () => undefined);
     headersMiddleware(b.req, b.res, () => undefined);
     expect(a.res.getHeader('cache-control')).toBe(IMMUTABLE);
-    expect(b.res.getHeader('cache-control')).toBe('no-store');
+    expect(b.res.getHeader('cache-control')).toBe(NO_STORE);
     b.res.setHeader('Cache-Control', 'max-age=60');
-    expect(b.res.getHeader('cache-control')).toBe('no-store');
+    expect(b.res.getHeader('cache-control')).toBe(NO_STORE);
     expect(a.res.getHeader('cache-control')).toBe(IMMUTABLE);
   });
 
@@ -84,7 +84,7 @@ describe('headersMiddleware', () => {
       const pass = vi.fn();
       headersMiddleware(page.req, page.res, pass);
       expect(pass, path).toHaveBeenCalledTimes(1);
-      expect(page.res.getHeader('cache-control'), path).toBe('no-store');
+      expect(page.res.getHeader('cache-control'), path).toBe(NO_STORE);
     }
   });
 });

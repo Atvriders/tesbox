@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { CSP, IMMUTABLE, NO_STORE_PATHS } from '../../deploy/csp';
+import { CSP, IMMUTABLE, NO_STORE, NO_STORE_PATHS } from '../../deploy/csp';
 
 // Header assertions target the nginx container (CI sets E2E_BASE_URL); vite preview is not nginx.
 test.skip(!process.env.E2E_BASE_URL, 'set E2E_BASE_URL to a running container to check headers');
@@ -15,10 +15,10 @@ test('CSP and security headers on / and /probe/', async ({ request }) => {
   }
 });
 
-test('no-store on every NO_STORE_PATH', async ({ request }) => {
+test('no-store, no-transform on every NO_STORE_PATH', async ({ request }) => {
   for (const path of NO_STORE_PATHS) {
     const res = await request.get(path);
-    expect(res.headers()['cache-control'], path).toBe('no-store');
+    expect(res.headers()['cache-control'], path).toBe(NO_STORE);
   }
 });
 
@@ -46,7 +46,7 @@ test('/lab/ carries the CSP and security headers, no-store, and serves the lab p
   expect(h['content-security-policy']).toBe(CSP);
   expect(h['x-content-type-options']).toBe('nosniff');
   expect(h['referrer-policy']).toBe('no-referrer');
-  expect(h['cache-control']).toBe('no-store');
+  expect(h['cache-control']).toBe(NO_STORE);
   expect(await res.text()).toContain('<title>Tesbox Sound Lab</title>');
 });
 
